@@ -7,7 +7,6 @@ import org.newdawn.slick.BasicGame;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
-import org.newdawn.slick.util.Log;
 
 public class View extends BasicGame
 {
@@ -15,13 +14,10 @@ public class View extends BasicGame
 	
 	private final Game				mGame;
 	
-	private final Adapter			mAdapter;
-	
 	public View() throws SlickException
 	{
 		super("Black");
 		mGame = new Game();
-		mAdapter = new Adapter(mGame);
 		mGameContainer = new AppGameContainer(this);
 		Toolkit tk = Toolkit.getDefaultToolkit();
 		mGameContainer.setDisplayMode(tk.getScreenSize().width, tk.getScreenSize().height, true);
@@ -37,7 +33,6 @@ public class View extends BasicGame
 	@Override
 	public void init(GameContainer gc)
 	{
-		Log.info("Initialization");
 		mGame.init(gc);
 	}
 	
@@ -51,12 +46,36 @@ public class View extends BasicGame
 	@Override
 	public void keyPressed(int key, char c)
 	{
-		mAdapter.key(key, true);
+		mGame.key(key, true);
 	}
 	
 	@Override
 	public void keyReleased(int key, char c)
 	{
-		mAdapter.key(key, false);
+		mGame.key(key, false);
+	}
+	
+	@Override
+	public void mouseClicked(int aButton, int aX, int aY, int aClickCount)
+	{
+		mGame.mouseClick(aButton, aX, aY);
+	}
+	
+	@Override
+	public void mousePressed(int aButton, int aX, int aY)
+	{
+		mGame.mouseClick(aButton, true);
+	}
+	
+	@Override
+	public void mouseReleased(int aButton, int aX, int aY)
+	{
+		mGame.mouseClick(aButton, false);
+	}
+	
+	@Override
+	public void mouseMoved(int aOldX, int aOldY, int aNewX, int aNewY)
+	{
+		mGame.mouseMove(aNewX - aOldX, aNewY - aOldY);
 	}
 }
