@@ -1,14 +1,19 @@
 package main;
 
-import log.Log;
+import org.newdawn.slick.SlickException;
+import view.View;
 
 public class Main
 {
 	public static void main(String[] args)
 	{
-		Log.log("Started!");
-		
-		// TODO Start the game!
-		Log.log("Stopped!");
+		try
+		{
+			new View();
+		}
+		catch (SlickException e)
+		{
+			e.printStackTrace();
+		}
 	}
 }
