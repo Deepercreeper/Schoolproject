@@ -1,12 +1,14 @@
 package game.main;
 
+import game.log.Log;
+
 public class Main
 {
 	public static void main(String[] args)
 	{
-		System.out.println("Started!");
+		Log.log("Started!");
 		
 		// TODO Start the game!
-		System.out.println("Stopped!");
+		Log.log("Stopped!");
 	}
 }
