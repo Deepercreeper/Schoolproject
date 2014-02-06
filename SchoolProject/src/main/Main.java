@@ -1,6 +1,6 @@
-package game.main;
+package main;
 
-import game.log.Log;
+import log.Log;
 
 public class Main
 {

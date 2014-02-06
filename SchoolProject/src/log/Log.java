@@ -1,4 +1,4 @@
-package game.log;
+package log;
 
 public class Log
 {
