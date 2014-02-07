@@ -1,32 +1,31 @@
 package data;
 
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.util.HashMap;
-import javax.imageio.ImageIO;
+import org.newdawn.slick.Image;
+import org.newdawn.slick.SlickException;
 import org.newdawn.slick.util.Log;
 
 public class DataManager
 {
-	private static final HashMap<String, BufferedImage>	IMAGES	= new HashMap<>();
+	private static final HashMap<String, Image>	IMAGES	= new HashMap<>();
 	
-	public static BufferedImage get(String aName)
+	public static Image get(String aName)
 	{
-		BufferedImage image = IMAGES.get(aName);
+		Image image = IMAGES.get(aName);
 		if (image == null) image = load(aName);
 		return image;
 	}
 	
-	private static BufferedImage load(String aName)
+	private static Image load(String aName)
 	{
 		try
 		{
-			return ImageIO.read(new FileInputStream(new File("data/" + aName
-					+ ".png")));
+			Image image = new Image("data/" + aName + ".png");
+			// System.out.println(DataManager.class.getClass().getClassLoader()
+			// .getResourceAsStream("resources/data/" + aName + ".png"));
+			return image;
 		}
-		catch (IOException e)
+		catch (SlickException e)
 		{
 			Log.error("Could not read Image " + aName);
 		}
