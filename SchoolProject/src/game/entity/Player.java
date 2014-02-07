@@ -1,5 +1,6 @@
 package game.entity;
 
+import java.awt.Toolkit;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
@@ -15,8 +16,8 @@ public class Player extends Entity
 	{
 		// TODO Input
 		mXA = 0;
-		if (aInput.isKeyDown(Input.KEY_D)) mXA += 0.01;
-		if (aInput.isKeyDown(Input.KEY_A)) mXA -= 0.01;
+		if (aInput.isKeyDown(Input.KEY_D)) mXA += 0.015;
+		if (aInput.isKeyDown(Input.KEY_A)) mXA -= 0.015;
 		if (aInput.isKeyDown(Input.KEY_SPACE)) mYA -= 0.15;
 	}
 	
@@ -27,10 +28,12 @@ public class Player extends Entity
 		mYV += mYA;
 		mX += mXV;
 		mY += mYV;
+		Toolkit tk = Toolkit.getDefaultToolkit();
+		int width = tk.getScreenSize().width, height = tk.getScreenSize().height;
 		if (mX <= 0) mX = 0;
-		if (mX + mWidth >= 1920) mX = 1920 - mWidth;
+		if (mX + mWidth >= width) mX = width - mWidth;
 		if (mY <= 0) mY = 0;
-		if (mY + mHeight >= 1080) mY = 1080 - mHeight;
+		if (mY + mHeight >= height) mY = height - mHeight;
 		mXV *= 0.985;
 		mYV *= 0.995;
 		mYA = 0.02f;
