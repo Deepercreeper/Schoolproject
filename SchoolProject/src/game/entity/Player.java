@@ -6,6 +6,11 @@ import org.newdawn.slick.Input;
 
 public class Player extends Entity
 {
+	public Player()
+	{
+		mWidth = mHeight = 20;
+	}
+	
 	public void updateInput(Input aInput)
 	{
 		// TODO Input
@@ -22,7 +27,10 @@ public class Player extends Entity
 		mYV += mYA;
 		mX += mXV;
 		mY += mYV;
-		if (mY >= 1000) mY = 1000;
+		if (mX <= 0) mX = 0;
+		if (mX + mWidth >= 1920) mX = 1920 - mWidth;
+		if (mY <= 0) mY = 0;
+		if (mY + mHeight >= 1080) mY = 1080 - mHeight;
 		mXV *= 0.985;
 		mYV *= 0.995;
 		mYA = 0.02f;
@@ -33,6 +41,6 @@ public class Player extends Entity
 	{
 		// TODO render
 		g.setColor(Color.white);
-		g.fillRect(mX, mY, 5, 5);
+		g.fillRect(mX, mY, mWidth, mHeight);
 	}
 }

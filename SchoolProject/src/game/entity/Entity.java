@@ -7,7 +7,7 @@ public abstract class Entity
 {
 	protected int	mId;
 	
-	protected float	mX, mY, mXV, mYV, mXA, mYA;
+	protected float	mX, mY, mXV, mYV, mXA, mYA, mWidth, mHeight;
 	
 	protected World	mWorld;
 	
@@ -16,6 +16,16 @@ public abstract class Entity
 	public int getId()
 	{
 		return mId;
+	}
+	
+	public float getWidth()
+	{
+		return mWidth;
+	}
+	
+	public float getHeight()
+	{
+		return mHeight;
 	}
 	
 	public float getX()
