@@ -44,18 +44,6 @@ public class View extends BasicGame
 	}
 	
 	@Override
-	public void keyPressed(int key, char c)
-	{
-		mGame.key(key, true);
-	}
-	
-	@Override
-	public void keyReleased(int key, char c)
-	{
-		mGame.key(key, false);
-	}
-	
-	@Override
 	public void mouseClicked(int aButton, int aX, int aY, int aClickCount)
 	{
 		mGame.mouseClick(aButton, aX, aY);

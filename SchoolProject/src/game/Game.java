@@ -5,7 +5,6 @@ import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
-import data.DataManager;
 
 public class Game
 {
@@ -30,7 +29,6 @@ public class Game
 	{
 		g.setColor(new Color(mR, mG, mB));
 		g.fillRect(0, 0, gc.getWidth(), gc.getHeight());
-		g.drawImage(DataManager.get("test"), 0f, 0f);
 		mWorld.render(g);
 	}
 	
@@ -44,27 +42,8 @@ public class Game
 	{
 		if (mMouseDown[Input.MOUSE_LEFT_BUTTON]) color(0, 0, 1);
 		if (mMouseDown[Input.MOUSE_RIGHT_BUTTON]) color(0, 0, -1);
+		if (mInput.isKeyPressed(Input.KEY_ESCAPE)) stop();
 		mWorld.update(mInput);
-	}
-	
-	public void key(int aKey, boolean aDown)
-	{
-		if (aDown)
-		{
-			// Instant keys
-		}
-		else
-		{
-			// Up keys
-			switch (aKey)
-			{
-				case Input.KEY_ESCAPE :
-					stop();
-					break;
-				default :
-					break;
-			}
-		}
 	}
 	
 	public void mouseClick(int aButton, int aX, int aY)
