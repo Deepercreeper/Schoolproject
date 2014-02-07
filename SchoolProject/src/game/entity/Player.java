@@ -9,23 +9,23 @@ public class Player extends Entity
 	public void updateInput(Input aInput)
 	{
 		// TODO Input
-		mXA = mYA = 0;
+		mXA = 0;
 		if (aInput.isKeyDown(Input.KEY_D)) mXA += 0.01;
 		if (aInput.isKeyDown(Input.KEY_A)) mXA -= 0.01;
-		if (aInput.isKeyDown(Input.KEY_S)) mYA += 0.01;
-		if (aInput.isKeyDown(Input.KEY_W)) mYA -= 0.01;
+		if (aInput.isKeyDown(Input.KEY_SPACE)) mYA -= 0.15;
 	}
 	
 	@Override
 	public void update()
 	{
-		System.out.println(mX + " " + mY);
 		mXV += mXA;
 		mYV += mYA;
 		mX += mXV;
 		mY += mYV;
-		mXV *= 0.98;
-		mYV *= 0.98;
+		if (mY >= 1000) mY = 1000;
+		mXV *= 0.985;
+		mYV *= 0.995;
+		mYA = 0.02f;
 	}
 	
 	@Override
