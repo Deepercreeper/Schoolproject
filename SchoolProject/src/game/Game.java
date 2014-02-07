@@ -25,7 +25,7 @@ public class Game
 		mMouseDown = new boolean[3];
 	}
 	
-	public void update(GameContainer arg0, int arg1)
+	public void update(GameContainer gc, int aDelta)
 	{
 		if (mMouseDown[Input.MOUSE_LEFT_BUTTON]) color(0, 0, 1);
 		if (mMouseDown[Input.MOUSE_RIGHT_BUTTON]) color(0, 0, -1);
