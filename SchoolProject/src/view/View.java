@@ -17,8 +17,8 @@ public class View extends BasicGame
 	public View() throws SlickException
 	{
 		super("Black");
-		mGame = new Game();
 		mGameContainer = new AppGameContainer(this);
+		mGame = new Game();
 		Toolkit tk = Toolkit.getDefaultToolkit();
 		mGameContainer.setDisplayMode(tk.getScreenSize().width, tk.getScreenSize().height, true);
 		mGameContainer.start();

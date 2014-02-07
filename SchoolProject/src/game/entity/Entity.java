@@ -5,11 +5,18 @@ import org.newdawn.slick.Graphics;
 
 public abstract class Entity
 {
+	protected int	mId;
+	
 	protected float	mX, mY, mXV, mYV, mXA, mYA;
 	
 	protected World	mWorld;
 	
 	private boolean	mRemoved;
+	
+	public int getId()
+	{
+		return mId;
+	}
 	
 	public float getX()
 	{
@@ -44,11 +51,29 @@ public abstract class Entity
 	public void init(World aWorld)
 	{
 		mWorld = aWorld;
+		mId = aWorld.createId();
 	}
 	
 	public abstract void update();
 	
 	public abstract void render(Graphics g);
+	
+	@Override
+	public boolean equals(Object o)
+	{
+		if (o instanceof Entity)
+		{
+			Entity e = (Entity) o;
+			return mId == e.mId;
+		}
+		return false;
+	}
+	
+	@Override
+	public int hashCode()
+	{
+		return mId;
+	}
 	
 	@Override
 	public String toString()
