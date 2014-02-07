@@ -20,9 +20,7 @@ public class DataManager
 	{
 		try
 		{
-			Image image = new Image("/" + aName + ".png");
-			// System.out.println(DataManager.class.getClass().getClassLoader()
-			// .getResourceAsStream("resources/data/" + aName + ".png"));
+			Image image = new Image("data/" + aName + ".png");
 			return image;
 		}
 		catch (SlickException e)

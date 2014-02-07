@@ -4,7 +4,6 @@ import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
-import data.DataManager;
 
 public class Game
 {
@@ -18,7 +17,6 @@ public class Game
 	{
 		g.setColor(new Color(mR, mG, mB));
 		g.fillRect(0, 0, gc.getWidth(), gc.getHeight());
-		g.drawImage(DataManager.get("test"), 0f, 0f);
 	}
 	
 	public void init(GameContainer gc)
@@ -30,7 +28,7 @@ public class Game
 	public void update(GameContainer gc, int aDelta)
 	{
 		if (mMouseDown[Input.MOUSE_LEFT_BUTTON]) color(0, 0, 1);
-		if (mMouseDown[Input.MOUSE_RIGHT_BUTTON]) color(0, 0, - 1);
+		if (mMouseDown[Input.MOUSE_RIGHT_BUTTON]) color(0, 0, -1);
 	}
 	
 	public void key(int aKey, boolean aDown)
