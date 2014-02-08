@@ -21,6 +21,7 @@ public class View extends BasicGame
 		mGame = new Game();
 		Toolkit tk = Toolkit.getDefaultToolkit();
 		mGameContainer.setDisplayMode(tk.getScreenSize().width, tk.getScreenSize().height, true);
+		mGameContainer.setVSync(true);
 		mGameContainer.start();
 	}
 	

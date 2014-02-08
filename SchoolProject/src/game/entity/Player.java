@@ -15,9 +15,10 @@ public class Player extends Entity
 	{
 		// TODO Input
 		mXA = 0;
-		if (aInput.isKeyDown(Input.KEY_D)) mXA += 0.1;
-		if (aInput.isKeyDown(Input.KEY_A)) mXA -= 0.1;
-		if (aInput.isKeyDown(Input.KEY_SPACE) && mOnGround) mYA -= 10;
+		if (aInput.isKeyDown(Input.KEY_D)) mXA += 0.5;
+		if (aInput.isKeyDown(Input.KEY_A)) mXA -= 0.5;
+		if (aInput.isKeyDown(Input.KEY_LSHIFT)) mXA *= 2;
+		if (aInput.isKeyDown(Input.KEY_SPACE) && mOnGround) mYA -= 20;
 	}
 	
 	@Override
@@ -51,7 +52,7 @@ public class Player extends Entity
 		}
 		mXV *= 0.985;
 		mYV *= 0.995;
-		mYA = 0.1f;
+		mYA = 0.9f;
 	}
 	
 	@Override

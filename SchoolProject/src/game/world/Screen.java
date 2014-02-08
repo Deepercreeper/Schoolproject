@@ -7,9 +7,9 @@ public class Screen
 {
 	private final Rectangle	mRect;
 	
-	public Screen(int aWidth, int aHeight)
+	public Screen()
 	{
-		mRect = new Rectangle(0, 0, aWidth, aHeight);
+		mRect = new Rectangle(0, 0, 0, 0);
 	}
 	
 	public void move(int aX, int aY)

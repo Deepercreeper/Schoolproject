@@ -18,8 +18,7 @@ public class Game
 	public Game()
 	{
 		mMouseDown = new boolean[3];
-		mWorld = new World(1920, 1080);
-		mWorld.addPlayer();
+		mWorld = new World();
 	}
 	
 	public void render(GameContainer gc, Graphics g)
@@ -31,7 +30,8 @@ public class Game
 	{
 		mRunning = true;
 		mInput = gc.getInput();
-		mWorld.init();
+		mWorld.init(gc.getWidth(), gc.getHeight());
+		mWorld.addPlayer();
 	}
 	
 	public void update(GameContainer gc, int aDelta)

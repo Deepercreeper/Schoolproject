@@ -9,7 +9,7 @@ import org.newdawn.slick.Input;
 
 public class World
 {
-	private final int	mWidth, mHeight;
+	private int	mWidth, mHeight;
 	
 	private final HashMap<Integer, Entity>	mEntities, mAddEntities;
 	
@@ -19,19 +19,20 @@ public class World
 	
 	private final Screen					mScreen;
 	
-	public World(int aWidth, int aHeight)
+	public World()
 	{
-		mWidth = aWidth;
-		mHeight = aHeight;
-		mScreen = new Screen(mWidth, mHeight);
+		mScreen = new Screen();
 		mEntities = new HashMap<>();
 		mAddEntities = new HashMap<>();
 		mRemoveEntities = new HashSet<>();
 	}
 	
-	public void init()
+	public void init(int aWidth, int aHeight)
 	{
+		mWidth = aWidth;
+		mHeight = aHeight;
 		mScreen.move(0, 0);
+		mScreen.resize(mWidth, mHeight);
 	}
 	
 	public int getWidth()
