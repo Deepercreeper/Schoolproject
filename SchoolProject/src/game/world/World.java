@@ -9,17 +9,39 @@ import org.newdawn.slick.Input;
 
 public class World
 {
+	private final int	mWidth, mHeight;
+	
 	private final HashMap<Integer, Entity>	mEntities, mAddEntities;
 	
 	private final HashSet<Integer>			mRemoveEntities;
 	
 	private Player							mPlayer;
 	
-	public World()
+	private final Screen					mScreen;
+	
+	public World(int aWidth, int aHeight)
 	{
+		mWidth = aWidth;
+		mHeight = aHeight;
+		mScreen = new Screen(mWidth, mHeight);
 		mEntities = new HashMap<>();
 		mAddEntities = new HashMap<>();
 		mRemoveEntities = new HashSet<>();
+	}
+	
+	public void init()
+	{
+		mScreen.move(0, 0);
+	}
+	
+	public int getWidth()
+	{
+		return mWidth;
+	}
+	
+	public int getHeight()
+	{
+		return mHeight;
 	}
 	
 	public void update(Input aInput)
@@ -61,6 +83,6 @@ public class World
 	public void render(Graphics g)
 	{
 		for (Entity entity : mEntities.values())
-			entity.render(g);
+			if (mScreen.intersectsWith(entity)) entity.render(g);
 	}
 }

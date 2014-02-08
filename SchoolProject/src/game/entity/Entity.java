@@ -2,40 +2,50 @@ package game.entity;
 
 import game.world.World;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.geom.Rectangle;
 
 public abstract class Entity
 {
-	protected int	mId;
+	protected int		mId;
 	
-	protected float	mX, mY, mXV, mYV, mXA, mYA, mWidth, mHeight;
+	protected float		mXV, mYV, mXA, mYA;
 	
-	protected World	mWorld;
+	protected Rectangle	mRect;
 	
-	private boolean	mRemoved;
+	protected World		mWorld;
+	
+	protected boolean	mOnGround;
+	
+	private boolean		mRemoved;
+	
+	public Entity(int aWidth, int aHeight)
+	{
+		mRect = new Rectangle(0, 0, aWidth, aHeight);
+	}
 	
 	public int getId()
 	{
 		return mId;
 	}
 	
-	public float getWidth()
+	public int getWidth()
 	{
-		return mWidth;
+		return (int) mRect.getWidth();
 	}
 	
-	public float getHeight()
+	public int getHeight()
 	{
-		return mHeight;
+		return (int) mRect.getHeight();
 	}
 	
 	public float getX()
 	{
-		return mX;
+		return mRect.getX();
 	}
 	
 	public float getY()
 	{
-		return mY;
+		return mRect.getY();
 	}
 	
 	public float getXV()
@@ -46,6 +56,31 @@ public abstract class Entity
 	public float getYV()
 	{
 		return mYV;
+	}
+	
+	protected void move()
+	{
+		mRect.setLocation(mRect.getX() + mXV, mRect.getY() + mYV);
+	}
+	
+	protected void move(float aX, float aY)
+	{
+		mRect.setLocation(aX, aY);
+	}
+	
+	protected void moveX(float aX)
+	{
+		mRect.setX(aX);
+	}
+	
+	protected void moveY(float aY)
+	{
+		mRect.setY(aY);
+	}
+	
+	public Rectangle getRectangle()
+	{
+		return mRect;
 	}
 	
 	public boolean isRemoved()
@@ -88,6 +123,6 @@ public abstract class Entity
 	@Override
 	public String toString()
 	{
-		return this.getClass().getName() + ":" + mX + "-" + mY;
+		return this.getClass().getName() + ":" + mRect;
 	}
 }

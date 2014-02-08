@@ -1,6 +1,5 @@
 package game.entity;
 
-import java.awt.Toolkit;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
@@ -9,16 +8,16 @@ public class Player extends Entity
 {
 	public Player()
 	{
-		mWidth = mHeight = 20;
+		super(10, 20);
 	}
 	
 	public void updateInput(Input aInput)
 	{
 		// TODO Input
 		mXA = 0;
-		if (aInput.isKeyDown(Input.KEY_D)) mXA += 0.015;
-		if (aInput.isKeyDown(Input.KEY_A)) mXA -= 0.015;
-		if (aInput.isKeyDown(Input.KEY_SPACE)) mYA -= 0.15;
+		if (aInput.isKeyDown(Input.KEY_D)) mXA += 0.1;
+		if (aInput.isKeyDown(Input.KEY_A)) mXA -= 0.1;
+		if (aInput.isKeyDown(Input.KEY_SPACE) && mOnGround) mYA -= 10;
 	}
 	
 	@Override
@@ -26,17 +25,33 @@ public class Player extends Entity
 	{
 		mXV += mXA;
 		mYV += mYA;
-		mX += mXV;
-		mY += mYV;
-		Toolkit tk = Toolkit.getDefaultToolkit();
-		int width = tk.getScreenSize().width, height = tk.getScreenSize().height;
-		if (mX <= 0) mX = 0;
-		if (mX + mWidth >= width) mX = width - mWidth;
-		if (mY <= 0) mY = 0;
-		if (mY + mHeight >= height) mY = height - mHeight;
+		move();
+		mOnGround = false;
+		final int width = mWorld.getWidth(), height = mWorld.getHeight();
+		if (getX() <= 0)
+		{
+			mXV = 0;
+			moveX(0);
+		}
+		if (mRect.getMaxX() >= width)
+		{
+			mXV = 0;
+			moveX((width - mRect.getWidth()));
+		}
+		if (getY() <= 0)
+		{
+			mYV = 0;
+			moveY(0);
+		}
+		if (mRect.getMaxY() >= height)
+		{
+			mYV = 0;
+			moveY((height - mRect.getHeight()));
+			mOnGround = true;
+		}
 		mXV *= 0.985;
 		mYV *= 0.995;
-		mYA = 0.02f;
+		mYA = 0.1f;
 	}
 	
 	@Override
@@ -44,6 +59,6 @@ public class Player extends Entity
 	{
 		// TODO render
 		g.setColor(Color.white);
-		g.fillRect(mX, mY, mWidth, mHeight);
+		g.fillRect(getX(), getY(), getWidth(), getHeight());
 	}
 }
