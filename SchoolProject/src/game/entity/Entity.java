@@ -14,7 +14,7 @@ public abstract class Entity
 	
 	protected World		mWorld;
 	
-	protected boolean	mOnGround;
+	protected boolean	mOnGround, mOnWall, mOnLeftWall;
 	
 	private boolean		mRemoved;
 	

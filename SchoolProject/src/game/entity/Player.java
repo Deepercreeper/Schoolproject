@@ -15,10 +15,18 @@ public class Player extends Entity
 	{
 		// TODO Input
 		mXA = 0;
-		if (aInput.isKeyDown(Input.KEY_D)) mXA += 0.5;
-		if (aInput.isKeyDown(Input.KEY_A)) mXA -= 0.5;
+		if (aInput.isKeyDown(Input.KEY_D)) mXA += 1;
+		if (aInput.isKeyDown(Input.KEY_A)) mXA -= 1;
 		if (aInput.isKeyDown(Input.KEY_LSHIFT)) mXA *= 2;
-		if (aInput.isKeyDown(Input.KEY_SPACE) && mOnGround) mYA -= 20;
+		if (aInput.isKeyDown(Input.KEY_SPACE) && (mOnGround || mOnWall))
+		{
+			if (mOnWall)
+			{
+				mXA += mOnLeftWall ? 20 : -20;
+				mYA -= 20;
+			}
+			else mYA -= 30;
+		}
 	}
 	
 	@Override
@@ -27,17 +35,21 @@ public class Player extends Entity
 		mXV += mXA;
 		mYV += mYA;
 		move();
-		mOnGround = false;
+		mOnGround = mOnWall = false;
 		final int width = mWorld.getWidth(), height = mWorld.getHeight();
 		if (getX() <= 0)
 		{
 			mXV = 0;
 			moveX(0);
+			mOnWall = true;
+			mOnLeftWall = true;
 		}
 		if (mRect.getMaxX() >= width)
 		{
 			mXV = 0;
 			moveX((width - mRect.getWidth()));
+			mOnWall = true;
+			mOnLeftWall = false;
 		}
 		if (getY() <= 0)
 		{
@@ -50,7 +62,7 @@ public class Player extends Entity
 			moveY((height - mRect.getHeight()));
 			mOnGround = true;
 		}
-		mXV *= 0.985;
+		mXV *= 0.9;
 		mYV *= 0.995;
 		mYA = 0.9f;
 	}
