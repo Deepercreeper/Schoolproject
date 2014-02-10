@@ -9,7 +9,7 @@ public class Player extends Entity
 {
 	public Player()
 	{
-		super(10, 20);
+		super(16, 32);
 	}
 	
 	public void updateInput(Input aInput)
@@ -24,10 +24,10 @@ public class Player extends Entity
 		{
 			if (mOnWall)
 			{
-				mXA += mOnLeftWall ? 20 : -20;
-				mYA -= 20;
+				mXA += mOnLeftWall ? 10 : -10;
+				mYA -= 10;
 			}
-			else mYA -= 30;
+			else mYA -= 20;
 		}
 	}
 	

@@ -6,7 +6,7 @@ public enum Block
 {
 	AIR(0, false), STONE(1, true, Color.white);
 	
-	public static final int	SIZE	= 10;
+	public static final int	SIZE	= 16;
 	
 	private final boolean	mSolid, mVisible;
 	
