@@ -7,19 +7,11 @@ import org.newdawn.slick.Input;
 
 public class Game
 {
-	private boolean			mRunning;
+	private boolean	mRunning;
 	
-	private final boolean[]	mMouseDown;
+	private World	mWorld;
 	
-	private final World		mWorld;
-	
-	private Input			mInput;
-	
-	public Game()
-	{
-		mMouseDown = new boolean[3];
-		mWorld = new World();
-	}
+	private Input	mInput;
 	
 	public void render(GameContainer gc, Graphics g)
 	{
@@ -29,29 +21,23 @@ public class Game
 	public void init(GameContainer gc)
 	{
 		mRunning = true;
-		mInput = gc.getInput();
+		createWorld(gc);
+	}
+	
+	private void createWorld(GameContainer gc)
+	{
+		if (mInput == null) mInput = gc.getInput();
+		mWorld = new World();
 		mWorld.init(gc.getWidth(), gc.getHeight());
-		mWorld.addPlayer();
+		mWorld.createPlayer();
 	}
 	
 	public void update(GameContainer gc, int aDelta)
 	{
 		if (mInput.isKeyPressed(Input.KEY_ESCAPE)) stop();
+		
 		mWorld.update(mInput);
 	}
-	
-	public void mouseClick(int aButton, int aX, int aY)
-	{	
-		
-	}
-	
-	public void mouseClick(int aButton, boolean aDown)
-	{
-		mMouseDown[aButton] = aDown;
-	}
-	
-	public void mouseMove(int aXD, int aYD)
-	{}
 	
 	public boolean isRunning()
 	{

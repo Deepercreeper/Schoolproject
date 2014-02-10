@@ -9,7 +9,9 @@ import org.newdawn.slick.Input;
 
 public class World
 {
-	private int	mWidth, mHeight;
+	public static final int	BLOCK_SIZE	= 10;
+	
+	private int				mWidth, mHeight;
 	
 	private final HashMap<Integer, Entity>	mEntities, mAddEntities;
 	
@@ -29,10 +31,10 @@ public class World
 	
 	public void init(int aWidth, int aHeight)
 	{
-		mWidth = aWidth;
-		mHeight = aHeight;
+		mWidth = aWidth / BLOCK_SIZE;
+		mHeight = aHeight / BLOCK_SIZE;
 		mScreen.move(0, 0);
-		mScreen.resize(mWidth, mHeight);
+		mScreen.resize(mWidth * BLOCK_SIZE, mHeight * BLOCK_SIZE);
 	}
 	
 	public int getWidth()
@@ -48,7 +50,9 @@ public class World
 	public void update(Input aInput)
 	{
 		// TODO update
-		if (mPlayer != null) mPlayer.updateInput(aInput);
+		while (mPlayer.isRemoved())
+			createPlayer();
+		mPlayer.updateInput(aInput);
 		updateEntities();
 	}
 	
@@ -63,7 +67,7 @@ public class World
 			entity.update();
 	}
 	
-	public void addPlayer()
+	public void createPlayer()
 	{
 		mPlayer = new Player();
 		addEntity(mPlayer);

@@ -16,12 +16,13 @@ public class View extends BasicGame
 	
 	public View() throws SlickException
 	{
-		super("Black");
+		super("Super Minion Bros");
+		final Toolkit tk = Toolkit.getDefaultToolkit();
 		mGameContainer = new AppGameContainer(this);
-		mGame = new Game();
-		Toolkit tk = Toolkit.getDefaultToolkit();
 		mGameContainer.setDisplayMode(tk.getScreenSize().width, tk.getScreenSize().height, true);
 		mGameContainer.setVSync(true);
+		
+		mGame = new Game();
 		mGameContainer.start();
 	}
 	
@@ -42,29 +43,5 @@ public class View extends BasicGame
 	{
 		if (mGame.isRunning()) mGame.update(gc, aDelta);
 		else mGameContainer.exit();
-	}
-	
-	@Override
-	public void mouseClicked(int aButton, int aX, int aY, int aClickCount)
-	{
-		mGame.mouseClick(aButton, aX, aY);
-	}
-	
-	@Override
-	public void mousePressed(int aButton, int aX, int aY)
-	{
-		mGame.mouseClick(aButton, true);
-	}
-	
-	@Override
-	public void mouseReleased(int aButton, int aX, int aY)
-	{
-		mGame.mouseClick(aButton, false);
-	}
-	
-	@Override
-	public void mouseMoved(int aOldX, int aOldY, int aNewX, int aNewY)
-	{
-		mGame.mouseMove(aNewX - aOldX, aNewY - aOldY);
 	}
 }

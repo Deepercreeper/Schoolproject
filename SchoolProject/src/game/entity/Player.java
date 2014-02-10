@@ -1,5 +1,6 @@
 package game.entity;
 
+import game.world.World;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
@@ -14,6 +15,7 @@ public class Player extends Entity
 	public void updateInput(Input aInput)
 	{
 		// TODO Input
+		if (isRemoved()) return;
 		mXA = 0;
 		if (aInput.isKeyDown(Input.KEY_D)) mXA += 1;
 		if (aInput.isKeyDown(Input.KEY_A)) mXA -= 1;
@@ -36,7 +38,7 @@ public class Player extends Entity
 		mYV += mYA;
 		move();
 		mOnGround = mOnWall = false;
-		final int width = mWorld.getWidth(), height = mWorld.getHeight();
+		final int width = mWorld.getWidth() * World.BLOCK_SIZE, height = mWorld.getHeight() * World.BLOCK_SIZE;
 		if (getX() <= 0)
 		{
 			mXV = 0;
