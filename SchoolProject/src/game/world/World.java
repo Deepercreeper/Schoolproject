@@ -9,9 +9,9 @@ import org.newdawn.slick.Input;
 
 public class World
 {
-	public static final int	BLOCK_SIZE	= 10;
+	private int			mWidth, mHeight;
 	
-	private int				mWidth, mHeight;
+	private byte[][]	mBlocks;
 	
 	private final HashMap<Integer, Entity>	mEntities, mAddEntities;
 	
@@ -31,10 +31,12 @@ public class World
 	
 	public void init(int aWidth, int aHeight)
 	{
-		mWidth = aWidth / BLOCK_SIZE;
-		mHeight = aHeight / BLOCK_SIZE;
+		mWidth = aWidth / Block.SIZE;
+		mHeight = aHeight / Block.SIZE;
+		mBlocks = new byte[aWidth][aHeight];
+		for (int i = 0; i < 100; i++ )
+			mBlocks[(int) (Math.random() * mWidth)][(int) (Math.random() * mHeight)] = Block.STONE.getId();
 		mScreen.move(0, 0);
-		mScreen.resize(mWidth * BLOCK_SIZE, mHeight * BLOCK_SIZE);
 	}
 	
 	public int getWidth()
@@ -52,6 +54,7 @@ public class World
 		// TODO update
 		while (mPlayer.isRemoved())
 			createPlayer();
+		mScreen.move((int) (mPlayer.getX() - mScreen.getWidth() / 2), (int) (mPlayer.getY() - mScreen.getHeight() / 2));
 		mPlayer.updateInput(aInput);
 		updateEntities();
 	}
@@ -85,9 +88,24 @@ public class World
 			if ( !mEntities.containsKey(i)) return i;
 	}
 	
+	public Screen getScreen()
+	{
+		return mScreen;
+	}
+	
 	public void render(Graphics g)
 	{
+		for (int x = 0; x < mWidth; x++ )
+			for (int y = 0; y < mHeight; y++ )
+				if (Block.get(mBlocks[x][y]).isVisible()) renderBlock(g, x, y);
 		for (Entity entity : mEntities.values())
 			if (mScreen.intersectsWith(entity)) entity.render(g);
+	}
+	
+	private void renderBlock(Graphics g, int aX, int aY)
+	{
+		Block block = Block.get(mBlocks[aX][aY]);
+		g.setColor(block.getColor());
+		g.fillRect(aX * Block.SIZE - mScreen.getX(), aY * Block.SIZE - mScreen.getY(), Block.SIZE, Block.SIZE);
 	}
 }

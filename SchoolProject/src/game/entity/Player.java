@@ -1,6 +1,6 @@
 package game.entity;
 
-import game.world.World;
+import game.world.Block;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
@@ -38,7 +38,7 @@ public class Player extends Entity
 		mYV += mYA;
 		move();
 		mOnGround = mOnWall = false;
-		final int width = mWorld.getWidth() * World.BLOCK_SIZE, height = mWorld.getHeight() * World.BLOCK_SIZE;
+		final int width = mWorld.getWidth() * Block.SIZE, height = mWorld.getHeight() * Block.SIZE;
 		if (getX() <= 0)
 		{
 			mXV = 0;
@@ -74,6 +74,6 @@ public class Player extends Entity
 	{
 		// TODO render
 		g.setColor(Color.white);
-		g.fillRect(getX(), getY(), getWidth(), getHeight());
+		g.fillRect(getX() - mWorld.getScreen().getX(), getY() - mWorld.getScreen().getY(), getWidth(), getHeight());
 	}
 }
