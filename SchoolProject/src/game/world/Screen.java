@@ -18,6 +18,18 @@ public class Screen
 		
 	}
 	
+	public void addX(int aXD)
+	{
+		if (mRect.getX() + aXD < 0) mRect.setX(0);
+		mRect.setX(mRect.getX() + aXD);
+	}
+	
+	public void addY(int aYD)
+	{
+		if (mRect.getY() + aYD < 0) mRect.setY(0);
+		mRect.setY(mRect.getY() + aYD);
+	}
+	
 	public int getX()
 	{
 		return (int) mRect.getX();
