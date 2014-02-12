@@ -19,11 +19,11 @@ public class World
 	
 	private Player							mPlayer;
 	
-	private final Screen					mScreen;
+	// private final Screen mScreen;
 	
 	public World()
 	{
-		mScreen = new Screen();
+		// mScreen = new Screen();
 		mEntities = new HashMap<>();
 		mAddEntities = new HashMap<>();
 		mRemoveEntities = new HashSet<>();
@@ -36,7 +36,7 @@ public class World
 		mBlocks = new byte[aWidth][aHeight];
 		for (int i = 0; i < 100; i++ )
 			mBlocks[(int) (Math.random() * mWidth)][(int) (Math.random() * mHeight)] = Block.STONE.getId();
-		mScreen.move(0, 0);
+		// mScreen.move(0, 0);
 	}
 	
 	public int getWidth()
@@ -54,7 +54,7 @@ public class World
 		// TODO update
 		while (mPlayer.isRemoved())
 			createPlayer();
-		mScreen.move((int) (mPlayer.getX() - mScreen.getWidth() / 2), (int) (mPlayer.getY() - mScreen.getHeight() / 2));
+		// mScreen.move((int) (mPlayer.getX() - mScreen.getWidth() / 2), (int) (mPlayer.getY() - mScreen.getHeight() / 2));
 		mPlayer.updateInput(aInput);
 		updateEntities();
 	}
@@ -90,7 +90,8 @@ public class World
 	
 	public Screen getScreen()
 	{
-		return mScreen;
+		return null;
+		// return mScreen;
 	}
 	
 	public void render(Graphics g)
@@ -98,14 +99,14 @@ public class World
 		for (int x = 0; x < mWidth; x++ )
 			for (int y = 0; y < mHeight; y++ )
 				if (Block.get(mBlocks[x][y]).isVisible()) renderBlock(g, x, y);
-		for (Entity entity : mEntities.values())
-			if (mScreen.intersectsWith(entity)) entity.render(g);
+		// for (Entity entity : mEntities.values())
+		// if (mScreen.contains(entity)) entity.render(g);
 	}
 	
 	private void renderBlock(Graphics g, int aX, int aY)
 	{
 		Block block = Block.get(mBlocks[aX][aY]);
 		g.setColor(block.getColor());
-		g.fillRect(aX * Block.SIZE - mScreen.getX(), aY * Block.SIZE - mScreen.getY(), Block.SIZE, Block.SIZE);
+		// g.fillRect(aX * Block.SIZE - mScreen.getX(), aY * Block.SIZE - mScreen.getY(), Block.SIZE, Block.SIZE);
 	}
 }

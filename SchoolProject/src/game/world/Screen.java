@@ -1,28 +1,21 @@
 package game.world;
 
 import game.entity.Entity;
-import java.awt.Dimension;
-import java.awt.Toolkit;
+import game.entity.Player;
 import org.newdawn.slick.geom.Rectangle;
 
 public class Screen
 {
 	private final Rectangle	mRect;
 	
-	public Screen()
+	public Screen(int aWidth, int aHeight)
 	{
-		final Dimension size = Toolkit.getDefaultToolkit().getScreenSize();
-		mRect = new Rectangle(0, 0, size.width, size.height);
+		mRect = new Rectangle(0, 0, aWidth, aHeight);
 	}
 	
-	public void move(int aX, int aY)
-	{
-		mRect.setLocation(aX, aY);
-	}
-	
-	public void resize(int aWidth, int aHeight)
-	{
-		mRect.setSize(aWidth, aHeight);
+	public void update(Player aPlayer)
+	{	
+		
 	}
 	
 	public int getX()
@@ -45,7 +38,7 @@ public class Screen
 		return (int) mRect.getHeight();
 	}
 	
-	public boolean intersectsWith(Entity aEntity)
+	public boolean contains(Entity aEntity)
 	{
 		return aEntity.getRectangle().intersects(mRect);
 	}

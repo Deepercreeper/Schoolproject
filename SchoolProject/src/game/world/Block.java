@@ -1,33 +1,46 @@
 package game.world;
 
+import java.util.HashMap;
 import org.newdawn.slick.Color;
 
-public enum Block
+public class Block
 {
-	AIR(0, false), STONE(1, true, Color.white);
+	public static final int					SIZE	= 16;
+	private static HashMap<Byte, Block>		BLOCKS	= new HashMap<>();
+	private static HashMap<Integer, Byte>	COLORS	= new HashMap<>();
 	
-	public static final int	SIZE	= 16;
+	public static final Block				AIR		= new Block(0, 0xffffff).setInVisible().setUnSolid();
+	public static final Block				STONE	= new Block(1, 0x0).setColor(Color.white);
 	
-	private final boolean	mSolid, mVisible;
+	private final byte						mId;
 	
-	private final byte		mId;
+	private boolean							mSolid	= true, mVisible = true;
 	
-	private final Color		mColor;
+	private Color							mColor;
 	
-	private Block(int aId, boolean aSolid, Color aColor)
+	private Block(int aId, int aRGB)
 	{
 		mId = (byte) aId;
-		mSolid = aSolid;
-		mVisible = true;
-		mColor = aColor;
+		BLOCKS.put(mId, this);
+		COLORS.put(aRGB, mId);
 	}
 	
-	private Block(int aId, boolean aSolid)
+	private Block setInVisible()
 	{
-		mId = (byte) aId;
-		mSolid = aSolid;
 		mVisible = false;
-		mColor = null;
+		return this;
+	}
+	
+	private Block setUnSolid()
+	{
+		mSolid = false;
+		return this;
+	}
+	
+	private Block setColor(Color aColor)
+	{
+		mColor = aColor;
+		return this;
 	}
 	
 	public byte getId()
@@ -52,8 +65,11 @@ public enum Block
 	
 	public static Block get(byte aId)
 	{
-		for (Block block : values())
-			if (block.mId == aId) return block;
-		return null;
+		return BLOCKS.get(aId);
+	}
+	
+	public static byte get(int aRGB)
+	{
+		return COLORS.get(aRGB);
 	}
 }
