@@ -7,11 +7,6 @@ import org.newdawn.slick.Input;
 
 public class Player extends Entity
 {
-	public Player()
-	{
-		super(16, 32);
-	}
-	
 	public void updateInput(Input aInput)
 	{
 		// TODO Input
@@ -75,5 +70,11 @@ public class Player extends Entity
 		// TODO render
 		g.setColor(Color.white);
 		g.fillRect(getX() - mWorld.getScreen().getX(), getY() - mWorld.getScreen().getY(), getWidth(), getHeight());
+	}
+	
+	@Override
+	public boolean isSolid()
+	{
+		return true;
 	}
 }

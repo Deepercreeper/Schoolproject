@@ -1,7 +1,8 @@
 package game.world;
 
 import java.util.HashMap;
-import org.newdawn.slick.Color;
+import org.newdawn.slick.Image;
+import data.DataManager;
 
 public class Block
 {
@@ -10,13 +11,13 @@ public class Block
 	private static HashMap<Integer, Byte>	COLORS	= new HashMap<>();
 	
 	public static final Block				AIR		= new Block(0, 0xffffff).setInVisible().setUnSolid();
-	public static final Block				STONE	= new Block(1, 0x0).setColor(Color.white);
+	public static final Block				STONE	= new Block(1, 0x0).setImage();
 	
 	private final byte						mId;
 	
 	private boolean							mSolid	= true, mVisible = true;
 	
-	private Color							mColor;
+	private Image							mImage;
 	
 	private Block(int aId, int aRGB)
 	{
@@ -37,9 +38,9 @@ public class Block
 		return this;
 	}
 	
-	private Block setColor(Color aColor)
+	private Block setImage()
 	{
-		mColor = aColor;
+		mImage = DataManager.get("block" + mId);
 		return this;
 	}
 	
@@ -48,9 +49,9 @@ public class Block
 		return mId;
 	}
 	
-	public Color getColor()
+	public Image getImage()
 	{
-		return mColor;
+		return mImage;
 	}
 	
 	public boolean isSolid()

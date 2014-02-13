@@ -1,6 +1,6 @@
 package game;
 
-import game.world.NewWorld;
+import game.world.World;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
@@ -9,7 +9,7 @@ public class Game
 {
 	private boolean		mRunning;
 	
-	private NewWorld	mWorld;
+	private World	mWorld;
 	
 	private Input		mInput;
 	
@@ -27,7 +27,7 @@ public class Game
 	private void createWorld(GameContainer gc)
 	{
 		if (mInput == null) mInput = gc.getInput();
-		mWorld = new NewWorld(0, gc);
+		mWorld = new World(0, gc);
 	}
 	
 	public void update(GameContainer gc, int aDelta)

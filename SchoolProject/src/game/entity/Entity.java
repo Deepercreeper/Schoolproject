@@ -2,25 +2,114 @@ package game.entity;
 
 import game.world.World;
 import org.newdawn.slick.Graphics;
-import org.newdawn.slick.geom.Rectangle;
 
 public abstract class Entity
 {
-	protected int		mId;
+	private int	mId;
 	
-	protected float		mXV, mYV, mXA, mYA;
+	protected float	mX, mY, mXV, mYV, mXA, mYA;
 	
-	protected Rectangle	mRect;
+	protected int	mWidth, mHeight;
 	
-	protected World		mWorld;
-	
-	protected boolean	mOnGround, mOnWall, mOnLeftWall;
+	protected boolean	mOnGround, mOnWall, mLeftWall;
 	
 	private boolean		mRemoved;
 	
-	public Entity(int aWidth, int aHeight)
+	protected World	mWorld;
+	
+	protected void move()
 	{
-		mRect = new Rectangle(0, 0, aWidth, aHeight);
+		float restX = mXV, restY = mYV, xd, yd, stepX, stepY;
+		boolean hitX = false, hitY = false;
+		final float rat = mYV / mXV;
+		
+		// Initializing the step size for x and y
+		if (Math.abs(mYV) > Math.abs(mXV))
+		{
+			stepY = 1;
+			stepX = stepY / rat;
+		}
+		else
+		{
+			stepX = 1;
+			stepY = stepX * rat;
+		}
+		
+		// Making each step
+		while ((restX != 0 || restY != 0) && (!hitX || !hitY))
+		{
+			// Move in x direction
+			if (stepX > restX) stepX = restX;
+			xd = mWorld.isFree(stepX, 0, this);
+			if (xd != Float.NaN) mX += stepX;
+			else
+			{
+				mX += xd;
+				hitWall(mXV, 0);
+				hitX = true;
+			}
+			
+			// Move in y direction
+			if (stepY > restY) stepY = restY;
+			yd = mWorld.isFree(0, stepY, this);
+			if (yd != Float.NaN) mY += stepY;
+			else
+			{
+				mY += yd;
+				hitWall(0, mYV);
+				hitY = true;
+			}
+		}
+	}
+	
+	public void hitWall(float aXV, float aYV)
+	{
+		if (aXV != 0)
+		{
+			mOnWall = true;
+			mLeftWall = aXV < 0;
+			mXV = 0;
+		}
+		if (aYV != 0)
+		{
+			if (aYV > 0) mOnGround = true;
+			mYV = 0;
+		}
+	}
+	
+	public void update()
+	{
+	}
+	
+	public void render(Graphics g)
+	{
+	}
+	
+	public float getX()
+	{
+		return mX;
+	}
+	
+	public float getY()
+	{
+		return mY;
+	}
+	
+	public int getWidth()
+	{
+		return mWidth;
+	}
+	
+	public int getHeight()
+	{
+		return mHeight;
+	}
+	
+	public abstract boolean isSolid();
+	
+	public void remove()
+	{
+		mRemoved = true;
 	}
 	
 	public int getId()
@@ -28,101 +117,13 @@ public abstract class Entity
 		return mId;
 	}
 	
-	public int getWidth()
+	public void init(World aWorld, int aId)
 	{
-		return (int) mRect.getWidth();
-	}
-	
-	public int getHeight()
-	{
-		return (int) mRect.getHeight();
-	}
-	
-	public float getX()
-	{
-		return mRect.getX();
-	}
-	
-	public float getY()
-	{
-		return mRect.getY();
-	}
-	
-	public float getXV()
-	{
-		return mXV;
-	}
-	
-	public float getYV()
-	{
-		return mYV;
-	}
-	
-	protected void move()
-	{
-		mRect.setLocation(mRect.getX() + mXV, mRect.getY() + mYV);
-	}
-	
-	protected void move(float aX, float aY)
-	{
-		mRect.setLocation(aX, aY);
-	}
-	
-	protected void moveX(float aX)
-	{
-		mRect.setX(aX);
-	}
-	
-	protected void moveY(float aY)
-	{
-		mRect.setY(aY);
-	}
-	
-	public Rectangle getRectangle()
-	{
-		return mRect;
+		mWorld = aWorld;
 	}
 	
 	public boolean isRemoved()
 	{
 		return mRemoved;
-	}
-	
-	public void remove()
-	{
-		mRemoved = true;
-	}
-	
-	public void init(World aWorld)
-	{
-		mWorld = aWorld;
-		mId = aWorld.createId();
-	}
-	
-	public abstract void update();
-	
-	public abstract void render(Graphics g);
-	
-	@Override
-	public boolean equals(Object o)
-	{
-		if (o instanceof Entity)
-		{
-			Entity e = (Entity) o;
-			return mId == e.mId;
-		}
-		return false;
-	}
-	
-	@Override
-	public int hashCode()
-	{
-		return mId;
-	}
-	
-	@Override
-	public String toString()
-	{
-		return this.getClass().getName() + ":" + mRect;
 	}
 }

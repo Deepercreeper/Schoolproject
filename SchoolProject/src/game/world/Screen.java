@@ -14,7 +14,7 @@ public class Screen
 	}
 	
 	public void update(Player aPlayer)
-	{	
+	{
 		
 	}
 	
@@ -52,6 +52,6 @@ public class Screen
 	
 	public boolean contains(Entity aEntity)
 	{
-		return aEntity.getRectangle().intersects(mRect);
+		return new Rectangle(aEntity.getX(), aEntity.getY(), aEntity.getWidth(), aEntity.getHeight()).intersects(mRect);
 	}
 }
