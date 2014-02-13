@@ -19,44 +19,44 @@ public class Player extends Entity
 		{
 			if (mOnWall)
 			{
-				mXA += mOnLeftWall ? 10 : -10;
+				mXA += mLeftWall ? 10 : - 10;
 				mYA -= 10;
 			}
 			else mYA -= 20;
 		}
 	}
 	
-	@Override
-	public void update()
+	@Override public void update()
 	{
 		mXV += mXA;
 		mYV += mYA;
 		move();
 		mOnGround = mOnWall = false;
-		final int width = mWorld.getWidth() * Block.SIZE, height = mWorld.getHeight() * Block.SIZE;
+		final int width = mWorld.getWidth() * Block.SIZE, height = mWorld
+				.getHeight() * Block.SIZE;
 		if (getX() <= 0)
 		{
 			mXV = 0;
-			moveX(0);
+			mX = 0;
 			mOnWall = true;
-			mOnLeftWall = true;
+			mLeftWall = true;
 		}
-		if (mRect.getMaxX() >= width)
+		if (mX + mWidth >= width)
 		{
 			mXV = 0;
-			moveX((width - mRect.getWidth()));
+			mX = width - mWidth;
 			mOnWall = true;
-			mOnLeftWall = false;
+			mLeftWall = false;
 		}
 		if (getY() <= 0)
 		{
 			mYV = 0;
-			moveY(0);
+			mY = 0;
 		}
-		if (mRect.getMaxY() >= height)
+		if (mY + mHeight >= height)
 		{
 			mYV = 0;
-			moveY((height - mRect.getHeight()));
+			mY = height - mHeight;
 			mOnGround = true;
 		}
 		mXV *= 0.9;
@@ -64,16 +64,15 @@ public class Player extends Entity
 		mYA = 0.9f;
 	}
 	
-	@Override
-	public void render(Graphics g)
+	@Override public void render(Graphics g)
 	{
 		// TODO render
 		g.setColor(Color.white);
-		g.fillRect(getX() - mWorld.getScreen().getX(), getY() - mWorld.getScreen().getY(), getWidth(), getHeight());
+		g.fillRect(getX() - mWorld.getScreenX(), getY() - mWorld.getScreenY(),
+				getWidth(), getHeight());
 	}
 	
-	@Override
-	public boolean isSolid()
+	@Override public boolean isSolid()
 	{
 		return true;
 	}

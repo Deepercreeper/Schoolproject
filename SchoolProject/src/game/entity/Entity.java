@@ -2,6 +2,7 @@ package game.entity;
 
 import game.world.World;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.geom.Rectangle;
 
 public abstract class Entity
 {
@@ -15,7 +16,7 @@ public abstract class Entity
 	
 	private boolean		mRemoved;
 	
-	protected World	mWorld;
+	protected World		mWorld;
 	
 	protected void move()
 	{
@@ -36,7 +37,7 @@ public abstract class Entity
 		}
 		
 		// Making each step
-		while ((restX != 0 || restY != 0) && (!hitX || !hitY))
+		while ((restX != 0 || restY != 0) && (! hitX || ! hitY))
 		{
 			// Move in x direction
 			if (stepX > restX) stepX = restX;
@@ -62,6 +63,11 @@ public abstract class Entity
 		}
 	}
 	
+	public void hitEntity(float aXV, float aYV, Entity aEntity)
+	{
+		hitWall(aXV, aYV);
+	}
+	
 	public void hitWall(float aXV, float aYV)
 	{
 		if (aXV != 0)
@@ -77,13 +83,16 @@ public abstract class Entity
 		}
 	}
 	
-	public void update()
+	public Rectangle getRect()
 	{
+		return new Rectangle(mX, mY, mWidth, mHeight);
 	}
 	
+	public void update()
+	{}
+	
 	public void render(Graphics g)
-	{
-	}
+	{}
 	
 	public float getX()
 	{
