@@ -22,7 +22,9 @@ public class Player extends Entity
 		mXA = 0;
 		if (aInput.isKeyDown(Input.KEY_D)) mXA += 1.5;
 		if (aInput.isKeyDown(Input.KEY_A)) mXA -= 1.5;
-		if (aInput.isKeyDown(Input.KEY_LSHIFT)) mXA *= 2;
+		if (aInput.isKeyDown(Input.KEY_LSHIFT)) mXA *= 1.5;
+		if ( !mOnGround) mXA *= 0.7;
+		
 		if (aInput.isKeyPressed(Input.KEY_SPACE) && (mOnGround || mOnWall))
 		{
 			if (mOnWall)
@@ -40,7 +42,7 @@ public class Player extends Entity
 		
 		move();
 		
-		mXV *= 0.7f;
+		mXV *= 0.7f - (mOnGround ? 0.2 : 0);
 		if (mYV < 0 && aInput.isKeyDown(Input.KEY_SPACE))
 		{
 			mYV *= 0.992;
