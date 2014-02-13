@@ -14,8 +14,9 @@ public class Screen
 	}
 	
 	public void update(Player aPlayer)
-	{	
-		
+	{
+		mRect.setCenterX(aPlayer.getX() + aPlayer.getWidth());
+		mRect.setCenterY(aPlayer.getY() + aPlayer.getHeight());
 	}
 	
 	public void addX(int aXD)

@@ -1,7 +1,9 @@
 package game.entity;
 
+import game.world.Block;
 import game.world.World;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Input;
 import org.newdawn.slick.geom.Rectangle;
 
 public abstract class Entity
@@ -70,6 +72,34 @@ public abstract class Entity
 				restY -= stepY;
 			}
 		}
+		
+		// Out of bounds
+		final int width = mWorld.getWidth() * Block.SIZE, height = mWorld.getHeight() * Block.SIZE;
+		if (mX <= 0)
+		{
+			mXV = 0;
+			mX = 0;
+			mOnWall = true;
+			mLeftWall = true;
+		}
+		if (mX + mWidth >= width)
+		{
+			mXV = 0;
+			mX = width - mWidth;
+			mOnWall = true;
+			mLeftWall = false;
+		}
+		if (mY <= 0)
+		{
+			mYV = 0;
+			mY = 0;
+		}
+		if (mY + mHeight >= height)
+		{
+			mYV = 0;
+			mY = height - mHeight;
+			mOnGround = true;
+		}
 	}
 	
 	public void hitEntity(float aXV, float aYV, Entity aEntity)
@@ -87,10 +117,13 @@ public abstract class Entity
 		}
 		if (aYV != 0)
 		{
-			if (aYV > 0) mOnGround = true;
+			if (aYV > 0)
+			{
+				mOnGround = true;
+				mOnWall = false;
+			}
 			mYV = 0;
 		}
-		System.out.println("HitWall: " + aXV + " " + aYV);
 	}
 	
 	public Rectangle getRect()
@@ -98,7 +131,7 @@ public abstract class Entity
 		return new Rectangle(mX, mY, mWidth, mHeight);
 	}
 	
-	public void update()
+	public void update(Input aInput)
 	{}
 	
 	public void render(Graphics g)

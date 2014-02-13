@@ -14,6 +14,8 @@ import data.DataManager;
 
 public class World
 {
+	public static final float				FRICTION	= 0.99f, GRAVITY = 0.3f;
+	
 	private final byte						mId;
 	
 	private final int						mWidth, mHeight;
@@ -63,8 +65,8 @@ public class World
 	public float isFree(float aXV, float aYV, Entity aEntity)
 	{
 		Rectangle entity = new Rectangle(aEntity.getX() + aXV, aEntity.getY() + aYV, aEntity.getWidth(), aEntity.getHeight());
-		for (int x = (int) (entity.getX() / Block.SIZE); x <= (int) (entity.getX() + entity.getWidth()) / Block.SIZE; x++ )
-			for (int y = (int) (entity.getY() / Block.SIZE); y <= (int) (entity.getY() + entity.getHeight() - 1) / Block.SIZE; y++ )
+		for (int x = (int) (entity.getX() / Block.SIZE); x <= (int) (entity.getX() + entity.getWidth() - 0.1) / Block.SIZE && x < mWidth; x++ )
+			for (int y = (int) (entity.getY() / Block.SIZE); y <= (int) (entity.getY() + entity.getHeight() - 0.1) / Block.SIZE && y < mHeight; y++ )
 			{
 				if (Block.get(mBlocks[x][y]).isSolid() && new Rectangle(x * Block.SIZE, y * Block.SIZE, Block.SIZE, Block.SIZE).intersects(entity))
 				{
@@ -140,18 +142,17 @@ public class World
 			if ( !entity.isRemoved()) mEntities.put(entity.getId(), entity);
 		mAddEntities.clear();
 		
-		// Update player input
-		mPlayer.updateInput(aInput);
 		// Update entities
 		for (Entity entity : mEntities.values())
-			entity.update();
+			entity.update(aInput);
+		mScreen.update(mPlayer);
 	}
 	
 	public void render(Graphics g)
 	{
 		// Render Blocks
-		for (int x = mScreen.getX() / Block.SIZE; x <= (mScreen.getX() + mScreen.getWidth()) / Block.SIZE && x < mWidth; x++ )
-			for (int y = mScreen.getY() / Block.SIZE; y <= (mScreen.getY() + mScreen.getHeight()) / Block.SIZE && y < mHeight; y++ )
+		for (int x = Math.max(mScreen.getX() / Block.SIZE, 0); x <= (mScreen.getX() + mScreen.getWidth()) / Block.SIZE && x < mWidth; x++ )
+			for (int y = Math.max(mScreen.getY() / Block.SIZE, 0); y <= (mScreen.getY() + mScreen.getHeight()) / Block.SIZE && y < mHeight; y++ )
 				renderBlock(x, y, g);
 		// Render entities
 		for (Entity entity : mEntities.values())

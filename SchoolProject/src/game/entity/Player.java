@@ -1,6 +1,7 @@
 package game.entity;
 
 import game.world.Block;
+import game.world.World;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
@@ -14,61 +15,42 @@ public class Player extends Entity
 		mHeight = 30;
 	}
 	
-	public void updateInput(Input aInput)
+	@Override
+	public void update(Input aInput)
 	{
-		// TODO Input
 		if (isRemoved()) return;
 		mXA = 0;
-		if (aInput.isKeyDown(Input.KEY_D)) mXA += 1;
-		if (aInput.isKeyDown(Input.KEY_A)) mXA -= 1;
+		if (aInput.isKeyDown(Input.KEY_D)) mXA += 1.5;
+		if (aInput.isKeyDown(Input.KEY_A)) mXA -= 1.5;
 		if (aInput.isKeyDown(Input.KEY_LSHIFT)) mXA *= 2;
-		if (aInput.isKeyDown(Input.KEY_SPACE) && (mOnGround || mOnWall))
+		if (aInput.isKeyPressed(Input.KEY_SPACE) && (mOnGround || mOnWall))
 		{
 			if (mOnWall)
 			{
-				mXA += mLeftWall ? 10 : -10;
-				mYA -= 10;
+				mXA += mLeftWall ? 6 : -6;
+				mYA -= 6;
 			}
-			else mYA -= 20;
+			else mYA -= 6;
 		}
-	}
-	
-	@Override
-	public void update()
-	{
+		
 		mXV += mXA;
 		mYV += mYA;
+		
 		mOnGround = mOnWall = false;
+		
 		move();
-		final int width = mWorld.getWidth() * Block.SIZE, height = mWorld.getHeight() * Block.SIZE;
-		if (mX <= 0)
+		
+		mXV *= 0.7f;
+		if (mYV < 0 && aInput.isKeyDown(Input.KEY_SPACE))
 		{
-			mXV = 0;
-			mX = 0;
-			mOnWall = true;
-			mLeftWall = true;
+			mYV *= 0.992;
+			mYA = World.GRAVITY * 0.5f;
 		}
-		if (mX + mWidth >= width)
+		else
 		{
-			mXV = 0;
-			mX = width - mWidth;
-			mOnWall = true;
-			mLeftWall = false;
+			mYV *= World.FRICTION;
+			mYA = World.GRAVITY;
 		}
-		if (mY <= 0)
-		{
-			mYV = 0;
-			mY = 0;
-		}
-		if (mY + mHeight >= height)
-		{
-			mYV = 0;
-			mY = height - mHeight;
-			mOnGround = true;
-		}
-		mXV *= 0.9;
-		mYV *= 0.995;
-		mYA = 0.9f;
 	}
 	
 	@Override
