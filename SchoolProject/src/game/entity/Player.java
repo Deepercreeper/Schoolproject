@@ -38,10 +38,10 @@ public class Player extends Entity
 	{
 		mXV += mXA;
 		mYV += mYA;
-		move();
 		mOnGround = mOnWall = false;
+		move();
 		final int width = mWorld.getWidth() * Block.SIZE, height = mWorld.getHeight() * Block.SIZE;
-		if (getX() <= 0)
+		if (mX <= 0)
 		{
 			mXV = 0;
 			mX = 0;
@@ -55,7 +55,7 @@ public class Player extends Entity
 			mOnWall = true;
 			mLeftWall = false;
 		}
-		if (getY() <= 0)
+		if (mY <= 0)
 		{
 			mYV = 0;
 			mY = 0;

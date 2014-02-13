@@ -58,7 +58,7 @@ public abstract class Entity
 			// Move in y direction
 			if (restY != 0 && !hitY)
 			{
-				if (Math.abs(stepY) > Math.abs(restY)) stepY = restY;
+				if (Math.abs(stepY) < Math.abs(restY)) stepY = restY;
 				yd = mWorld.isFree(0, stepY, this);
 				if (Float.isNaN(yd)) mY += stepY;
 				else
@@ -90,6 +90,7 @@ public abstract class Entity
 			if (aYV > 0) mOnGround = true;
 			mYV = 0;
 		}
+		System.out.println("HitWall: " + aXV + " " + aYV);
 	}
 	
 	public Rectangle getRect()
