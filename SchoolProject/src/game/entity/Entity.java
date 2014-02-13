@@ -22,43 +22,52 @@ public abstract class Entity
 	{
 		float restX = mXV, restY = mYV, xd, yd, stepX, stepY;
 		boolean hitX = false, hitY = false;
-		final float rat = mYV / mXV;
 		
 		// Initializing the step size for x and y
 		if (Math.abs(mYV) > Math.abs(mXV))
 		{
-			stepY = 1;
-			stepX = stepY / rat;
+			stepY = Math.signum(mYV);
+			if (mXV != 0) stepX = mXV / mYV;
+			else stepX = 0;
 		}
 		else
 		{
-			stepX = 1;
-			stepY = stepX * rat;
+			stepX = Math.signum(mXV);
+			if (mYV != 0) stepY = mYV / mXV;
+			else stepY = 0;
 		}
 		
 		// Making each step
-		while ((restX != 0 || restY != 0) && (! hitX || ! hitY))
+		while (restX != 0 && !hitX || restY != 0 && !hitY)
 		{
 			// Move in x direction
-			if (stepX > restX) stepX = restX;
-			xd = mWorld.isFree(stepX, 0, this);
-			if (xd != Float.NaN) mX += stepX;
-			else
+			if (restX != 0 && !hitX)
 			{
-				mX += xd;
-				hitWall(mXV, 0);
-				hitX = true;
+				if (Math.abs(stepX) > Math.abs(restX)) stepX = restX;
+				xd = mWorld.isFree(stepX, 0, this);
+				if (Float.isNaN(xd)) mX += stepX;
+				else
+				{
+					mX += xd;
+					hitWall(mXV, 0);
+					hitX = true;
+				}
+				restX -= stepX;
 			}
 			
 			// Move in y direction
-			if (stepY > restY) stepY = restY;
-			yd = mWorld.isFree(0, stepY, this);
-			if (yd != Float.NaN) mY += stepY;
-			else
+			if (restY != 0 && !hitY)
 			{
-				mY += yd;
-				hitWall(0, mYV);
-				hitY = true;
+				if (Math.abs(stepY) > Math.abs(restY)) stepY = restY;
+				yd = mWorld.isFree(0, stepY, this);
+				if (Float.isNaN(yd)) mY += stepY;
+				else
+				{
+					mY += yd;
+					hitWall(0, mYV);
+					hitY = true;
+				}
+				restY -= stepY;
 			}
 		}
 	}

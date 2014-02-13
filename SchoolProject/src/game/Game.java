@@ -7,11 +7,11 @@ import org.newdawn.slick.Input;
 
 public class Game
 {
-	private boolean		mRunning;
+	private boolean	mRunning;
 	
 	private World	mWorld;
 	
-	private Input		mInput;
+	private Input	mInput;
 	
 	public void render(GameContainer gc, Graphics g)
 	{

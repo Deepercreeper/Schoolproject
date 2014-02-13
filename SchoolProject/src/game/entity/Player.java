@@ -7,6 +7,13 @@ import org.newdawn.slick.Input;
 
 public class Player extends Entity
 {
+	public Player()
+	{
+		mX = mY = 18 * Block.SIZE;
+		mWidth = 16;
+		mHeight = 30;
+	}
+	
 	public void updateInput(Input aInput)
 	{
 		// TODO Input
@@ -19,21 +26,21 @@ public class Player extends Entity
 		{
 			if (mOnWall)
 			{
-				mXA += mLeftWall ? 10 : - 10;
+				mXA += mLeftWall ? 10 : -10;
 				mYA -= 10;
 			}
 			else mYA -= 20;
 		}
 	}
 	
-	@Override public void update()
+	@Override
+	public void update()
 	{
 		mXV += mXA;
 		mYV += mYA;
 		move();
 		mOnGround = mOnWall = false;
-		final int width = mWorld.getWidth() * Block.SIZE, height = mWorld
-				.getHeight() * Block.SIZE;
+		final int width = mWorld.getWidth() * Block.SIZE, height = mWorld.getHeight() * Block.SIZE;
 		if (getX() <= 0)
 		{
 			mXV = 0;
@@ -64,15 +71,16 @@ public class Player extends Entity
 		mYA = 0.9f;
 	}
 	
-	@Override public void render(Graphics g)
+	@Override
+	public void render(Graphics g)
 	{
 		// TODO render
 		g.setColor(Color.white);
-		g.fillRect(getX() - mWorld.getScreenX(), getY() - mWorld.getScreenY(),
-				getWidth(), getHeight());
+		g.fillRect(getX() - mWorld.getScreenX(), getY() - mWorld.getScreenY(), getWidth(), getHeight());
 	}
 	
-	@Override public boolean isSolid()
+	@Override
+	public boolean isSolid()
 	{
 		return true;
 	}
