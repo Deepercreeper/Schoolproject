@@ -43,7 +43,7 @@ public abstract class Entity
 			// Move in x direction
 			if (restX != 0 && !hitX)
 			{
-				if (Math.abs(stepX) > Math.abs(restX)) stepX = restX;
+				if (Math.abs(stepX) < Math.abs(restX)) stepX = restX;
 				xd = mWorld.isFree(stepX, 0, this);
 				if (Float.isNaN(xd)) mX += stepX;
 				else
