@@ -6,6 +6,8 @@ import org.newdawn.slick.geom.Rectangle;
 
 public class Screen
 {
+	private final int		MOVEMENT_SPACE	= 20 / 2;
+	
 	private final Rectangle	mRect;
 	
 	public Screen(int aWidth, int aHeight)
@@ -15,7 +17,11 @@ public class Screen
 	
 	public void update(Player aPlayer)
 	{
-		mRect.setCenterX(aPlayer.getX() + aPlayer.getWidth());
+		if (Math.abs(mRect.getCenterX() - aPlayer.getRect().getCenterX()) > Block.SIZE * MOVEMENT_SPACE)
+		{
+			if (aPlayer.getRect().getCenterX() > mRect.getCenterX()) mRect.setCenterX(aPlayer.getRect().getCenterX() - Block.SIZE * MOVEMENT_SPACE);
+			else mRect.setCenterX(aPlayer.getRect().getCenterX() + Block.SIZE * MOVEMENT_SPACE);
+		}
 		mRect.setCenterY(aPlayer.getY() + aPlayer.getHeight());
 	}
 	

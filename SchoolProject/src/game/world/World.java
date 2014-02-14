@@ -57,7 +57,9 @@ public class World
 			{
 				color = image.getColor(x, y);
 				rgb = color.getRed() * redInt + color.getGreen() * greenInt + color.getBlue();
-				blocks[x][y] = Block.get(rgb);
+				byte id = Block.get(rgb);
+				if (id == -1) blocks[x][y] = Block.AIR.getId();
+				else blocks[x][y] = id;
 			}
 		return blocks;
 	}
