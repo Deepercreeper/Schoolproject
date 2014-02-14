@@ -22,21 +22,25 @@ public abstract class Entity
 	
 	protected void move()
 	{
-		float restX = mXV, restY = mYV, xd, yd, stepX, stepY;
+		if (mXV == 0 && mYV == 0) return;
+		
+		double restX = mXV, restY = mYV, xd, yd, stepX, stepY;
 		boolean hitX = false, hitY = false;
 		
+		double a = Math.acos(Math.abs(mXV) / Math.sqrt(mXV * mXV + mYV * mYV));
+		
 		// Initializing the step size for x and y
-		if (Math.abs(mYV) > Math.abs(mXV))
-		{
-			stepY = Math.signum(mYV);
-			if (mXV != 0) stepX = mXV / mYV;
-			else stepX = 0;
-		}
+		if (mXV == 0) stepX = 0;
 		else
 		{
-			stepX = Math.signum(mXV);
-			if (mYV != 0) stepY = mYV / mXV;
-			else stepY = 0;
+			stepX = Math.cos(a);
+			if (mXV < 0) stepX *= -1;
+		}
+		if (mYV == 0) stepY = 0;
+		else
+		{
+			stepY = Math.sin(a);
+			if (mYV < 0) stepY *= -1;
 		}
 		
 		// Making each step
@@ -45,9 +49,9 @@ public abstract class Entity
 			// Move in x direction
 			if (restX != 0 && !hitX)
 			{
-				if (Math.abs(stepX) < Math.abs(restX)) stepX = restX;
-				xd = mWorld.isFree(stepX, 0, this);
-				if (Float.isNaN(xd)) mX += stepX;
+				if (Math.abs(stepX) > Math.abs(restX)) stepX = restX;
+				xd = mWorld.isFree((float) stepX, 0, this);
+				if (Double.isNaN(xd)) mX += stepX;
 				else
 				{
 					mX += xd;
@@ -60,9 +64,9 @@ public abstract class Entity
 			// Move in y direction
 			if (restY != 0 && !hitY)
 			{
-				if (Math.abs(stepY) < Math.abs(restY)) stepY = restY;
-				yd = mWorld.isFree(0, stepY, this);
-				if (Float.isNaN(yd)) mY += stepY;
+				if (Math.abs(stepY) > Math.abs(restY)) stepY = restY;
+				yd = mWorld.isFree(0, (float) stepY, this);
+				if (Double.isNaN(yd)) mY += stepY;
 				else
 				{
 					mY += yd;
@@ -79,14 +83,12 @@ public abstract class Entity
 		{
 			mXV = 0;
 			mX = 0;
-			mOnWall = true;
 			mLeftWall = true;
 		}
 		if (mX + mWidth >= width)
 		{
 			mXV = 0;
 			mX = width - mWidth;
-			mOnWall = true;
 			mLeftWall = false;
 		}
 		if (mY <= 0)

@@ -53,6 +53,7 @@ public class Player extends Entity
 			mYV *= World.FRICTION;
 			mYA = World.GRAVITY;
 		}
+		if (mOnWall && mYV > 0) mYA *= 0.6f;
 	}
 	
 	@Override
