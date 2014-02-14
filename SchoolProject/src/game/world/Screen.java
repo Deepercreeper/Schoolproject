@@ -22,7 +22,7 @@ public class Screen
 			if (aPlayer.getRect().getCenterX() > mRect.getCenterX()) mRect.setCenterX(aPlayer.getRect().getCenterX() - Block.SIZE * MOVEMENT_SPACE);
 			else mRect.setCenterX(aPlayer.getRect().getCenterX() + Block.SIZE * MOVEMENT_SPACE);
 		}
-		mRect.setCenterY(aPlayer.getY() + aPlayer.getHeight());
+		mRect.setCenterY(Math.round(aPlayer.getY()) + aPlayer.getHeight());
 	}
 	
 	public void addX(int aXD)

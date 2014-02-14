@@ -6,23 +6,25 @@ import data.DataManager;
 
 public class Block
 {
-	public static final int					SIZE	= 16;
-	private static HashMap<Byte, Block>		BLOCKS	= new HashMap<>();
-	private static HashMap<Integer, Byte>	COLORS	= new HashMap<>();
+	public static final int					SIZE				= 16;
+	private static HashMap<Byte, Block>		BLOCKS				= new HashMap<>();
+	private static HashMap<Integer, Byte>	COLORS				= new HashMap<>();
 	
-	public static final Block				AIR		= new Block(0, 0xffffff).setInVisible().setUnSolid();
-	public static final Block				STONE	= new Block(1, 0xc0c0c0);
-	public static final Block				GRASS	= new Block(2, 0x4cff00);
-	public static final Block				DIRT	= new Block(3, 0x885900);
-	public static final Block				COBBLE	= new Block(4, 0x808080);
-	public static final Block				SAND	= new Block(5, 0xffe9c2);
-	public static final Block				PLANKS	= new Block(6, 0xb79c5b);
-	public static final Block				LOG		= new Block(7, 0x653a00);
-	public static final Block				IRON	= new Block(8, 0xa0a0a0);
+	public static final Block				AIR					= new Block(0, 0xffffff).setInVisible().setUnSolid();
+	public static final Block				STONE				= new Block(1, 0xB89040);
+	public static final Block				BRICK				= new Block(2, 0xB06000);
+	public static final Block				EMPTY				= new Block(3, 0xC03010);
+	public static final Block				QUESTION			= new Block(4, 0xD8B018);
+	public static final Block				GROUND_TOP_LEFT		= new Block(5, 0x00E000);
+	public static final Block				GROUND_TOP			= new Block(6, 0x00BA00);
+	public static final Block				GROUND_TOP_RIGHT	= new Block(7, 0x009300);
+	public static final Block				GROUND_LEFT			= new Block(8, 0xF0B848);
+	public static final Block				GROUND_MIDDLE		= new Block(9, 0xD3A23F);
+	public static final Block				GROUND_RIGHT		= new Block(10, 0xAD8434);
 	
 	private final byte						mId;
 	
-	private boolean							mSolid	= true, mVisible = true;
+	private boolean							mSolid				= true, mVisible = true;
 	
 	private final Image						mImage;
 	
