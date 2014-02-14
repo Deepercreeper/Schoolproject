@@ -1,7 +1,7 @@
 package game.entity;
 
-import game.world.Block;
 import game.world.World;
+import game.world.block.Block;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.geom.Rectangle;
@@ -147,6 +147,16 @@ public abstract class Entity
 	public float getY()
 	{
 		return mY;
+	}
+	
+	public float getXV()
+	{
+		return mXV;
+	}
+	
+	public float getYV()
+	{
+		return mYV;
 	}
 	
 	public int getWidth()

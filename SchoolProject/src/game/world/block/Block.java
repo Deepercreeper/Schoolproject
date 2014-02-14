@@ -1,5 +1,7 @@
-package game.world;
+package game.world.block;
 
+import game.entity.Entity;
+import game.world.World;
 import java.util.HashMap;
 import org.newdawn.slick.Image;
 import data.DataManager;
@@ -14,7 +16,7 @@ public class Block
 	public static final Block				STONE				= new Block(1, 0xB89040);
 	public static final Block				BRICK				= new Block(2, 0xB06000);
 	public static final Block				EMPTY				= new Block(3, 0xC03010);
-	public static final Block				QUESTION			= new Block(4, 0xD8B018);
+	public static final Block				QUESTION			= new QuestionBlock(4, 0xD8B018);
 	public static final Block				GROUND_TOP_LEFT		= new Block(5, 0x00E000);
 	public static final Block				GROUND_TOP			= new Block(6, 0x00BA00);
 	public static final Block				GROUND_TOP_RIGHT	= new Block(7, 0x009300);
@@ -28,7 +30,7 @@ public class Block
 	
 	private final Image						mImage;
 	
-	private Block(int aId, int aRGB)
+	protected Block(int aId, int aRGB)
 	{
 		mId = (byte) aId;
 		BLOCKS.put(mId, this);
@@ -78,4 +80,7 @@ public class Block
 		if ( !COLORS.containsKey(aRGB)) return -1;
 		return COLORS.get(aRGB);
 	}
+	
+	public void hit(int aX, int aY, float aXV, float aYV, World aWorld, Entity aEntity)
+	{}
 }

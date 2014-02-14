@@ -2,6 +2,7 @@ package game.world;
 
 import game.entity.Entity;
 import game.entity.Player;
+import game.world.block.Block;
 import java.util.HashMap;
 import java.util.HashSet;
 import org.newdawn.slick.Color;
@@ -64,8 +65,9 @@ public class World
 		return blocks;
 	}
 	
-	public float isFree(float aXV, float aYV, Entity aEntity)
+	public double isFree(float aXV, float aYV, Entity aEntity)
 	{
+		double result = Float.NaN;
 		Rectangle entity = new Rectangle(aEntity.getX() + aXV, aEntity.getY() + aYV, aEntity.getWidth(), aEntity.getHeight());
 		for (int x = (int) (entity.getX() / Block.SIZE); x <= (int) (entity.getX() + entity.getWidth() - 0.1) / Block.SIZE && x < mWidth; x++ )
 			for (int y = (int) (entity.getY() / Block.SIZE); y <= (int) (entity.getY() + entity.getHeight() - 0.1) / Block.SIZE && y < mHeight; y++ )
@@ -74,14 +76,15 @@ public class World
 				{
 					if (aXV != 0)
 					{
-						if (aXV > 0) return aXV - (entity.getMaxX() % Block.SIZE);
-						else return -(aEntity.getX() % Block.SIZE);
+						if (aXV > 0) result = min(result, aXV - (entity.getMaxX() % Block.SIZE));
+						else result = min(result, -(aEntity.getX() % Block.SIZE));
 					}
 					else
 					{
-						if (aYV > 0) return aYV - (entity.getMaxY() % Block.SIZE);
-						else return -(aEntity.getY() % Block.SIZE);
+						if (aYV > 0) result = min(result, aYV - (entity.getMaxY() % Block.SIZE));
+						else result = min(result, -(aEntity.getY() % Block.SIZE));
 					}
+					Block.get(mBlocks[x][y]).hit(x, y, aEntity.getXV(), aEntity.getYV(), this, aEntity);
 				}
 			}
 		for (Entity other : mEntities.values())
@@ -89,16 +92,28 @@ public class World
 			{
 				if (aXV != 0)
 				{
-					if (aXV > 0) return aXV - (entity.getX() + entity.getWidth() - (other.getX()));
-					else return aXV + (other.getX() + other.getWidth() - (entity.getX()));
+					if (aXV > 0) result = min(result, aXV - (entity.getX() + entity.getWidth() - (other.getX())));
+					else result = min(result, aXV + (other.getX() + other.getWidth() - (entity.getX())));
 				}
 				else
 				{
-					if (aYV > 0) return aYV - (entity.getY() + entity.getHeight() - (other.getY()));
-					else return aYV + (other.getY() + other.getHeight() - (entity.getY()));
+					if (aYV > 0) result = min(result, aYV - (entity.getY() + entity.getHeight() - (other.getY())));
+					else result = min(result, aYV + (other.getY() + other.getHeight() - (entity.getY())));
 				}
 			}
-		return Float.NaN;
+		return result;
+	}
+	
+	public void setBlock(int aX, int aY, byte aId)
+	{
+		mBlocks[aX][aY] = aId;
+	}
+	
+	private double min(double aFirst, double aSecond)
+	{
+		if (Double.isNaN(aFirst)) return aSecond;
+		if (Math.abs(aFirst) < Math.abs(aSecond)) return aFirst;
+		return aSecond;
 	}
 	
 	public int getScreenX()

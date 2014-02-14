@@ -2,6 +2,7 @@ package game.world;
 
 import game.entity.Entity;
 import game.entity.Player;
+import game.world.block.Block;
 import org.newdawn.slick.geom.Rectangle;
 
 public class Screen

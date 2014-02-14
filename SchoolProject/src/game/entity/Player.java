@@ -1,7 +1,7 @@
 package game.entity;
 
-import game.world.Block;
 import game.world.World;
+import game.world.block.Block;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
