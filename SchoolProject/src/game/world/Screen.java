@@ -11,8 +11,11 @@ public class Screen
 	
 	private final Rectangle	mRect;
 	
-	public Screen(int aWidth, int aHeight)
+	private final World		mWorld;
+	
+	public Screen(World aWorld, int aWidth, int aHeight)
 	{
+		mWorld = aWorld;
 		mRect = new Rectangle(0, 0, aWidth, aHeight);
 	}
 	
@@ -24,6 +27,10 @@ public class Screen
 			else mRect.setCenterX(aPlayer.getRect().getCenterX() + Block.SIZE * MOVEMENT_SPACE);
 		}
 		mRect.setCenterY(Math.round(aPlayer.getY()) + aPlayer.getHeight());
+		if (mRect.getX() < 0) mRect.setX(0);
+		if (mRect.getY() < 0) mRect.setY(0);
+		if (mRect.getMaxX() > mWorld.getWidth() * Block.SIZE) mRect.setX(mWorld.getWidth() * Block.SIZE - mRect.getWidth());
+		if (mRect.getMaxY() > mWorld.getHeight() * Block.SIZE) mRect.setY(mWorld.getHeight() * Block.SIZE - mRect.getHeight());
 	}
 	
 	public void addX(int aXD)

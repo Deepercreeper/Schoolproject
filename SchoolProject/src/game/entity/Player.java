@@ -1,22 +1,24 @@
 package game.entity;
 
 import game.world.World;
-import game.world.block.Block;
+import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
 import data.DataManager;
 
 public class Player extends Entity
 {
-	private boolean	mCannon;
+	private final int	mMaxLife	= 10;
 	
-	private int		mCannonDelay;
+	private final int	mLife		= mMaxLife;
+	
+	private boolean		mCannon;
+	
+	private int			mCannonDelay;
 	
 	public Player()
 	{
-		mX = mY = 18 * Block.SIZE;
-		mWidth = 14;
-		mHeight = 30;
+		super(0, 0, 14, 30);
 	}
 	
 	@Override
@@ -93,6 +95,10 @@ public class Player extends Entity
 	public void render(Graphics g)
 	{
 		g.drawImage(DataManager.getImage("minion0"), mX - mWorld.getScreenX(), mY - mWorld.getScreenY());
+		g.setColor(Color.red);
+		g.fillRect(10, mWorld.getScreenHeight() - 20, 100, 10);
+		g.setColor(Color.green);
+		g.fillRect(10, mWorld.getScreenHeight() - 20, 100 * mLife / mMaxLife, 10);
 	}
 	
 	@Override

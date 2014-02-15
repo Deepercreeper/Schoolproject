@@ -20,6 +20,14 @@ public abstract class Entity
 	
 	protected World		mWorld;
 	
+	public Entity(int aX, int aY, int aWidth, int aHeight)
+	{
+		mX = aX;
+		mY = aY;
+		mWidth = aWidth;
+		mHeight = aHeight;
+	}
+	
 	protected void move()
 	{
 		if (mXV == 0 && mYV == 0) return;

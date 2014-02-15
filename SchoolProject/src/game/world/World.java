@@ -41,7 +41,7 @@ public class World
 		mWidth = mBlocks.length;
 		if (mWidth > 0) mHeight = mBlocks[0].length;
 		else mHeight = 0;
-		mScreen = new Screen(gc.getWidth(), gc.getHeight());
+		mScreen = new Screen(this, gc.getWidth(), gc.getHeight());
 		mPlayer = new Player();
 		addEntity(mPlayer);
 		DataManager.playMusic("world" + mId);
@@ -119,6 +119,16 @@ public class World
 	public int getScreenY()
 	{
 		return mScreen.getY();
+	}
+	
+	public int getScreenWidth()
+	{
+		return mScreen.getWidth();
+	}
+	
+	public int getScreenHeight()
+	{
+		return mScreen.getHeight();
 	}
 	
 	public int getWidth()
