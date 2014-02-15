@@ -9,11 +9,17 @@ import org.newdawn.slick.util.Log;
 
 public class DataManager
 {
-	private static final HashMap<String, Image>	IMAGES	= new HashMap<>();
+	private static final HashMap<String, Image>		IMAGES				= new HashMap<>();
+	private static final HashMap<String, Image[]>	SPLITTED_IMAGES		= new HashMap<>();
+	private static final HashMap<String, Sound>		SOUNDS				= new HashMap<>();
+	private static final HashMap<String, Music>		MUSIC				= new HashMap<>();
 	
-	private static final HashMap<String, Sound>	SOUNDS	= new HashMap<>();
+	private static final String[]					sMusicTitles		= new String[] { "world0" };
 	
-	private static Music						MUSIC;
+	private static final String[]					sSplittedImages		= new String[] { "blocks" };
+	private static final int[][]					sSplittedImageSizes	= new int[][] { { 16, 16 } };
+	
+	private static boolean							sLoaded				= false;
 	
 	public static void playSound(String aName)
 	{
@@ -25,13 +31,12 @@ public class DataManager
 	
 	public static void playMusic(String aName)
 	{
-		new MusicLoader(aName).start();
+		MUSIC.get(aName).loop();
 	}
 	
-	public static boolean isLoading()
+	public static boolean hasLoaded()
 	{
-		if (MUSIC != null) return !MUSIC.playing();
-		return true;
+		return sLoaded;
 	}
 	
 	public static Image getImage(String aName)
@@ -39,6 +44,45 @@ public class DataManager
 		Image image = IMAGES.get(aName);
 		if (image == null) image = loadImage(aName);
 		return image;
+	}
+	
+	public static Image getSplittedImage(String aName, int aTile)
+	{
+		return SPLITTED_IMAGES.get(aName)[aTile];
+	}
+	
+	private static Image[] loadSplittedImages(int aTile)
+	{
+		String name = sSplittedImages[aTile];
+		Image image = loadImage(name);
+		final int imageWidth = sSplittedImageSizes[aTile][0], imageHeight = sSplittedImageSizes[aTile][1], width = image.getWidth() / imageWidth, height = image.getHeight() / imageHeight;
+		Image[] images = new Image[width * height];
+		try
+		{
+			for (int tile = 0; tile < width * height; tile++ )
+			{
+				Image tileImage = new Image(imageWidth, imageHeight);
+				tileImage.getGraphics().drawImage(image, -(tile % width) * imageWidth, -tile / width * imageHeight);
+				images[tile] = tileImage;
+			}
+		}
+		catch (SlickException e)
+		{
+			e.printStackTrace();
+		}
+		return images;
+	}
+	
+	public static void init()
+	{
+		for (int tile = 0; tile < sSplittedImages.length; tile++ )
+		{
+			Image[] images = loadSplittedImages(tile);
+			SPLITTED_IMAGES.put(sSplittedImages[tile], images);
+		}
+		for (String name : sMusicTitles)
+			MUSIC.put(name, loadMusic(name));
+		sLoaded = true;
 	}
 	
 	private static Image loadImage(String aName)
@@ -83,20 +127,4 @@ public class DataManager
 		return null;
 	}
 	
-	private static class MusicLoader extends Thread
-	{
-		private final String	mName;
-		
-		public MusicLoader(String aName)
-		{
-			mName = aName;
-		}
-		
-		@Override
-		public void run()
-		{
-			MUSIC = loadMusic(mName);
-			if (MUSIC != null) MUSIC.loop();
-		}
-	}
 }

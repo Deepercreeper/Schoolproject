@@ -177,6 +177,9 @@ public abstract class Entity
 		return mHeight;
 	}
 	
+	public void hurt(int aAmount, float aXV, float aYV)
+	{}
+	
 	public abstract boolean isSolid();
 	
 	public void remove()

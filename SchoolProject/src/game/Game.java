@@ -4,6 +4,7 @@ import game.world.World;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
+import data.DataManager;
 
 public class Game
 {
@@ -15,13 +16,13 @@ public class Game
 	
 	public void render(GameContainer gc, Graphics g)
 	{
-		mWorld.render(g);
+		if ( !DataManager.hasLoaded()) g.drawImage(DataManager.getImage("splash"), 0, 0);
+		else mWorld.render(g);
 	}
 	
 	public void init(GameContainer gc)
 	{
 		mRunning = true;
-		createWorld(gc);
 	}
 	
 	private void createWorld(GameContainer gc)
@@ -32,6 +33,10 @@ public class Game
 	
 	public void update(GameContainer gc, int aDelta)
 	{
+		if ( !DataManager.hasLoaded()) DataManager.init();
+		
+		if (mWorld == null) createWorld(gc);
+		
 		if (mInput.isKeyPressed(Input.KEY_ESCAPE)) stop();
 		
 		mWorld.update(mInput);

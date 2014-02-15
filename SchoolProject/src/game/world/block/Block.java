@@ -4,7 +4,6 @@ import game.entity.Entity;
 import game.world.World;
 import java.util.HashMap;
 import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Image;
 import data.DataManager;
 
 public class Block
@@ -26,19 +25,20 @@ public class Block
 	public static final Block				GROUND_RIGHT		= new Block(10, 0xAD8434);
 	public static final Block				GROUND_LEFT_STOP	= new Block(11, 0x8CB848);
 	public static final Block				GROUND_RIGHT_STOP	= new Block(12, 0x73963C);
+	public static final Block				SPIKES_UP			= new SpikeBlock(13, 0xBCBCBC, 0);
+	public static final Block				SPIKES_DOWN			= new SpikeBlock(14, 0xB5B5B5, 1);
+	public static final Block				SPIKES_RIGHT		= new SpikeBlock(15, 0xADADAD, 2);
+	public static final Block				SPIKES_LEFT			= new SpikeBlock(16, 0xA5A5A5, 3);
 	
 	private final byte						mId;
 	
 	private boolean							mSolid				= true, mVisible = true;
-	
-	private final Image						mImage;
 	
 	protected Block(int aId, int aRGB)
 	{
 		mId = (byte) aId;
 		BLOCKS.put(mId, this);
 		COLORS.put(aRGB, mId);
-		mImage = DataManager.getImage("block" + mId);
 	}
 	
 	private Block setInVisible()
@@ -60,7 +60,7 @@ public class Block
 	
 	public void render(int aX, int aY, Graphics g, World aWorld)
 	{
-		g.drawImage(mImage, aX * SIZE - aWorld.getScreenX(), aY * SIZE - aWorld.getScreenY());
+		g.drawImage(DataManager.getSplittedImage(getImageName(), getImageTile()), aX * SIZE - aWorld.getScreenX(), aY * SIZE - aWorld.getScreenY());
 	}
 	
 	public boolean isSolid()
@@ -82,6 +82,16 @@ public class Block
 	{
 		if ( !COLORS.containsKey(aRGB)) return -1;
 		return COLORS.get(aRGB);
+	}
+	
+	protected String getImageName()
+	{
+		return "blocks";
+	}
+	
+	protected int getImageTile()
+	{
+		return mId;
 	}
 	
 	public void hit(int aX, int aY, float aXV, float aYV, World aWorld, Entity aEntity)

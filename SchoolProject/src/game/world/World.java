@@ -155,9 +155,6 @@ public class World
 	
 	public void update(Input aInput)
 	{
-		// If loading music
-		if (DataManager.isLoading()) return;
-		
 		final HashSet<Integer> remove = new HashSet<>();
 		for (Entity entity : mEntities.values())
 			if (entity.isRemoved()) remove.add(entity.getId());
@@ -175,13 +172,6 @@ public class World
 	
 	public void render(Graphics g)
 	{
-		// If loading music
-		if (DataManager.isLoading())
-		{
-			g.drawImage(DataManager.getImage("splash"), 0, 0);
-			return;
-		}
-		
 		// Render Blocks
 		for (int x = Math.max(mScreen.getX() / Block.SIZE, 0); x <= (mScreen.getX() + mScreen.getWidth()) / Block.SIZE && x < mWidth; x++ )
 			for (int y = Math.max(mScreen.getY() / Block.SIZE, 0); y <= (mScreen.getY() + mScreen.getHeight()) / Block.SIZE && y < mHeight; y++ )
