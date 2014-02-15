@@ -45,7 +45,7 @@ public class DataManager
 	{
 		try
 		{
-			Image image = new Image("data/" + aName + ".png");
+			Image image = new Image("data/images/" + aName + ".png");
 			return image;
 		}
 		catch (SlickException e)
@@ -59,7 +59,7 @@ public class DataManager
 	{
 		try
 		{
-			Sound sound = new Sound("data/" + aName + ".wav");
+			Sound sound = new Sound("data/sounds/" + aName + ".wav");
 			return sound;
 		}
 		catch (SlickException e)
@@ -73,7 +73,7 @@ public class DataManager
 	{
 		try
 		{
-			Music music = new Music("data/" + aName + ".ogg");
+			Music music = new Music("data/sounds/" + aName + ".ogg");
 			return music;
 		}
 		catch (SlickException e)

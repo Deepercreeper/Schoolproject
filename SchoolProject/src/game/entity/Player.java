@@ -8,10 +8,14 @@ import data.DataManager;
 
 public class Player extends Entity
 {
+	private boolean	mCannon;
+	
+	private int		mCannonDelay;
+	
 	public Player()
 	{
 		mX = mY = 18 * Block.SIZE;
-		mWidth = 16;
+		mWidth = 14;
 		mHeight = 30;
 	}
 	
@@ -19,25 +23,48 @@ public class Player extends Entity
 	public void update(Input aInput)
 	{
 		if (isRemoved()) return;
-		mXA = 0;
-		if (aInput.isKeyDown(Input.KEY_D)) mXA += 1.5;
-		if (aInput.isKeyDown(Input.KEY_A)) mXA -= 1.5;
-		if (aInput.isKeyDown(Input.KEY_LSHIFT)) mXA *= 1.5;
-		if ( !mOnGround) mXA *= 0.125;
 		
-		if (aInput.isKeyPressed(Input.KEY_SPACE) && (mOnGround || mOnWall))
+		if (aInput.isKeyPressed(Input.KEY_S))
 		{
-			if (mOnWall)
+			mCannon = true;
+			mCannonDelay = 10;
+			DataManager.playSound("cannon");
+		}
+		if (aInput.isKeyPressed(Input.KEY_W) || mOnGround)
+		{
+			if (mCannon && mOnGround) DataManager.playSound("bomb");
+			mCannon = false;
+		}
+		
+		if ( !mCannon)
+		{
+			mXA = 0;
+			if (aInput.isKeyDown(Input.KEY_D)) mXA += 1.5;
+			if (aInput.isKeyDown(Input.KEY_A)) mXA -= 1.5;
+			if (aInput.isKeyDown(Input.KEY_LSHIFT)) mXA *= 1.5;
+			if ( !mOnGround) mXA *= 0.125;
+			
+			if (aInput.isKeyPressed(Input.KEY_SPACE) && (mOnGround || mOnWall))
 			{
-				mXV = 10 * (mLeftWall ? 1 : -1);
-				mYV = -5;
+				if (mOnWall)
+				{
+					mXV = 10 * (mLeftWall ? 1 : -1);
+					mYV = -5;
+				}
+				else mYA -= 6;
+				DataManager.playSound("jump");
 			}
-			else mYA -= 6;
-			DataManager.playSound("jump");
 		}
 		
 		mXV += mXA;
 		mYV += mYA;
+		
+		if (mCannon)
+		{
+			mXV = 0;
+			if (--mCannonDelay <= 0) mYV = 10;
+			else mYV = 0;
+		}
 		
 		mOnGround = mOnWall = false;
 		
@@ -55,6 +82,11 @@ public class Player extends Entity
 			mYA = World.GRAVITY;
 		}
 		if (mOnWall && mYV > 0) mYA *= 0.3f;
+	}
+	
+	public boolean isCannonBall()
+	{
+		return mCannon;
 	}
 	
 	@Override
