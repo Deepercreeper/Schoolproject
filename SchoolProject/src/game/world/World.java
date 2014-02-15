@@ -10,7 +10,7 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
-import org.newdawn.slick.geom.Rectangle;
+import util.Rectangle;
 import util.Util;
 import data.DataManager;
 
@@ -67,10 +67,10 @@ public class World
 		return blocks;
 	}
 	
-	public double isFree(float aXV, float aYV, Entity aEntity)
+	public double isFree(double aXV, double aYV, Entity aEntity)
 	{
-		double result = Float.NaN;
-		Rectangle entity = new Rectangle(aEntity.getX() + aXV, aEntity.getY() + aYV, aEntity.getWidth(), aEntity.getHeight());
+		double result = Double.NaN;
+		Rectangle entity = new Rectangle((aEntity.getX() + aXV), (aEntity.getY() + aYV), aEntity.getWidth(), aEntity.getHeight());
 		for (int x = (int) (entity.getX() / Block.SIZE); x <= (int) (entity.getX() + entity.getWidth() - 0.1) / Block.SIZE && x < mWidth; x++ )
 			for (int y = (int) (entity.getY() / Block.SIZE); y <= (int) (entity.getY() + entity.getHeight() - 0.1) / Block.SIZE && y < mHeight; y++ )
 			{

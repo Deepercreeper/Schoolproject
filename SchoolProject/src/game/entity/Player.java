@@ -14,7 +14,7 @@ public class Player extends Entity
 	
 	private int			mHurtDelay;
 	
-	private boolean		mCannon, mHurted;
+	private boolean		mCannon;
 	
 	private int			mCannonDelay;
 	
@@ -26,8 +26,6 @@ public class Player extends Entity
 	@Override
 	public void update(Input aInput)
 	{
-		if (isRemoved()) return;
-		
 		if (mHurtDelay > 0) mHurtDelay-- ;
 		if ( !mHurted)
 		{
@@ -58,39 +56,36 @@ public class Player extends Entity
 						mXV = 10 * (mLeftWall ? 1 : -1);
 						mYV = -5;
 					}
-					else mYA -= 6;
+					else mYV = -6;
 					DataManager.playSound("jump");
 				}
+			}
+			else
+			{
+				mXV = 0;
+				if (--mCannonDelay <= 0) mYV = 10;
+				else mYV = 0;
 			}
 		}
 		mHurted = false;
 		
 		mXV += mXA;
-		mYV += mYA;
-		
-		if (mCannon)
-		{
-			mXV = 0;
-			if (--mCannonDelay <= 0) mYV = 10;
-			else mYV = 0;
-		}
-		
-		mOnGround = mOnWall = false;
 		
 		move();
 		
 		mXV *= 0.95f - (mOnGround ? 0.45 : 0);
+		
 		if (mYV < 0 && aInput.isKeyDown(Input.KEY_SPACE))
 		{
 			mYV *= 0.992;
-			mYA = World.GRAVITY * 0.5f;
+			mYV += World.GRAVITY * 0.5f;
 		}
 		else
 		{
 			mYV *= World.FRICTION;
-			mYA = World.GRAVITY;
+			if (mOnWall) mYV += (float) (World.GRAVITY * 0.3);
+			else mYV += World.GRAVITY;
 		}
-		if (mOnWall && mYV > 0) mYA *= 0.3f;
 	}
 	
 	public boolean isCannonBall()
@@ -101,7 +96,10 @@ public class Player extends Entity
 	@Override
 	public void render(Graphics g)
 	{
-		g.drawImage(DataManager.getImage("minion0"), mX - mWorld.getScreenX(), mY - mWorld.getScreenY());
+		// Player
+		g.drawImage(DataManager.getImage("minion0"), (float) mX - mWorld.getScreenX(), (float) mY - mWorld.getScreenY());
+		
+		// HUD
 		g.setColor(Color.red);
 		g.fillRect(10, mWorld.getScreenHeight() - 20, 100, 10);
 		g.setColor(Color.green);
@@ -116,8 +114,8 @@ public class Player extends Entity
 			mLife -= aAmount;
 			mHurtDelay = 100;
 			mHurted = true;
-			mXA = aXV;
-			mYA = aYV;
+			mXV = aXV;
+			mYV = aYV;
 		}
 	}
 	

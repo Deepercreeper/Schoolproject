@@ -4,17 +4,17 @@ import game.world.World;
 import game.world.block.Block;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
-import org.newdawn.slick.geom.Rectangle;
+import util.Rectangle;
 
 public abstract class Entity
 {
 	private int	mId;
 	
-	protected float	mX, mY, mXV, mYV, mXA, mYA;
+	protected double	mX, mY, mXV, mYV, mXA;
 	
-	protected int	mWidth, mHeight;
+	protected int		mWidth, mHeight;
 	
-	protected boolean	mOnGround, mOnWall, mLeftWall;
+	protected boolean	mOnGround, mOnWall, mLeftWall, mHurted;
 	
 	private boolean		mRemoved;
 	
@@ -30,6 +30,7 @@ public abstract class Entity
 	
 	protected void move()
 	{
+		mOnGround = mOnWall = false;
 		if (mXV == 0 && mYV == 0) return;
 		
 		double restX = mXV, restY = mYV, xd, yd, stepX, stepY;
@@ -52,7 +53,7 @@ public abstract class Entity
 		}
 		
 		// Making each step
-		while (restX != 0 && !hitX || restY != 0 && !hitY)
+		while ((restX != 0 && !hitX || restY != 0 && !hitY))
 		{
 			// Move in x direction
 			if (restX != 0 && !hitX)
@@ -117,8 +118,9 @@ public abstract class Entity
 		hitWall(aXV, aYV);
 	}
 	
-	public void hitWall(float aXV, float aYV)
+	public void hitWall(double aXV, double aYV)
 	{
+		if (mHurted) return;
 		if (aXV != 0)
 		{
 			mOnWall = true;
@@ -147,22 +149,22 @@ public abstract class Entity
 	public void render(Graphics g)
 	{}
 	
-	public float getX()
+	public double getX()
 	{
 		return mX;
 	}
 	
-	public float getY()
+	public double getY()
 	{
 		return mY;
 	}
 	
-	public float getXV()
+	public double getXV()
 	{
 		return mXV;
 	}
 	
-	public float getYV()
+	public double getYV()
 	{
 		return mYV;
 	}

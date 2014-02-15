@@ -94,6 +94,6 @@ public class Block
 		return mId;
 	}
 	
-	public void hit(int aX, int aY, float aXV, float aYV, World aWorld, Entity aEntity)
+	public void hit(int aX, int aY, double aXV, double aYV, World aWorld, Entity aEntity)
 	{}
 }

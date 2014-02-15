@@ -13,7 +13,7 @@ public class BrickBlock extends Block
 	}
 	
 	@Override
-	public void hit(int aX, int aY, float aXV, float aYV, World aWorld, Entity aEntity)
+	public void hit(int aX, int aY, double aXV, double aYV, World aWorld, Entity aEntity)
 	{
 		if (aYV < 0 && aEntity.getY() >= (aY + 1) * Block.SIZE || (aEntity instanceof Player && ((Player) aEntity).isCannonBall()))
 		{
