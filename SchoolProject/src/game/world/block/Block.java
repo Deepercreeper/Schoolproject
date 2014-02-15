@@ -3,6 +3,7 @@ package game.world.block;
 import game.entity.Entity;
 import game.world.World;
 import java.util.HashMap;
+import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import data.DataManager;
 
@@ -14,7 +15,7 @@ public class Block
 	
 	public static final Block				AIR					= new Block(0, 0xffffff).setInVisible().setUnSolid();
 	public static final Block				STONE				= new Block(1, 0xB89040);
-	public static final Block				BRICK				= new Block(2, 0xB06000);
+	public static final Block				BRICK				= new BrickBlock(2, 0xB06000);
 	public static final Block				EMPTY				= new Block(3, 0xC03010);
 	public static final Block				QUESTION			= new QuestionBlock(4, 0xD8B018);
 	public static final Block				GROUND_TOP_LEFT		= new Block(5, 0x00E000);
@@ -23,6 +24,8 @@ public class Block
 	public static final Block				GROUND_LEFT			= new Block(8, 0xF0B848);
 	public static final Block				GROUND_MIDDLE		= new Block(9, 0xD3A23F);
 	public static final Block				GROUND_RIGHT		= new Block(10, 0xAD8434);
+	public static final Block				GROUND_LEFT_STOP	= new Block(11, 0x8CB848);
+	public static final Block				GROUND_RIGHT_STOP	= new Block(12, 0x73963C);
 	
 	private final byte						mId;
 	
@@ -35,7 +38,7 @@ public class Block
 		mId = (byte) aId;
 		BLOCKS.put(mId, this);
 		COLORS.put(aRGB, mId);
-		mImage = DataManager.get("block" + mId);
+		mImage = DataManager.getImage("block" + mId);
 	}
 	
 	private Block setInVisible()
@@ -55,9 +58,9 @@ public class Block
 		return mId;
 	}
 	
-	public Image getImage()
+	public void render(int aX, int aY, Graphics g, World aWorld)
 	{
-		return mImage;
+		g.drawImage(mImage, aX * SIZE - aWorld.getScreenX(), aY * SIZE - aWorld.getScreenY());
 	}
 	
 	public boolean isSolid()

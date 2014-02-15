@@ -47,7 +47,7 @@ public class World
 	
 	private byte[][] loadBlocks()
 	{
-		Image image = DataManager.get("worldData" + mId);
+		Image image = DataManager.getImage("worldData" + mId);
 		final int width = image.getWidth(), height = image.getHeight();
 		final int redInt = (int) Math.pow(2, 16), greenInt = (int) Math.pow(2, 8);
 		byte[][] blocks = new byte[width][height];
@@ -180,6 +180,6 @@ public class World
 	{
 		final Block block = Block.get(mBlocks[aX][aY]);
 		if ( !block.isVisible()) return;
-		g.drawImage(block.getImage(), aX * Block.SIZE - mScreen.getX(), aY * Block.SIZE - mScreen.getY());
+		block.render(aX, aY, g, this);
 	}
 }

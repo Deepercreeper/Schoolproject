@@ -4,9 +4,10 @@ import game.entity.Entity;
 import game.world.World;
 import data.DataManager;
 
-public class QuestionBlock extends Block
+public class BrickBlock extends Block
 {
-	public QuestionBlock(int aId, int aRGB)
+	
+	protected BrickBlock(int aId, int aRGB)
 	{
 		super(aId, aRGB);
 	}
@@ -16,8 +17,8 @@ public class QuestionBlock extends Block
 	{
 		if (aYV < 0 && aEntity.getY() >= (aY + 1) * Block.SIZE)
 		{
-			aWorld.setBlock(aX, aY, Block.EMPTY.getId());
-			DataManager.playSound("item");
+			aWorld.setBlock(aX, aY, Block.AIR.getId());
+			DataManager.playSound("destroyBlock");
 		}
 	}
 }

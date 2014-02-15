@@ -2,9 +2,9 @@ package game.entity;
 
 import game.world.World;
 import game.world.block.Block;
-import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
+import data.DataManager;
 
 public class Player extends Entity
 {
@@ -23,16 +23,17 @@ public class Player extends Entity
 		if (aInput.isKeyDown(Input.KEY_D)) mXA += 1.5;
 		if (aInput.isKeyDown(Input.KEY_A)) mXA -= 1.5;
 		if (aInput.isKeyDown(Input.KEY_LSHIFT)) mXA *= 1.5;
-		if ( !mOnGround) mXA *= 0.7;
+		if ( !mOnGround) mXA *= 0.125;
 		
 		if (aInput.isKeyPressed(Input.KEY_SPACE) && (mOnGround || mOnWall))
 		{
 			if (mOnWall)
 			{
-				mXA += mLeftWall ? 6 : -6;
-				mYA -= 6;
+				mXV = 10 * (mLeftWall ? 1 : -1);
+				mYV = -5;
 			}
 			else mYA -= 6;
+			DataManager.playSound("jump");
 		}
 		
 		mXV += mXA;
@@ -42,7 +43,7 @@ public class Player extends Entity
 		
 		move();
 		
-		mXV *= 0.7f - (mOnGround ? 0.2 : 0);
+		mXV *= 0.95f - (mOnGround ? 0.45 : 0);
 		if (mYV < 0 && aInput.isKeyDown(Input.KEY_SPACE))
 		{
 			mYV *= 0.992;
@@ -59,9 +60,7 @@ public class Player extends Entity
 	@Override
 	public void render(Graphics g)
 	{
-		// TODO render
-		g.setColor(Color.white);
-		g.fillRect(getX() - mWorld.getScreenX(), getY() - mWorld.getScreenY(), getWidth(), getHeight());
+		g.drawImage(DataManager.getImage("minion0"), mX - mWorld.getScreenX(), mY - mWorld.getScreenY());
 	}
 	
 	@Override
