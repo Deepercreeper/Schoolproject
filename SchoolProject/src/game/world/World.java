@@ -11,6 +11,7 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.geom.Rectangle;
+import util.Util;
 import data.DataManager;
 
 public class World
@@ -43,6 +44,7 @@ public class World
 		mScreen = new Screen(gc.getWidth(), gc.getHeight());
 		mPlayer = new Player();
 		addEntity(mPlayer);
+		DataManager.playMusic("world" + mId);
 	}
 	
 	private byte[][] loadBlocks()
@@ -76,13 +78,13 @@ public class World
 				{
 					if (aXV != 0)
 					{
-						if (aXV > 0) result = min(result, aXV - (entity.getMaxX() % Block.SIZE));
-						else result = min(result, -(aEntity.getX() % Block.SIZE));
+						if (aXV > 0) result = Util.minAbs(result, aXV - (entity.getMaxX() % Block.SIZE));
+						else result = Util.minAbs(result, -(aEntity.getX() % Block.SIZE));
 					}
 					else
 					{
-						if (aYV > 0) result = min(result, aYV - (entity.getMaxY() % Block.SIZE));
-						else result = min(result, -(aEntity.getY() % Block.SIZE));
+						if (aYV > 0) result = Util.minAbs(result, aYV - (entity.getMaxY() % Block.SIZE));
+						else result = Util.minAbs(result, -(aEntity.getY() % Block.SIZE));
 					}
 					Block.get(mBlocks[x][y]).hit(x, y, aEntity.getXV(), aEntity.getYV(), this, aEntity);
 				}
@@ -92,13 +94,13 @@ public class World
 			{
 				if (aXV != 0)
 				{
-					if (aXV > 0) result = min(result, aXV - (entity.getX() + entity.getWidth() - (other.getX())));
-					else result = min(result, aXV + (other.getX() + other.getWidth() - (entity.getX())));
+					if (aXV > 0) result = Util.minAbs(result, aXV - (entity.getX() + entity.getWidth() - (other.getX())));
+					else result = Util.minAbs(result, aXV + (other.getX() + other.getWidth() - (entity.getX())));
 				}
 				else
 				{
-					if (aYV > 0) result = min(result, aYV - (entity.getY() + entity.getHeight() - (other.getY())));
-					else result = min(result, aYV + (other.getY() + other.getHeight() - (entity.getY())));
+					if (aYV > 0) result = Util.minAbs(result, aYV - (entity.getY() + entity.getHeight() - (other.getY())));
+					else result = Util.minAbs(result, aYV + (other.getY() + other.getHeight() - (entity.getY())));
 				}
 			}
 		return result;
@@ -107,13 +109,6 @@ public class World
 	public void setBlock(int aX, int aY, byte aId)
 	{
 		mBlocks[aX][aY] = aId;
-	}
-	
-	private double min(double aFirst, double aSecond)
-	{
-		if (Double.isNaN(aFirst)) return aSecond;
-		if (Math.abs(aFirst) < Math.abs(aSecond)) return aFirst;
-		return aSecond;
 	}
 	
 	public int getScreenX()
@@ -150,6 +145,9 @@ public class World
 	
 	public void update(Input aInput)
 	{
+		// If loading music
+		if (DataManager.isLoading()) return;
+		
 		final HashSet<Integer> remove = new HashSet<>();
 		for (Entity entity : mEntities.values())
 			if (entity.isRemoved()) remove.add(entity.getId());
@@ -167,6 +165,13 @@ public class World
 	
 	public void render(Graphics g)
 	{
+		// If loading music
+		if (DataManager.isLoading())
+		{
+			g.drawImage(DataManager.getImage("splash"), 0, 0);
+			return;
+		}
+		
 		// Render Blocks
 		for (int x = Math.max(mScreen.getX() / Block.SIZE, 0); x <= (mScreen.getX() + mScreen.getWidth()) / Block.SIZE && x < mWidth; x++ )
 			for (int y = Math.max(mScreen.getY() / Block.SIZE, 0); y <= (mScreen.getY() + mScreen.getHeight()) / Block.SIZE && y < mHeight; y++ )
