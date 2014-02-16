@@ -13,7 +13,7 @@ public abstract class Entity
 	/**
 	 * The position and velocity of this entity.
 	 */
-	protected double	mX, mY, mXV, mYV, mXA;
+	protected double	mX, mY, mXV, mYV, mXA, mYA;
 	
 	/**
 	 * The size of this entity.

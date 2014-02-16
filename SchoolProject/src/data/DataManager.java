@@ -21,7 +21,7 @@ public class DataManager
 	private static final int[][]					sSplitImageSizes	= new int[][] { { 14, 30 } };
 	
 	private static int								sTexturepack		= 0;
-	
+	private static float							sVolume				= 1;
 	private static boolean							sLoaded				= false;
 	
 	/**
@@ -35,7 +35,7 @@ public class DataManager
 		Sound sound = SOUNDS.get(aName);
 		if (sound == null) sound = loadSound(aName);
 		if (sound.playing()) sound.stop();
-		sound.play();
+		sound.play(1, sVolume);
 	}
 	
 	/**
@@ -69,6 +69,7 @@ public class DataManager
 	 */
 	public static void volumeUp()
 	{
+		if (sVolume < 1) sVolume += 0.1f;
 		for (Music music : MUSIC.values())
 		{
 			if (music.getVolume() == 1) return;
@@ -81,6 +82,7 @@ public class DataManager
 	 */
 	public static void volumeDown()
 	{
+		if (sVolume > 0) sVolume -= 0.1f;
 		for (Music music : MUSIC.values())
 		{
 			if (music.getVolume() == 0) return;
