@@ -49,7 +49,7 @@ public class World
 		else mHeight = 0;
 		mScreen = new Screen(this, gc.getWidth(), gc.getHeight());
 		addPlayer();
-		DataManager.playMusic("world" + mId);
+		DataManager.playMusic("world0");
 	}
 	
 	private byte[][] loadBlocks()

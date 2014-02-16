@@ -34,6 +34,29 @@ public class DataManager
 		MUSIC.get(aName).loop();
 	}
 	
+	public static float getVolume()
+	{
+		return MUSIC.get(sMusicTitles[0]).getVolume();
+	}
+	
+	public static void volumeUp()
+	{
+		for (Music music : MUSIC.values())
+		{
+			if (music.getVolume() == 1) return;
+			music.setVolume(music.getVolume() + 0.1f);
+		}
+	}
+	
+	public static void volumeDown()
+	{
+		for (Music music : MUSIC.values())
+		{
+			if (music.getVolume() == 0) return;
+			music.setVolume(music.getVolume() - 0.1f);
+		}
+	}
+	
 	public static boolean hasLoaded()
 	{
 		return sLoaded;
