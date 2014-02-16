@@ -20,6 +20,18 @@ public abstract class Entity
 	
 	protected World		mWorld;
 	
+	/**
+	 * Creates a entity with position {@code aX:aY} and size {@code aWidth:aHeight}.
+	 * 
+	 * @param aX
+	 *            The x position.
+	 * @param aY
+	 *            The y position.
+	 * @param aWidth
+	 *            The width.
+	 * @param aHeight
+	 *            The height.
+	 */
 	public Entity(int aX, int aY, int aWidth, int aHeight)
 	{
 		mX = aX;
