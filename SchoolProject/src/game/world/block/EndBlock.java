@@ -18,18 +18,34 @@ public class EndBlock extends Block
 	@Override
 	public void update(int aX, int aY, World aWorld)
 	{
-		if (aWorld.getPlayer().getRect().intersects(new Rectangle(aX * SIZE, (aY - 2) * SIZE, SIZE, SIZE * 3))) aWorld.win();
+		if (aWorld.getPlayer().getRect().intersects(new Rectangle(aX * SIZE, (aY - 7) * SIZE, SIZE * 2, SIZE * 8))) aWorld.win();
 	}
 	
 	@Override
 	public void render(int aX, int aY, Graphics g, World aWorld)
 	{
-		mTile = 0;
+		mTile = -1;
 		super.render(aX, aY, g, aWorld);
 		mTile++ ;
-		super.render(aX, aY - 1, g, aWorld);
+		super.render(aX + 1, aY, g, aWorld);
 		mTile++ ;
+		super.render(aX, aY - 1, g, aWorld);
 		super.render(aX, aY - 2, g, aWorld);
+		super.render(aX, aY - 3, g, aWorld);
+		super.render(aX, aY - 4, g, aWorld);
+		super.render(aX, aY - 5, g, aWorld);
+		super.render(aX, aY - 6, g, aWorld);
+		mTile++ ;
+		super.render(aX + 1, aY - 1, g, aWorld);
+		super.render(aX + 1, aY - 2, g, aWorld);
+		super.render(aX + 1, aY - 3, g, aWorld);
+		super.render(aX + 1, aY - 4, g, aWorld);
+		super.render(aX + 1, aY - 5, g, aWorld);
+		super.render(aX + 1, aY - 6, g, aWorld);
+		mTile++ ;
+		super.render(aX, aY - 7, g, aWorld);
+		mTile++ ;
+		super.render(aX + 1, aY - 7, g, aWorld);
 	}
 	
 	@Override
