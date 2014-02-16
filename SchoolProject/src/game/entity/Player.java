@@ -18,9 +18,9 @@ public class Player extends Entity
 	
 	private int			mCannonDelay;
 	
-	public Player()
+	public Player(int aX, int aY)
 	{
-		super(0, 0, 14, 30);
+		super(aX, aY, 14, 30);
 	}
 	
 	@Override
@@ -29,7 +29,7 @@ public class Player extends Entity
 		if (mHurtDelay > 0) mHurtDelay-- ;
 		if ( !mHurted)
 		{
-			if (aInput.isKeyPressed(Input.KEY_S))
+			if (aInput.isKeyPressed(Input.KEY_S) && !mOnGround)
 			{
 				mCannon = true;
 				mCannonDelay = 10;
@@ -97,7 +97,7 @@ public class Player extends Entity
 	public void render(Graphics g)
 	{
 		// Player
-		g.drawImage(DataManager.getImage("minion0"), (float) mX - mWorld.getScreenX(), (float) mY - mWorld.getScreenY());
+		g.drawImage(DataManager.getSplittedImage("player", 0), (float) mX - mWorld.getScreenX(), (float) mY - mWorld.getScreenY());
 		
 		// HUD
 		g.setColor(Color.red);

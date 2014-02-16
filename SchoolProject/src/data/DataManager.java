@@ -16,8 +16,8 @@ public class DataManager
 	
 	private static final String[]					sMusicTitles		= new String[] { "world0" };
 	
-	private static final String[]					sSplittedImages		= new String[] { "blocks" };
-	private static final int[][]					sSplittedImageSizes	= new int[][] { { 16, 16 } };
+	private static final String[]					sSplittedImages		= new String[] { "blocks", "player" };
+	private static final int[][]					sSplittedImageSizes	= new int[][] { { 16, 16 }, { 14, 30 } };
 	
 	private static boolean							sLoaded				= false;
 	

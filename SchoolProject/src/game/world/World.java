@@ -20,7 +20,7 @@ public class World
 	
 	private final byte						mId;
 	
-	private final int						mWidth, mHeight;
+	private final int						mWidth, mHeight, mStartX, mStartY;
 	
 	private final Screen					mScreen;
 	
@@ -41,10 +41,26 @@ public class World
 		mWidth = mBlocks.length;
 		if (mWidth > 0) mHeight = mBlocks[0].length;
 		else mHeight = 0;
+		int[] start = findStartPosition();
+		mStartX = start[0];
+		mStartY = start[1];
 		mScreen = new Screen(this, gc.getWidth(), gc.getHeight());
-		mPlayer = new Player();
+		mPlayer = new Player(mStartX * Block.SIZE, mStartY * Block.SIZE);
 		addEntity(mPlayer);
 		DataManager.playMusic("world" + mId);
+	}
+	
+	private int[] findStartPosition()
+	{
+		final byte startId = Block.START.getId();
+		for (int x = 0; x < mWidth; x++ )
+			for (int y = 0; y < mHeight; y++ )
+				if (mBlocks[x][y] == startId)
+				{
+					mBlocks[x][y] = Block.AIR.getId();
+					return new int[] { x, y - 1 };
+				}
+		return new int[] { 0, 0 };
 	}
 	
 	private byte[][] loadBlocks()

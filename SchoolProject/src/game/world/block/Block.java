@@ -101,6 +101,10 @@ public class Block
 	 * Spikes that point left.
 	 */
 	public static final Block				SPIKES_LEFT					= new SpikeBlock(21, 0xA5A5A5, 3);
+	/**
+	 * The position of the start point of the player.
+	 */
+	public static final Block				START						= new Block(22, 0x0);
 	
 	private final byte						mId;
 	
