@@ -31,7 +31,11 @@ public class DataManager
 	
 	public static void playMusic(String aName)
 	{
+		float volume = 1;
+		Music music = MUSIC.get(sSplittedImages[0]);
+		if (music != null) volume = music.getVolume();
 		MUSIC.get(aName).loop();
+		MUSIC.get(aName).setVolume(volume);
 	}
 	
 	public static float getVolume()
