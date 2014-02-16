@@ -150,11 +150,17 @@ public class DataManager
 		return SPLIT_IMAGES.get(aName)[aIndex];
 	}
 	
+	/**
+	 * Sets the next texture pack.
+	 */
 	public static void setNextTexturePack()
 	{
 		sTexturepack = (sTexturepack + 1) % sTexturepacks.length;
 	}
 	
+	/**
+	 * Sets the previous texture pack.
+	 */
 	public static void setPreviousTexturePack()
 	{
 		sTexturepack = (sTexturepack - 1 + sTexturepacks.length) % sTexturepacks.length;

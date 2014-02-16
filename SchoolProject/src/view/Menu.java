@@ -13,11 +13,23 @@ public class Menu
 	
 	private final Game			mGame;
 	
+	/**
+	 * Creates a new menu that controls settings.
+	 * 
+	 * @param aGame
+	 *            The parent game.
+	 */
 	public Menu(Game aGame)
 	{
 		mGame = aGame;
 	}
 	
+	/**
+	 * Updates the menu.
+	 * 
+	 * @param aInput
+	 *            The input information.
+	 */
 	public void update(Input aInput)
 	{
 		if (aInput.isKeyPressed(Input.KEY_SPACE)) mGame.hideMenu();
@@ -26,6 +38,14 @@ public class Menu
 		if (aInput.isKeyPressed(Input.KEY_LEFT)) DataManager.setPreviousTexturePack();
 	}
 	
+	/**
+	 * Renders the menu into the middle of the screen.
+	 * 
+	 * @param gc
+	 *            The containing game container.
+	 * @param g
+	 *            The graphics to draw into.
+	 */
 	public void render(GameContainer gc, Graphics g)
 	{
 		final int xPos = gc.getWidth() / 2 - WIDTH / 2, yPos = gc.getHeight() / 2 - HEIGHT / 2;
