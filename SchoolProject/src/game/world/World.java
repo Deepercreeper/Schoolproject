@@ -86,7 +86,7 @@ public class World
 						if (aYV > 0) result = Util.minAbs(result, aYV - (entity.getMaxY() % Block.SIZE));
 						else result = Util.minAbs(result, -(aEntity.getY() % Block.SIZE));
 					}
-					Block.get(mBlocks[x][y]).hit(x, y, aEntity.getXV(), aEntity.getYV(), this, aEntity);
+					Block.get(mBlocks[x][y]).hit(x, y, this, aEntity);
 				}
 			}
 		for (Entity other : mEntities.values())

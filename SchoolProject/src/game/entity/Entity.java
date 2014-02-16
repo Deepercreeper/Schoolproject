@@ -30,13 +30,15 @@ public abstract class Entity
 	
 	protected void move()
 	{
-		mOnGround = mOnWall = false;
+		mOnGround = false;
+		
+		// On Wall?
+		if (mLeftWall && mXV > 0 || !mLeftWall && mXV < 0 || Double.isNaN(mWorld.isFree(mLeftWall ? -0.1 : 0.1, 0, this))) mOnWall = false;
 		if (mXV == 0 && mYV == 0) return;
 		
+		final double a = Math.acos(Math.abs(mXV) / Math.sqrt(mXV * mXV + mYV * mYV));
 		double restX = mXV, restY = mYV, xd, yd, stepX, stepY;
 		boolean hitX = false, hitY = false;
-		
-		double a = Math.acos(Math.abs(mXV) / Math.sqrt(mXV * mXV + mYV * mYV));
 		
 		// Initializing the step size for x and y
 		if (mXV == 0) stepX = 0;
