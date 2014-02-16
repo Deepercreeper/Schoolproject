@@ -236,8 +236,9 @@ public class World
 	public void render(Graphics g)
 	{
 		// Render background
-		g.drawImage(DataManager.getImage("background0"), -(mScreen.getX() / 5 % mScreen.getWidth()), 0);
-		g.drawImage(DataManager.getImage("background0"), mScreen.getWidth() - (mScreen.getX() / 5 % mScreen.getWidth()), 0);
+		Image background = DataManager.getImage("background0");
+		g.drawImage(background, -(mScreen.getX() / 5 % background.getWidth()), 0);
+		g.drawImage(background, background.getWidth() - (mScreen.getX() / 5 % background.getWidth()), 0);
 		
 		// Render Blocks
 		for (int x = Math.max(mScreen.getX() / Block.SIZE, 0); x <= (mScreen.getX() + mScreen.getWidth()) / Block.SIZE && x < mWidth; x++ )
