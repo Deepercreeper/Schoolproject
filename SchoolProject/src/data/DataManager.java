@@ -16,8 +16,11 @@ public class DataManager
 	
 	private static final String[]					sMusicTitles		= new String[] { "world0" };
 	
-	private static final String[]					sSplitImages		= new String[] { "blocks", "player" };
-	private static final int[][]					sSplitImageSizes	= new int[][] { { 16, 16 }, { 14, 30 } };
+	private static final String[]					sSplitImages		= new String[] { "player" };
+	private static final String[]					sTexturepacks		= new String[] { "Standard", "Mario", "Minecraft" };
+	private static final int[][]					sSplitImageSizes	= new int[][] { { 14, 30 } };
+	
+	private static int								sTexturepack		= 0;
 	
 	private static boolean							sLoaded				= false;
 	
@@ -44,10 +47,11 @@ public class DataManager
 	public static void playMusic(String aName)
 	{
 		float volume = 1;
-		Music music = MUSIC.get(sSplitImages[0]);
-		if (music != null) volume = music.getVolume();
+		Music lastMusic = MUSIC.get(aName);
+		if (lastMusic != null) volume = lastMusic.getVolume();
 		MUSIC.get(aName).loop();
-		MUSIC.get(aName).setVolume(volume);
+		for (Music music : MUSIC.values())
+			music.setVolume(volume);
 	}
 	
 	/**
@@ -109,6 +113,30 @@ public class DataManager
 	}
 	
 	/**
+	 * Loads an world data image.
+	 * 
+	 * @param aId
+	 *            The world id.
+	 * @return an image that contains world data.
+	 */
+	public static Image getWorldImage(int aId)
+	{
+		return getImage("worldData/worldData" + aId);
+	}
+	
+	/**
+	 * Loads an background image.
+	 * 
+	 * @param aId
+	 *            The background id.
+	 * @return an image that contains world data.
+	 */
+	public static Image getBackgroundImage(int aId)
+	{
+		return getImage("backgrounds/background" + aId);
+	}
+	
+	/**
 	 * Returns a part of the split image {@code aName.png} with position {@code aIndex}.
 	 * 
 	 * @param aName
@@ -117,16 +145,35 @@ public class DataManager
 	 *            The index of the image part.
 	 * @return the {@code aIndex}s part of {@code aName}.png.
 	 */
-	public static Image getSplittedImage(String aName, int aIndex)
+	public static Image getSplitImage(String aName, int aIndex)
 	{
 		return SPLIT_IMAGES.get(aName)[aIndex];
 	}
 	
-	private static Image[] loadSplittedImages(int aTile)
+	public static void setNextTexturePack()
 	{
-		String name = sSplitImages[aTile];
-		Image image = loadImage(name);
-		final int imageWidth = sSplitImageSizes[aTile][0], imageHeight = sSplitImageSizes[aTile][1], width = image.getWidth() / imageWidth, height = image.getHeight() / imageHeight;
+		sTexturepack = (sTexturepack + 1) % sTexturepacks.length;
+	}
+	
+	public static void setPreviousTexturePack()
+	{
+		sTexturepack = (sTexturepack - 1 + sTexturepacks.length) % sTexturepacks.length;
+	}
+	
+	/**
+	 * Returns the current used texture pack name.
+	 * 
+	 * @return the name of the texture pack.
+	 */
+	public static String getTexturePack()
+	{
+		return sTexturepacks[sTexturepack];
+	}
+	
+	private static Image[] loadSplittedImages(String aName, int[] aSize)
+	{
+		Image image = loadImage(aName);
+		final int imageWidth = aSize[0], imageHeight = aSize[1], width = image.getWidth() / imageWidth, height = image.getHeight() / imageHeight;
 		Image[] images = new Image[width * height];
 		try
 		{
@@ -151,8 +198,14 @@ public class DataManager
 	{
 		for (int tile = 0; tile < sSplitImages.length; tile++ )
 		{
-			Image[] images = loadSplittedImages(tile);
+			Image[] images = loadSplittedImages(sSplitImages[tile], sSplitImageSizes[tile]);
 			SPLIT_IMAGES.put(sSplitImages[tile], images);
+		}
+		final int[] size = new int[] { 16, 16 };
+		for (String aName : sTexturepacks)
+		{
+			Image[] images = loadSplittedImages("texturepacks/blocks" + aName, size);
+			SPLIT_IMAGES.put(aName, images);
 		}
 		for (String name : sMusicTitles)
 			MUSIC.put(name, loadMusic(name));

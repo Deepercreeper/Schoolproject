@@ -185,7 +185,7 @@ public class Block
 	 */
 	public void render(int aX, int aY, Graphics g, World aWorld)
 	{
-		g.drawImage(DataManager.getSplittedImage(getImageName(), getImageIndex()), aX * SIZE - aWorld.getScreenX(), aY * SIZE - aWorld.getScreenY());
+		g.drawImage(DataManager.getSplitImage(DataManager.getTexturePack(), getImageIndex()), aX * SIZE - aWorld.getScreenX(), aY * SIZE - aWorld.getScreenY());
 	}
 	
 	/**
@@ -254,16 +254,6 @@ public class Block
 	{
 		if ( !COLORS.containsKey(aRGB)) return -1;
 		return COLORS.get(aRGB);
-	}
-	
-	/**
-	 * The name of the image file that is rendered.
-	 * 
-	 * @return the name of the image file.
-	 */
-	protected String getImageName()
-	{
-		return "blocks";
 	}
 	
 	/**

@@ -110,7 +110,7 @@ public class Player extends Entity
 	public void render(Graphics g)
 	{
 		// Player
-		g.drawImage(DataManager.getSplittedImage("player", 0), (float) mX - mWorld.getScreenX(), (float) mY - mWorld.getScreenY());
+		g.drawImage(DataManager.getSplitImage("player", 0), (float) mX - mWorld.getScreenX(), (float) mY - mWorld.getScreenY());
 		
 		// HUD
 		g.setColor(Color.red);

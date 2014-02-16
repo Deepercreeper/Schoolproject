@@ -5,17 +5,20 @@ import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
+import view.Menu;
 import data.DataManager;
 
 public class Game
 {
-	private boolean	mRunning;
+	private boolean		mRunning, mShowingMenu;
 	
-	private World	mWorld;
+	private final Menu	mMenu			= new Menu(this);
 	
-	private Input	mInput;
+	private World		mWorld;
 	
-	private int		mShowingVolume	= 0;
+	private Input		mInput;
+	
+	private int			mShowingVolume	= 0;
 	
 	/**
 	 * Renders the splash screen and the world. The volume is also displayed.
@@ -31,6 +34,12 @@ public class Game
 		else
 		{
 			mWorld.render(g);
+			
+			if (mShowingMenu)
+			{
+				mMenu.render(gc, g);
+				return;
+			}
 			
 			// Render volume
 			if (mShowingVolume > 0)
@@ -75,6 +84,12 @@ public class Game
 	{
 		if ( !DataManager.hasLoaded()) DataManager.init();
 		
+		if (mShowingMenu)
+		{
+			mMenu.update(mInput);
+			return;
+		}
+		
 		// Creating world
 		if (mWorld == null) createWorld(gc, 0);
 		if (mWorld.hasWon()) createWorld(gc, mWorld.getId() + 1);
@@ -83,7 +98,7 @@ public class Game
 		if (mShowingVolume > 0) mShowingVolume-- ;
 		
 		// Input
-		if (mInput.isKeyPressed(Input.KEY_ESCAPE)) stop();
+		if (mInput.isKeyPressed(Input.KEY_ESCAPE)) mShowingMenu = true;
 		if (mInput.isKeyPressed(Input.KEY_ADD))
 		{
 			DataManager.volumeUp();
@@ -97,6 +112,14 @@ public class Game
 		
 		// Updating world
 		mWorld.update(mInput);
+	}
+	
+	/**
+	 * Hides the menu.
+	 */
+	public void hideMenu()
+	{
+		mShowingMenu = false;
 	}
 	
 	/**

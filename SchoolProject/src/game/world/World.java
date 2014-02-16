@@ -65,7 +65,7 @@ public class World
 	
 	private byte[][] loadBlocks()
 	{
-		Image image = DataManager.getImage("worldData" + mId);
+		Image image = DataManager.getWorldImage(mId);
 		final int width = image.getWidth(), height = image.getHeight();
 		final int redInt = (int) Math.pow(2, 16), greenInt = (int) Math.pow(2, 8);
 		byte[][] blocks = new byte[width][height];
@@ -336,7 +336,7 @@ public class World
 	public void render(Graphics g)
 	{
 		// Render background
-		Image background = DataManager.getImage("background0");
+		Image background = DataManager.getBackgroundImage(0);
 		g.drawImage(background, -(mScreen.getX() / 5 % background.getWidth()), 0);
 		g.drawImage(background, background.getWidth() - (mScreen.getX() / 5 % background.getWidth()), 0);
 		
