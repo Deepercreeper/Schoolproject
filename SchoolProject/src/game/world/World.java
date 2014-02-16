@@ -16,51 +16,40 @@ import data.DataManager;
 
 public class World
 {
-	public static final float				FRICTION	= 0.99f, GRAVITY = 0.3f;
+	public static final float				FRICTION			= 0.99f, GRAVITY = 0.3f;
 	
 	private final byte						mId;
 	
-	private final int						mWidth, mHeight, mStartX, mStartY;
+	private final int						mWidth, mHeight;
+	
+	private int								mStartX, mStartY;
 	
 	private final Screen					mScreen;
 	
-	private final byte[][]					mBlocks;
+	private byte[][]						mBlocks;
 	
 	private final HashMap<Integer, Entity>	mEntities;
 	
 	private final HashSet<Entity>			mAddEntities;
 	
-	private final Player					mPlayer;
+	private final HashSet<Integer>			mUpdatableBlocks	= new HashSet<>();
+	
+	private Player							mPlayer;
+	
+	private boolean							mWon;
 	
 	public World(int aId, GameContainer gc)
 	{
 		mId = (byte) aId;
 		mEntities = new HashMap<>();
 		mAddEntities = new HashSet<>();
-		mBlocks = loadBlocks();
+		reload();
 		mWidth = mBlocks.length;
 		if (mWidth > 0) mHeight = mBlocks[0].length;
 		else mHeight = 0;
-		int[] start = findStartPosition();
-		mStartX = start[0];
-		mStartY = start[1];
 		mScreen = new Screen(this, gc.getWidth(), gc.getHeight());
-		mPlayer = new Player(mStartX * Block.SIZE, mStartY * Block.SIZE);
-		addEntity(mPlayer);
+		addPlayer();
 		DataManager.playMusic("world" + mId);
-	}
-	
-	private int[] findStartPosition()
-	{
-		final byte startId = Block.START.getId();
-		for (int x = 0; x < mWidth; x++ )
-			for (int y = 0; y < mHeight; y++ )
-				if (mBlocks[x][y] == startId)
-				{
-					mBlocks[x][y] = Block.AIR.getId();
-					return new int[] { x, y - 1 };
-				}
-		return new int[] { 0, 0 };
 	}
 	
 	private byte[][] loadBlocks()
@@ -78,7 +67,18 @@ public class World
 				rgb = color.getRed() * redInt + color.getGreen() * greenInt + color.getBlue();
 				byte id = Block.get(rgb);
 				if (id == -1) blocks[x][y] = Block.AIR.getId();
-				else blocks[x][y] = id;
+				else
+				{
+					Block block = Block.get(id);
+					if (block.isUpdatable()) mUpdatableBlocks.add(x + y * width);
+					if (block == Block.START)
+					{
+						mStartX = x;
+						mStartY = y - 1;
+						blocks[x][y] = Block.AIR.getId();
+					}
+					else blocks[x][y] = id;
+				}
 			}
 		return blocks;
 	}
@@ -180,10 +180,57 @@ public class World
 			if ( !entity.isRemoved()) mEntities.put(entity.getId(), entity);
 		mAddEntities.clear();
 		
+		if (mPlayer.isRemoved())
+		{
+			reload();
+			addPlayer();
+			return;
+		}
+		
 		// Update entities
 		for (Entity entity : mEntities.values())
 			entity.update(aInput);
+		
+		// Update blocks
+		for (int tile : mUpdatableBlocks)
+		{
+			final int x = tile % mWidth, y = tile / mWidth;
+			Block.get(mBlocks[x][y]).update(x, y, this);
+		}
+		
+		// Update screen
 		mScreen.update(mPlayer);
+	}
+	
+	private void addPlayer()
+	{
+		mPlayer = new Player(mStartX * Block.SIZE, mStartY * Block.SIZE);
+		addEntity(mPlayer);
+	}
+	
+	private void reload()
+	{
+		mBlocks = loadBlocks();
+	}
+	
+	public byte getId()
+	{
+		return mId;
+	}
+	
+	public boolean hasWon()
+	{
+		return mWon;
+	}
+	
+	public void win()
+	{
+		mWon = true;
+	}
+	
+	public Player getPlayer()
+	{
+		return mPlayer;
 	}
 	
 	public void render(Graphics g)

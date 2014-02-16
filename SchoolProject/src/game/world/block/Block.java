@@ -106,9 +106,14 @@ public class Block
 	 */
 	public static final Block				START						= new Block(22, 0x0);
 	
+	/**
+	 * The position of the finish point of the level.
+	 */
+	public static final Block				END							= new EndBlock(23, 0x0000ff);
+	
 	private final byte						mId;
 	
-	private boolean							mSolid						= true, mVisible = true;
+	private boolean							mSolid						= true, mVisible = true, mUpdatable = false;
 	
 	protected Block(int aId, int aRGB)
 	{
@@ -123,9 +128,15 @@ public class Block
 		return this;
 	}
 	
-	private Block setUnSolid()
+	protected Block setUnSolid()
 	{
 		mSolid = false;
+		return this;
+	}
+	
+	protected Block setUpdatable()
+	{
+		mUpdatable = true;
 		return this;
 	}
 	
@@ -137,6 +148,14 @@ public class Block
 	public void render(int aX, int aY, Graphics g, World aWorld)
 	{
 		g.drawImage(DataManager.getSplittedImage(getImageName(), getImageTile()), aX * SIZE - aWorld.getScreenX(), aY * SIZE - aWorld.getScreenY());
+	}
+	
+	public void update(int aX, int aY, World aWorld)
+	{}
+	
+	public boolean isUpdatable()
+	{
+		return mUpdatable;
 	}
 	
 	public boolean isSolid()

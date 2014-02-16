@@ -25,17 +25,18 @@ public class Game
 		mRunning = true;
 	}
 	
-	private void createWorld(GameContainer gc)
+	private void createWorld(GameContainer gc, int aLevel)
 	{
 		if (mInput == null) mInput = gc.getInput();
-		mWorld = new World(0, gc);
+		mWorld = new World(aLevel, gc);
 	}
 	
 	public void update(GameContainer gc, int aDelta)
 	{
 		if ( !DataManager.hasLoaded()) DataManager.init();
 		
-		if (mWorld == null) createWorld(gc);
+		if (mWorld == null) createWorld(gc, 0);
+		if (mWorld.hasWon()) createWorld(gc, mWorld.getId() + 1);
 		
 		if (mInput.isKeyPressed(Input.KEY_ESCAPE)) stop();
 		

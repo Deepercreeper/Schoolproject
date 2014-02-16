@@ -116,6 +116,7 @@ public class Player extends Entity
 			mHurted = true;
 			mXV = aXV;
 			mYV = aYV;
+			if (mLife <= 0) remove();
 		}
 	}
 	
