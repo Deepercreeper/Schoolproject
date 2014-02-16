@@ -8,6 +8,14 @@ public class EndBlock extends Block
 {
 	private int	mTile	= 0;
 	
+	/**
+	 * Creates an end block that makes the player win the level at stepping through this block.
+	 * 
+	 * @param aId
+	 *            This blocks id.
+	 * @param aRGB
+	 *            The RGB code of this block.
+	 */
 	protected EndBlock(int aId, int aRGB)
 	{
 		super(aId, aRGB);
@@ -49,7 +57,7 @@ public class EndBlock extends Block
 	}
 	
 	@Override
-	protected int getImageTile()
+	protected int getImageIndex()
 	{
 		return getId() + mTile;
 	}

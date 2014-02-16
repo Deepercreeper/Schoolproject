@@ -6,6 +6,14 @@ import data.DataManager;
 
 public class BrickBlock extends Block
 {
+	/**
+	 * Creates a brick, that may contain items or is breakable.
+	 * 
+	 * @param aId
+	 *            This blocks id.
+	 * @param aRGB
+	 *            The RGB code of this block.
+	 */
 	protected BrickBlock(int aId, int aRGB)
 	{
 		super(aId, aRGB);

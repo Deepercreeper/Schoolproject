@@ -17,6 +17,14 @@ public class Game
 	
 	private int		mShowingVolume	= 0;
 	
+	/**
+	 * Renders the splash screen and the world. The volume is also displayed.
+	 * 
+	 * @param gc
+	 *            The containing game container.
+	 * @param g
+	 *            The graphics to draw into.
+	 */
 	public void render(GameContainer gc, Graphics g)
 	{
 		if ( !DataManager.hasLoaded()) g.drawImage(DataManager.getImage("splash"), 0, 0);
@@ -38,6 +46,12 @@ public class Game
 		}
 	}
 	
+	/**
+	 * Prepares this game for running.
+	 * 
+	 * @param gc
+	 *            The containing game container.
+	 */
 	public void init(GameContainer gc)
 	{
 		mRunning = true;
@@ -49,6 +63,14 @@ public class Game
 		mWorld = new World(aLevel, gc);
 	}
 	
+	/**
+	 * Initiates the data manager, creates a world, handles menu input and updates the world.
+	 * 
+	 * @param gc
+	 *            The containing game container.
+	 * @param aDelta
+	 *            The done ticks after the last update.
+	 */
 	public void update(GameContainer gc, int aDelta)
 	{
 		if ( !DataManager.hasLoaded()) DataManager.init();
@@ -77,11 +99,19 @@ public class Game
 		mWorld.update(mInput);
 	}
 	
+	/**
+	 * Returns whether this game is running or has stopped.
+	 * 
+	 * @return {@code true} if running and {@code false} if not.
+	 */
 	public boolean isRunning()
 	{
 		return mRunning;
 	}
 	
+	/**
+	 * Stops this game.
+	 */
 	public void stop()
 	{
 		mRunning = false;

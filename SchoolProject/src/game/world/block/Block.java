@@ -9,6 +9,9 @@ import data.DataManager;
 
 public class Block
 {
+	/**
+	 * The size of one block.
+	 */
 	public static final int					SIZE						= 16;
 	private static HashMap<Byte, Block>		BLOCKS						= new HashMap<>();
 	private static HashMap<Integer, Byte>	COLORS						= new HashMap<>();
@@ -105,7 +108,6 @@ public class Block
 	 * The position of the start point of the player.
 	 */
 	public static final Block				START						= new Block(22, 0x0);
-	
 	/**
 	 * The position of the finish point of the level.
 	 */
@@ -115,6 +117,14 @@ public class Block
 	
 	private boolean							mSolid						= true, mVisible = true, mUpdatable = false;
 	
+	/**
+	 * Creates a new block with a unique id and a RGB value that identifies this block when loading an image to create a level.
+	 * 
+	 * @param aId
+	 *            The id of this block type.
+	 * @param aRGB
+	 *            The integer code of the color that you find inside the level image to represent this block.
+	 */
 	protected Block(int aId, int aRGB)
 	{
 		mId = (byte) aId;
@@ -128,78 +138,189 @@ public class Block
 		return this;
 	}
 	
+	/**
+	 * Sets whether this block is solid.
+	 * 
+	 * @return this.
+	 */
 	protected Block setUnSolid()
 	{
 		mSolid = false;
 		return this;
 	}
 	
+	/**
+	 * Sets whether this block needs to be updates every tick.
+	 * 
+	 * @return this.
+	 */
 	protected Block setUpdatable()
 	{
 		mUpdatable = true;
 		return this;
 	}
 	
+	/**
+	 * The id of this block.
+	 * 
+	 * @return this blocks id.
+	 */
 	public byte getId()
 	{
 		return mId;
 	}
 	
+	/**
+	 * Renders this block. the position is only the position index of this block, so it should be rendered at {@code SIZE *} the position.<br>
+	 * By default draws the block image with the id as index at the given position.
+	 * 
+	 * @param aX
+	 *            the x index.
+	 * @param aY
+	 *            the y index.
+	 * @param g
+	 *            the graphics to render into.
+	 * @param aWorld
+	 *            the parent world.
+	 */
 	public void render(int aX, int aY, Graphics g, World aWorld)
 	{
-		g.drawImage(DataManager.getSplittedImage(getImageName(), getImageTile()), aX * SIZE - aWorld.getScreenX(), aY * SIZE - aWorld.getScreenY());
+		g.drawImage(DataManager.getSplittedImage(getImageName(), getImageIndex()), aX * SIZE - aWorld.getScreenX(), aY * SIZE - aWorld.getScreenY());
 	}
 	
+	/**
+	 * If this block is updatable this method is invoked each tick.
+	 * 
+	 * @param aX
+	 *            the x index of this block.
+	 * @param aY
+	 *            the y index of this block.
+	 * @param aWorld
+	 *            the parent world.
+	 */
 	public void update(int aX, int aY, World aWorld)
 	{}
 	
+	/**
+	 * If this block needs to be updated every tick this returns {@code true}.
+	 * 
+	 * @return {@code true} if this block has to be updated and {@code false} if not.
+	 */
 	public boolean isUpdatable()
 	{
 		return mUpdatable;
 	}
 	
+	/**
+	 * Returns whether this block allows to move through.
+	 * 
+	 * @return {@code true} if this block is solid and {@code false} if not.
+	 */
 	public boolean isSolid()
 	{
 		return mSolid;
 	}
 	
+	/**
+	 * Returns whether this block has to be rendered.
+	 * 
+	 * @return {@code true} if this block is visible and {@code false} if not.
+	 */
 	public boolean isVisible()
 	{
 		return mVisible;
 	}
 	
+	/**
+	 * Returns the block with the given id.
+	 * 
+	 * @param aId
+	 *            The id of the block you want.
+	 * @return the block with the given id or {@code null} if no block has this id.
+	 */
 	public static Block get(byte aId)
 	{
 		return BLOCKS.get(aId);
 	}
 	
+	/**
+	 * Returns the id of the block with the given color code.
+	 * 
+	 * @param aRGB
+	 *            The color of any pixel inside a world map image.
+	 * @return the id of the searched block.
+	 */
 	public static byte get(int aRGB)
 	{
 		if ( !COLORS.containsKey(aRGB)) return -1;
 		return COLORS.get(aRGB);
 	}
 	
+	/**
+	 * The name of the image file that is rendered.
+	 * 
+	 * @return the name of the image file.
+	 */
 	protected String getImageName()
 	{
 		return "blocks";
 	}
 	
-	protected int getImageTile()
+	/**
+	 * The index that says at which position in the split image lays inside the parent image.
+	 * 
+	 * @return the image index.
+	 */
+	protected int getImageIndex()
 	{
 		return mId;
 	}
 	
+	/**
+	 * If any entity hits this block, this method returns whether this block was hit from the bottom side.
+	 * 
+	 * @param aX
+	 *            the x position.
+	 * @param aY
+	 *            the y position.
+	 * @param aEntity
+	 *            the hitting entity.
+	 * @return {@code true} if the entity hit this block with its head and {@code false} if not.
+	 */
 	protected boolean isUnder(int aX, int aY, Entity aEntity)
 	{
 		return aEntity.getYV() < 0 && aEntity.getY() >= (aY + 1) * SIZE;
 	}
 	
+	/**
+	 * Returns whether the hitting entity is a player and just used the cannon ball to hit this block.
+	 * 
+	 * @param aX
+	 *            the x position.
+	 * @param aY
+	 *            the y position.
+	 * @param aEntity
+	 *            the hitting entity.
+	 * @return {@code true} if the player used a cannon ball to hit this block and {@code false} if not.
+	 */
 	protected boolean isCannon(int aX, int aY, Entity aEntity)
 	{
 		double x = aEntity.getX();
 		return aEntity instanceof Player && ((Player) aEntity).isCannonBall() && aEntity.getY() <= aY * SIZE && x + aEntity.getWidth() > aX * SIZE && x < (aX + 1) * SIZE;
 	}
 	
+	/**
+	 * Invoked, when any entity hits this block.
+	 * 
+	 * @param aX
+	 *            the x position.
+	 * @param aY
+	 *            the y position.
+	 * @param aWorld
+	 *            the parent world.
+	 * @param aEntity
+	 *            the hitting entity.
+	 */
 	public void hit(int aX, int aY, World aWorld, Entity aEntity)
 	{}
 }

@@ -18,6 +18,14 @@ public class Player extends Entity
 	
 	private int			mCannonDelay;
 	
+	/**
+	 * Creates a new player at the given position.
+	 * 
+	 * @param aX
+	 *            The x position.
+	 * @param aY
+	 *            The y position.
+	 */
 	public Player(int aX, int aY)
 	{
 		super(aX, aY, 14, 30);
@@ -27,7 +35,7 @@ public class Player extends Entity
 	public void update(Input aInput)
 	{
 		if (mHurtDelay > 0) mHurtDelay-- ;
-		if ( !mHurted)
+		if ( !mHurt)
 		{
 			if (aInput.isKeyPressed(Input.KEY_S) && !mOnGround)
 			{
@@ -67,7 +75,7 @@ public class Player extends Entity
 				else mYV = 0;
 			}
 		}
-		mHurted = false;
+		mHurt = false;
 		
 		mXV += mXA;
 		
@@ -88,6 +96,11 @@ public class Player extends Entity
 		}
 	}
 	
+	/**
+	 * Returns whether this player has started to do a cannon ball (ass bomb).
+	 * 
+	 * @return {@code true} if doing and {@code false} if not.
+	 */
 	public boolean isCannonBall()
 	{
 		return mCannon;
@@ -113,7 +126,7 @@ public class Player extends Entity
 		{
 			mLife -= aAmount;
 			mHurtDelay = 100;
-			mHurted = true;
+			mHurt = true;
 			mXV = aXV;
 			mYV = aYV;
 			if (mLife <= 0) remove();

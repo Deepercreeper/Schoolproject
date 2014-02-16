@@ -7,6 +7,17 @@ public class SpikeBlock extends Block
 {
 	private final byte	mDirection;
 	
+	/**
+	 * Creates a spike block that points into the given direction.<br>
+	 * 0 -> up, 1 -> down, 2 -> right, 3 -> left
+	 * 
+	 * @param aId
+	 *            This blocks id.
+	 * @param aRGB
+	 *            The RGB code of this block.
+	 * @param aDirection
+	 *            The direction of this spike.
+	 */
 	protected SpikeBlock(int aId, int aRGB, int aDirection)
 	{
 		super(aId, aRGB);

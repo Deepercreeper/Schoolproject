@@ -14,6 +14,11 @@ public class View extends BasicGame
 	
 	private final Game				mGame;
 	
+	/**
+	 * Creates a new Minion bros. game.
+	 * 
+	 * @throws SlickException
+	 */
 	public View() throws SlickException
 	{
 		super("Super Minion Bros");

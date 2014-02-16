@@ -16,6 +16,9 @@ import data.DataManager;
 
 public class World
 {
+	/**
+	 * Friction and gravity of the world.
+	 */
 	public static final float				FRICTION			= 0.99f, GRAVITY = 0.3f;
 	
 	private final byte						mId;
@@ -38,6 +41,14 @@ public class World
 	
 	private boolean							mWon;
 	
+	/**
+	 * Creates a world defined by the given id and the given game container.
+	 * 
+	 * @param aId
+	 *            The id of this world.
+	 * @param gc
+	 *            the containing game container.
+	 */
 	public World(int aId, GameContainer gc)
 	{
 		mId = (byte) aId;
@@ -83,6 +94,17 @@ public class World
 		return blocks;
 	}
 	
+	/**
+	 * Tests whether the given entity hits any block or other entity when moving in the given direction.
+	 * 
+	 * @param aXV
+	 *            The x velocity of the given entity.
+	 * @param aYV
+	 *            The y velocity of the given entity.
+	 * @param aEntity
+	 *            The entity that is moving.
+	 * @return {@code Double.NaN} if there is no wall or entity in the way or the distance between the wall or entity and the given entity left.
+	 */
 	public double isFree(double aXV, double aYV, Entity aEntity)
 	{
 		double result = Double.NaN;
@@ -118,46 +140,94 @@ public class World
 					if (aYV > 0) result = Util.minAbs(result, aYV - (entity.getY() + entity.getHeight() - (other.getY())));
 					else result = Util.minAbs(result, aYV + (other.getY() + other.getHeight() - (entity.getY())));
 				}
+				aEntity.hitEntity(aEntity.getXV(), aEntity.getYV(), other);
 			}
 		return result;
 	}
 	
+	/**
+	 * Sets the id of the given positioned block.
+	 * 
+	 * @param aX
+	 *            The x position of the block.
+	 * @param aY
+	 *            The y position of the block.
+	 * @param aId
+	 *            The block id to set.
+	 */
 	public void setBlock(int aX, int aY, byte aId)
 	{
 		mBlocks[aX][aY] = aId;
 	}
 	
+	/**
+	 * Returns the screen position along the x axis.
+	 * 
+	 * @return the screen x position.
+	 */
 	public int getScreenX()
 	{
 		return mScreen.getX();
 	}
 	
+	/**
+	 * Returns the screen position along the y axis.
+	 * 
+	 * @return the screen y position.
+	 */
 	public int getScreenY()
 	{
 		return mScreen.getY();
 	}
 	
+	/**
+	 * Returns the screen width.
+	 * 
+	 * @return the screen width.
+	 */
 	public int getScreenWidth()
 	{
 		return mScreen.getWidth();
 	}
 	
+	/**
+	 * Returns the screen height.
+	 * 
+	 * @return the screen height.
+	 * @return
+	 */
 	public int getScreenHeight()
 	{
 		return mScreen.getHeight();
 	}
 	
+	/**
+	 * Returns the number of blocks in a row.
+	 * 
+	 * @return the map width.
+	 */
 	public int getWidth()
 	{
 		return mWidth;
 	}
 	
+	/**
+	 * Returns the number of blocks in a column.
+	 * 
+	 * @return the map height.
+	 */
 	public int getHeight()
 	{
 		return mHeight;
 	}
 	
-	private void addEntity(Entity aEntity)
+	/**
+	 * Adds the given entity to this world.
+	 * 
+	 * @param aEntity
+	 *            The entity to add.
+	 */
+	public void addEntity(Entity aEntity)
 	{
 		aEntity.init(this, generateId());
 		mAddEntities.add(aEntity);
@@ -169,6 +239,12 @@ public class World
 			if ( !mEntities.containsKey(i)) return i;
 	}
 	
+	/**
+	 * Updates all entities, blocks and the screen.
+	 * 
+	 * @param aInput
+	 *            The information about keyboard and mouse activity.
+	 */
 	public void update(Input aInput)
 	{
 		final HashSet<Integer> remove = new HashSet<>();
@@ -213,26 +289,50 @@ public class World
 		mBlocks = loadBlocks();
 	}
 	
+	/**
+	 * Returns the world id.
+	 * 
+	 * @return the id.
+	 */
 	public byte getId()
 	{
 		return mId;
 	}
 	
+	/**
+	 * Returns whether the player has gone through the finishing flag.
+	 * 
+	 * @return {@code true} if the player has finished and {@code false} if not.
+	 */
 	public boolean hasWon()
 	{
 		return mWon;
 	}
 	
+	/**
+	 * Makes this world be done so the next world can be loaded.
+	 */
 	public void win()
 	{
 		mWon = true;
 	}
 	
+	/**
+	 * The current player of this world.
+	 * 
+	 * @return the player.
+	 */
 	public Player getPlayer()
 	{
 		return mPlayer;
 	}
 	
+	/**
+	 * Renders the background, all blocks and entities.
+	 * 
+	 * @param g
+	 *            the graphics to draw into.
+	 */
 	public void render(Graphics g)
 	{
 		// Render background
