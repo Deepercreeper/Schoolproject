@@ -14,7 +14,7 @@ public class DataManager
 	private static final HashMap<String, Sound>		SOUNDS				= new HashMap<>();
 	private static final HashMap<String, Music>		MUSIC				= new HashMap<>();
 	
-	private static final String[]					sMusicTitles		= new String[] { "world0" };
+	private static final String[]					sMusicTitles		= new String[] { "musicOverworld", "musicBossfight", "musicDesert", "musicMenusound", "musicUnderground" };
 	
 	private static final String[]					sSplitImages		= new String[] { "player" };
 	private static final String[]					sTexturepacks		= new String[] { "Mario", "Minecraft" };
