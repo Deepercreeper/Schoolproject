@@ -296,7 +296,7 @@ public class Block
 	protected boolean isCannon(int aX, int aY, Entity aEntity)
 	{
 		double x = aEntity.getX();
-		return aEntity instanceof Player && ((Player) aEntity).isCannonBall() && aEntity.getY() <= aY * SIZE && x + aEntity.getWidth() > aX * SIZE && x < (aX + 1) * SIZE;
+		return aEntity instanceof Player && ((Player) aEntity).isCannonBall() && aEntity.getY() + aEntity.getHeight() <= aY * SIZE && x + aEntity.getWidth() > aX * SIZE && x < (aX + 1) * SIZE;
 	}
 	
 	/**

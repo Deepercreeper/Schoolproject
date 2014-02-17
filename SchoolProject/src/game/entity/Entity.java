@@ -91,7 +91,7 @@ public abstract class Entity
 			if (restX != 0 && !hitX)
 			{
 				if (Math.abs(stepX) > Math.abs(restX)) stepX = restX;
-				xd = mWorld.isFree((float) stepX, 0, this);
+				xd = mWorld.isFree(stepX, 0, this);
 				if (Double.isNaN(xd)) mX += stepX;
 				else
 				{
@@ -106,7 +106,7 @@ public abstract class Entity
 			if (restY != 0 && !hitY)
 			{
 				if (Math.abs(stepY) > Math.abs(restY)) stepY = restY;
-				yd = mWorld.isFree(0, (float) stepY, this);
+				yd = mWorld.isFree(0, stepY, this);
 				if (Double.isNaN(yd)) mY += stepY;
 				else
 				{
