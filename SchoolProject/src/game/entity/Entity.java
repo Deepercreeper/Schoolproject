@@ -23,7 +23,7 @@ public abstract class Entity
 	/**
 	 * States that tell whether this entity is on the ground, on the wall, on which wall and whether it was hurt at the last update.
 	 */
-	protected boolean	mOnGround, mOnWall, mLeftWall, mHurt;
+	protected boolean	mOnGround, mOnWall, mLeftWall, mHurt, mInLiquid;
 	
 	private boolean		mRemoved;
 	
@@ -137,12 +137,7 @@ public abstract class Entity
 			mYV = 0;
 			mY = 0;
 		}
-		if (mY + mHeight >= height)
-		{
-			mYV = 0;
-			mY = height - mHeight;
-			mOnGround = true;
-		}
+		if (mY >= height) remove();
 	}
 	
 	/**
@@ -275,6 +270,14 @@ public abstract class Entity
 	public int getHeight()
 	{
 		return mHeight;
+	}
+	
+	/**
+	 * Sets the entity state to inside a liquid. That influences the rendering and updating.
+	 */
+	public void setInLiquid()
+	{
+		mInLiquid = true;
 	}
 	
 	/**

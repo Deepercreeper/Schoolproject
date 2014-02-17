@@ -17,7 +17,7 @@ public class DataManager
 	private static final String[]					sMusicTitles		= new String[] { "world0" };
 	
 	private static final String[]					sSplitImages		= new String[] { "player" };
-	private static final String[]					sTexturepacks		= new String[] { "Standard", "Mario", "Minecraft" };
+	private static final String[]					sTexturepacks		= new String[] { "Mario", "Minecraft" };
 	private static final int[][]					sSplitImageSizes	= new int[][] { { 14, 30 } };
 	
 	private static int								sTexturepack		= 0;

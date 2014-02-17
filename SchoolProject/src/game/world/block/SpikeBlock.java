@@ -25,31 +25,26 @@ public class SpikeBlock extends Block
 	}
 	
 	@Override
-	public void hit(int aX, int aY, World aWorld, Entity aEntity)
+	protected void hitTop(int aX, int aY, World aWorld, Entity aEntity, boolean aCannon)
 	{
-		boolean hit = false;
-		float xv = 0, yv = 0;
-		switch (mDirection)
-		{
-			case 0 :
-				hit = aEntity.getYV() > 0 && Math.round(aEntity.getY() + aEntity.getHeight()) <= aY * Block.SIZE;
-				yv = -3;
-				break;
-			case 1 :
-				hit = aEntity.getYV() < 0 && Math.round(aEntity.getY()) >= (aY + 1) * Block.SIZE;
-				yv = 3;
-				break;
-			case 2 :
-				hit = aEntity.getXV() < 0 && Math.round(aEntity.getX()) >= (aX + 1) * Block.SIZE;
-				xv = 5;
-				yv = -2;
-				break;
-			case 3 :
-				hit = aEntity.getXV() > 0 && Math.round(aEntity.getX() + aEntity.getWidth()) <= aX * Block.SIZE;
-				xv = -5;
-				yv = -2;
-				break;
-		}
-		if (hit) aEntity.hurt(1, xv, yv);
+		if (mDirection == 0) aEntity.hurt(1, 0, -3);
+	}
+	
+	@Override
+	protected void hitBottom(int aX, int aY, World aWorld, Entity aEntity, boolean aCannon)
+	{
+		if (mDirection == 1) aEntity.hurt(1, 0, 3);
+	}
+	
+	@Override
+	protected void hitRight(int aX, int aY, World aWorld, Entity aEntity, boolean aCannon)
+	{
+		if (mDirection == 2) aEntity.hurt(1, 5, -2);
+	}
+	
+	@Override
+	protected void hitLeft(int aX, int aY, World aWorld, Entity aEntity, boolean aCannon)
+	{
+		if (mDirection == 3) aEntity.hurt(1, -5, -2);
 	}
 }

@@ -20,9 +20,16 @@ public class BrickBlock extends Block
 	}
 	
 	@Override
-	public void hit(int aX, int aY, World aWorld, Entity aEntity)
+	protected void hitBottom(int aX, int aY, World aWorld, Entity aEntity, boolean aCannon)
 	{
-		if (isUnder(aX, aY, aEntity) || isCannon(aX, aY, aEntity))
+		aWorld.setBlock(aX, aY, Block.AIR.getId());
+		DataManager.playSound("destroyBlock");
+	}
+	
+	@Override
+	protected void hitTop(int aX, int aY, World aWorld, Entity aEntity, boolean aCannon)
+	{
+		if (aCannon)
 		{
 			aWorld.setBlock(aX, aY, Block.AIR.getId());
 			DataManager.playSound("destroyBlock");

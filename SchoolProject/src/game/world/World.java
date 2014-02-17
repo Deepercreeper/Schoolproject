@@ -19,7 +19,7 @@ public class World
 	/**
 	 * Friction and gravity of the world.
 	 */
-	public static final float				FRICTION			= 0.99f, GRAVITY = 0.3f;
+	public static final double				FRICTION	= 0.99, GRAVITY = 0.3;
 	
 	private final byte						mId;
 	
@@ -35,7 +35,7 @@ public class World
 	
 	private final HashSet<Entity>			mAddEntities;
 	
-	private final HashSet<Integer>			mUpdatableBlocks	= new HashSet<>();
+	private final HashSet<Integer>			mUpdatableBlocks	= new HashSet<>(), mLiquidBlocks = new HashSet<>();
 	
 	private Player							mPlayer;
 	
@@ -82,6 +82,7 @@ public class World
 				{
 					Block block = Block.get(id);
 					if (block.isUpdatable()) mUpdatableBlocks.add(x + y * width);
+					if (block.isLiquid()) mLiquidBlocks.add(x + y * width);
 					if (block == Block.START)
 					{
 						mStartX = x;
@@ -348,12 +349,19 @@ public class World
 		// Render entities
 		for (Entity entity : mEntities.values())
 			entity.render(g);
+		
+		// Render liquid blocks
+		for (int tile : mLiquidBlocks)
+		{
+			final int x = tile % mWidth, y = tile / mWidth;
+			renderBlock(x, y, g);
+		}
 	}
 	
 	private void renderBlock(int aX, int aY, Graphics g)
 	{
 		final Block block = Block.get(mBlocks[aX][aY]);
-		if ( !block.isVisible()) return;
+		if ( !block.isVisible() && !block.isLiquid()) return;
 		block.render(aX, aY, g, this);
 	}
 }

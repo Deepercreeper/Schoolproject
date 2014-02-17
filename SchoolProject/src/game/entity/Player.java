@@ -81,19 +81,24 @@ public class Player extends Entity
 		
 		move();
 		
-		mXV *= 0.95f - (mOnGround ? 0.45 : 0);
+		mXV *= 0.95f - (mOnGround ? 0.45 : 0) - (mInLiquid ? 0.3 : 0);
+		
+		final double gravity = World.GRAVITY - (mInLiquid ? 0.1 : 0), friction = World.FRICTION - (mInLiquid ? 0.1 : 0);
 		
 		if (mYV < 0 && aInput.isKeyDown(Input.KEY_SPACE))
 		{
-			mYV *= 0.992;
-			mYV += World.GRAVITY * 0.5f;
+			mYV *= friction + 0.002;
+			mYV += gravity * 0.5f;
 		}
 		else
 		{
-			mYV *= World.FRICTION;
-			if (mOnWall) mYV += (float) (World.GRAVITY * 0.3);
-			else mYV += World.GRAVITY;
+			mYV *= friction;
+			if (mOnWall) mYV += gravity * 0.3;
+			else mYV += gravity;
 		}
+		
+		// Reset attributes
+		mInLiquid = false;
 	}
 	
 	/**
