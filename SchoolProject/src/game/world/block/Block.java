@@ -224,7 +224,6 @@ public class Block
 	/**
 	 * The position of the finish point of the level.
 	 */
-	//PUSHTEST
 	public static final Block				END								= new EndBlock(51, 0x0000FF);
 	
 	private final byte						mId;
