@@ -214,6 +214,8 @@ public class DataManager
 		{
 			Image[] images = loadSplittedImages("texturepacks/blocks" + aName, size);
 			SPLIT_IMAGES.put(aName, images);
+			images = loadSplittedImages("texturepacks/blocks" + aName + "Snow", size);
+			SPLIT_IMAGES.put(aName + "Snow", images); 
 		}
 		for (String name : sMusicTitles)
 			MUSIC.put(name, loadMusic(name));

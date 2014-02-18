@@ -42,6 +42,8 @@ public class Util
 	}
 	
 	/**
+<<<<<<< HEAD
+=======
 	 * If any entity hits this block, this method returns whether this block was hit from the bottom side.
 	 * 
 	 * @param aX
@@ -106,6 +108,7 @@ public class Util
 	}
 	
 	/**
+>>>>>>> refs/remotes/origin/master
 	 * Checks whether the entity is the current player and is doing a cannon ball.
 	 * 
 	 * @param aEntity

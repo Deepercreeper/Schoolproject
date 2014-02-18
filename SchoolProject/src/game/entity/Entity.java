@@ -2,35 +2,40 @@ package game.entity;
 
 import game.world.World;
 import game.world.block.Block;
+import java.util.HashMap;
+import java.util.HashSet;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
+import util.Direction;
 import util.Rectangle;
 
 public abstract class Entity
 {
-	private int	mId;
+	private int									mId;
 	
 	/**
 	 * The position and velocity of this entity.
 	 */
-	protected double	mX, mY, mXV, mYV, mXA, mYA;
+	protected double							mX, mY, mXV, mYV, mXA, mYA;
 	
 	/**
 	 * The size of this entity.
 	 */
-	protected int		mWidth, mHeight;
+	protected int								mWidth, mHeight;
 	
 	/**
 	 * States that tell whether this entity is on the ground, on the wall, on which wall and whether it was hurt at the last update.
 	 */
-	protected boolean	mOnGround, mOnWall, mLeftWall, mHurt, mInLiquid;
+	protected boolean							mOnGround, mOnWall, mLeftWall, mHurt, mInLiquid;
 	
-	private boolean		mRemoved;
+	private boolean								mRemoved;
+	
+	private final HashMap<Integer, Direction>	mTouchingBlocks	= new HashMap<>();
 	
 	/**
 	 * The parent world within this entity is living.
 	 */
-	protected World		mWorld;
+	protected World								mWorld;
 	
 	/**
 	 * Creates a entity with position {@code aX:aY} and size {@code aWidth:aHeight}.
@@ -118,6 +123,8 @@ public abstract class Entity
 			}
 		}
 		
+		touchBlocks();
+		
 		// Out of bounds
 		final int width = mWorld.getWidth() * Block.SIZE, height = mWorld.getHeight() * Block.SIZE;
 		if (mX <= 0)
@@ -138,6 +145,28 @@ public abstract class Entity
 			mY = 0;
 		}
 		if (mY >= height) remove();
+	}
+	
+	private void touchBlocks()
+	{
+		final HashSet<Block> blocks = new HashSet<>();
+		for (int tile : mTouchingBlocks.keySet())
+		{
+			final int x = tile % mWorld.getWidth(), y = tile / mWorld.getWidth();
+			blocks.add(Block.get(mWorld.getBlock(x, y)));
+		}
+		for (int tile : mTouchingBlocks.keySet())
+		{
+			final int x = tile % mWorld.getWidth(), y = tile / mWorld.getWidth();
+			final Direction dir = mTouchingBlocks.get(tile);
+			Block.get(mWorld.getBlock(x, y)).hit(x, y, mWorld, this, dir, blocks);
+		}
+		mTouchingBlocks.clear();
+	}
+	
+	public void addTouchingBlock(int aX, int aY, Direction aDir)
+	{
+		mTouchingBlocks.put(aX + aY * mWorld.getWidth(), aDir); 
 	}
 	
 	/**

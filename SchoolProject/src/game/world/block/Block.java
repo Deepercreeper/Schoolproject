@@ -15,7 +15,7 @@ public class Block
 	 */
 	public static final int					SIZE						= 16;
 	private static HashMap<Byte, Block>		BLOCKS						= new HashMap<>();
-	private static HashMap<Integer, Block>	COLORS						= new HashMap<>();
+	private static HashMap<Integer, Byte>	COLORS						= new HashMap<>();
 	private static HashSet<Byte>			SNOW_IDS					= new HashSet<>();
 	
 	// Blocks
@@ -37,8 +37,8 @@ public class Block
 	public static final Block				GROUND_BOTTOM_RIGHT			= new Block(15, 0x936C2D, 0x995900);
 	public static final Block				GROUND_BOTTOM_STOP_LEFT		= new Block(16, 0xB6B848, 0x997F00);
 	public static final Block				GROUND_BOTTOM_STOP_RIGHT	= new Block(17, 0xABAD45, 0x7F6A00);
-	public static final Block				SPIKES_UP					= new Block(18, 0xBCBCBC).setHurtPlayer(Direction.UP);
-	public static final Block				SPIKES_DOWN					= new Block(19, 0xB5B5B5).setHurtPlayer(Direction.DOWN);
+	public static final Block				SPIKES_UP					= new Block(18, 0xBCBCBC).setHurtPlayer(Direction.TOP);
+	public static final Block				SPIKES_DOWN					= new Block(19, 0xB5B5B5).setHurtPlayer(Direction.BOTTOM);
 	public static final Block				SPIKES_RIGHT				= new Block(20, 0xADADAD).setHurtPlayer(Direction.RIGHT);
 	public static final Block				SPIKES_LEFT					= new Block(21, 0xA5A5A5).setHurtPlayer(Direction.LEFT);
 	public static final Block				WATER_TOP					= new Block(22, 0x5151FF).setLiquid();
@@ -56,7 +56,8 @@ public class Block
 	public static final Block				END							= new Block(34, 0x0000FF).setFlag();
 	
 	// Attributes
-	private final HashSet<BlockAction>		mUpdateActions				= new HashSet<>(), mHitActions = new HashSet<>();
+	private final HashSet<UpdateAction>		mUpdateActions				= new HashSet<>();
+	private final HashSet<HitAction>		mHitActions					= new HashSet<>();
 	private Entity							mItem						= null;
 	private Direction						mHurtDirection				= Direction.NONE;
 	private final byte						mId, mSnowId;
@@ -68,8 +69,9 @@ public class Block
 		mId = (byte) aId;
 		mSnowId = (byte) ( -mId - 1);
 		BLOCKS.put(mId, this);
-		COLORS.put(aSnowRGB, this);
-		COLORS.put(aRGB, this);
+		BLOCKS.put(mSnowId, this);
+		COLORS.put(aSnowRGB, mSnowId);
+		COLORS.put(aRGB, mId);
 		SNOW_IDS.add(mSnowId);
 	}
 	
@@ -78,7 +80,7 @@ public class Block
 		mId = (byte) aId;
 		mSnowId = mId;
 		BLOCKS.put(mId, this);
-		COLORS.put(aRGB, this);
+		COLORS.put(aRGB, mId);
 	}
 	
 	/**
@@ -93,8 +95,8 @@ public class Block
 	 */
 	public void update(int aX, int aY, World aWorld)
 	{
-		for (BlockAction action : mUpdateActions)
-			action.execute(aX, aY, aWorld, null, this);
+		for (UpdateAction action : mUpdateActions)
+			action.execute(aX, aY, aWorld);
 	}
 	
 	/**
@@ -109,10 +111,10 @@ public class Block
 	 * @param aEntity
 	 *            the hitting entity.
 	 */
-	public void hit(int aX, int aY, World aWorld, Entity aEntity)
+	public void hit(int aX, int aY, World aWorld, Entity aEntity, Direction aDirection, HashSet<Block> aOtherBlocks)
 	{
-		for (BlockAction action : mHitActions)
-			action.execute(aX, aY, aWorld, aEntity, this);
+		for (HitAction action : mHitActions)
+			action.execute(aX, aY, aWorld, aEntity, this, aDirection, aOtherBlocks);
 	}
 	
 	private Block setUpdatable()
@@ -138,7 +140,7 @@ public class Block
 		mFlag = true;
 		setUpdatable();
 		setUnsolid();
-		mUpdateActions.add(BlockAction.WIN);
+		mUpdateActions.add(UpdateAction.WIN);
 		return this;
 	}
 	
@@ -147,7 +149,7 @@ public class Block
 		setUpdatable();
 		setUnsolid();
 		mLiquid = true;
-		mUpdateActions.add(BlockAction.LIQUID);
+		mUpdateActions.add(UpdateAction.LIQUID);
 		return this;
 	}
 	
@@ -160,14 +162,14 @@ public class Block
 	private Block setDestroyable(Block aDestination)
 	{
 		mDestination = aDestination;
-		mHitActions.add(BlockAction.DESTROY_ON_HIT);
+		mHitActions.add(HitAction.DESTROY);
 		return this;
 	}
 	
 	private Block setHurtPlayer(Direction aDirection)
 	{
 		mHurtDirection = aDirection;
-		mHitActions.add(BlockAction.HURT_ENTITY);
+		mHitActions.add(HitAction.HURT);
 		return this;
 	}
 	
@@ -203,7 +205,7 @@ public class Block
 	 */
 	public byte getSnowId()
 	{
-		return mId;
+		return mSnowId;
 	}
 	
 	/**
@@ -246,6 +248,13 @@ public class Block
 		return mLiquid;
 	}
 	
+	/**
+	 * Returns the block with the given id.
+	 * 
+	 * @param aId
+	 *            The id.
+	 * @return The block.
+	 */
 	public static Block get(byte aId)
 	{
 		return BLOCKS.get(aId);
@@ -258,8 +267,9 @@ public class Block
 	 *            The color of any pixel inside a world map image.
 	 * @return the id of the searched block.
 	 */
-	public static Block get(int aRGB)
+	public static byte get(int aRGB)
 	{
+		if ( !COLORS.containsKey(aRGB)) return -1;
 		return COLORS.get(aRGB);
 	}
 	
@@ -282,7 +292,7 @@ public class Block
 	 *            The parent world.
 	 * @return {@code true} if the block is snow and {@code false} if not.
 	 */
-	static boolean isSnowBlock(int aX, int aY, World aWorld)
+	public static boolean isSnowBlock(int aX, int aY, World aWorld)
 	{
 		return SNOW_IDS.contains(aWorld.getBlock(aX, aY));
 	}

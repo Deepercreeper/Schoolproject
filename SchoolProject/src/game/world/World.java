@@ -10,6 +10,7 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
+import util.Direction;
 import util.Rectangle;
 import util.Util;
 import data.DataManager;
@@ -76,10 +77,11 @@ public class World
 			{
 				color = image.getColor(x, y);
 				rgb = color.getRed() * redInt + color.getGreen() * greenInt + color.getBlue();
-				Block block = Block.get(rgb);
-				if (block == null) blocks[x][y] = Block.AIR.getId();
+				byte id = Block.get(rgb);
+				if (id == -1) blocks[x][y] = Block.AIR.getId();
 				else
 				{
+					final Block block = Block.get(id);
 					if (block.isUpdatable()) mUpdatableBlocks.add(x + y * width);
 					if (block.isLiquid()) mLiquidBlocks.add(x + y * width);
 					if (block == Block.START)
@@ -88,7 +90,7 @@ public class World
 						mStartY = y - 1;
 						blocks[x][y] = Block.AIR.getId();
 					}
-					else blocks[x][y] = block.getId();
+					else blocks[x][y] = id;
 				}
 			}
 		return blocks;
@@ -119,12 +121,17 @@ public class World
 						if (aXV > 0) result = Util.minAbs(result, aXV - (entity.getMaxX() % Block.SIZE));
 						else result = Util.minAbs(result, -(aEntity.getX() % Block.SIZE));
 					}
-					else
+					else 
 					{
 						if (aYV > 0) result = Util.minAbs(result, aYV - (entity.getMaxY() % Block.SIZE));
 						else result = Util.minAbs(result, -(aEntity.getY() % Block.SIZE));
 					}
-					Block.get(mBlocks[x][y]).hit(x, y, this, aEntity);
+					Direction dir = Direction.NONE;
+					if (aXV > 0) dir = Direction.LEFT;
+					else if (aXV < 0) dir = Direction.RIGHT;
+					else if (aYV > 0) dir = Direction.TOP;
+					else if (aYV < 0) dir = Direction.BOTTOM;
+					aEntity.addTouchingBlock(x, y, dir);
 				}
 			}
 		for (Entity other : mEntities.values())
