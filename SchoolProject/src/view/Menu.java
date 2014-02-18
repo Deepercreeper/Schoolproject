@@ -32,10 +32,12 @@ public class Menu
 	 */
 	public void update(Input aInput)
 	{
-		if (aInput.isKeyPressed(Input.KEY_SPACE)) mGame.hideMenu();
-		if (aInput.isKeyPressed(Input.KEY_ESCAPE)) mGame.stop();
-		if (aInput.isKeyPressed(Input.KEY_RIGHT)) DataManager.setNextTexturePack();
-		if (aInput.isKeyPressed(Input.KEY_LEFT)) DataManager.setPreviousTexturePack();
+		if (aInput.isKeyPressed(Input.KEY_SPACE)) mGame.stop();
+		if (aInput.isKeyPressed(Input.KEY_ESCAPE)) mGame.hideMenu();
+		if (aInput.isKeyPressed(Input.KEY_RIGHT)) DataManager.nextTexturePack();
+		if (aInput.isKeyPressed(Input.KEY_LEFT)) DataManager.previousTexturePack();
+		if (aInput.isKeyPressed(Input.KEY_D)) DataManager.nextTitle();
+		if (aInput.isKeyPressed(Input.KEY_A)) DataManager.previousTitle();
 	}
 	
 	/**
@@ -52,8 +54,18 @@ public class Menu
 		g.setColor(Color.black);
 		g.fillRect(xPos, yPos, WIDTH, HEIGHT);
 		g.setColor(Color.white);
-		g.drawString("< > - TexturePack: " + DataManager.getTexturePack(false), xPos + 10, yPos + 10);
-		g.drawString("Esc - Beenden", xPos + 10, yPos + 40);
-		g.drawString("Space - Weiter", xPos + 10, yPos + 70);
+		g.drawString("< > - TexturePack: " + DataManager.getTexturePack(false), xPos + 10, yPos + 5);
+		g.drawString("A D - Music title: " + DataManager.getTitle(), xPos + 10, yPos + 30);
+		g.drawString("Space - Beenden", xPos + 10, yPos + 55);
+		g.drawString("Esc - Weiter", xPos + 10, yPos + 80);
+	}
+	
+	public void initKeys(Input aInput)
+	{
+		// Prevents switching title when no key was pressed.
+		aInput.isKeyPressed(Input.KEY_RIGHT);
+		aInput.isKeyPressed(Input.KEY_LEFT);
+		aInput.isKeyPressed(Input.KEY_D);
+		aInput.isKeyPressed(Input.KEY_A);
 	}
 }

@@ -3,7 +3,6 @@ package game.entity;
 import game.world.World;
 import game.world.block.Block;
 import java.util.HashMap;
-import java.util.HashSet;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
 import util.Direction;
@@ -149,11 +148,11 @@ public abstract class Entity
 	
 	private void touchBlocks()
 	{
-		final HashSet<Block> blocks = new HashSet<>();
+		final HashMap<Block, Direction> blocks = new HashMap<>();
 		for (int tile : mTouchingBlocks.keySet())
 		{
 			final int x = tile % mWorld.getWidth(), y = tile / mWorld.getWidth();
-			blocks.add(Block.get(mWorld.getBlock(x, y)));
+			blocks.put(Block.get(mWorld.getBlock(x, y)), mTouchingBlocks.get(tile));
 		}
 		for (int tile : mTouchingBlocks.keySet())
 		{
@@ -164,6 +163,16 @@ public abstract class Entity
 		mTouchingBlocks.clear();
 	}
 	
+	/**
+	 * Adds a block to the list of this entity touching blocks.
+	 * 
+	 * @param aX
+	 *            The x position.
+	 * @param aY
+	 *            The y position.
+	 * @param aDir
+	 *            The touching direction.
+	 */
 	public void addTouchingBlock(int aX, int aY, Direction aDir)
 	{
 		mTouchingBlocks.put(aX + aY * mWorld.getWidth(), aDir);

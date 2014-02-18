@@ -14,7 +14,7 @@ public class Rectangle
 	
 	public boolean intersects(Rectangle aRect)
 	{
-		return !(mX > aRect.mX + aRect.mWidth || mX + mWidth < aRect.mX || mY > aRect.mY + aRect.mHeight || mY + mHeight < aRect.mY);
+		return !(mX >= aRect.mX + aRect.mWidth || mX + mWidth <= aRect.mX || mY >= aRect.mY + aRect.mHeight || mY + mHeight <= aRect.mY);
 	}
 	
 	public double getMaxX()

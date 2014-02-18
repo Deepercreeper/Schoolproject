@@ -14,13 +14,13 @@ public class DataManager
 	private static final HashMap<String, Sound>		SOUNDS				= new HashMap<>();
 	private static final HashMap<String, Music>		MUSIC				= new HashMap<>();
 	
-	private static final String[]					sMusicTitles		= new String[] { "world0" };
+	private static final String[]					sTitles				= new String[] { "Overworld", "Bossfight", "Desert", "Menu", "Mountain", "Underground" };
 	
 	private static final String[]					sSplitImages		= new String[] { "player" };
 	private static final String[]					sTexturepacks		= new String[] { "Mario", "Minecraft" };
 	private static final int[][]					sSplitImageSizes	= new int[][] { { 14, 30 } };
 	
-	private static int								sTexturepack		= 0;
+	private static int								sTexturepack		= 0, sTitle = 0;
 	private static float							sVolume				= 1;
 	private static boolean							sLoaded				= false;
 	
@@ -55,13 +55,26 @@ public class DataManager
 	}
 	
 	/**
+	 * Starts to play a music with the current name. All music titles have to have the type ogg and only one music title can be played at one time.
+	 */
+	public static void playMusic()
+	{
+		float volume = 1;
+		Music lastMusic = MUSIC.get(sTitles[sTitle]);
+		if (lastMusic != null) volume = lastMusic.getVolume();
+		MUSIC.get(sTitles[sTitle]).loop();
+		for (Music music : MUSIC.values())
+			music.setVolume(volume);
+	}
+	
+	/**
 	 * The volume of all music titles at this time.
 	 * 
 	 * @return A float out of {@code [0,1]}.
 	 */
 	public static float getVolume()
 	{
-		return MUSIC.get(sMusicTitles[0]).getVolume();
+		return MUSIC.get(sTitles[0]).getVolume();
 	}
 	
 	/**
@@ -88,6 +101,18 @@ public class DataManager
 			if (music.getVolume() == 0) return;
 			music.setVolume(music.getVolume() - 0.1f);
 		}
+	}
+	
+	public static void nextTitle()
+	{
+		sTitle = (sTitle + 1) % sTitles.length;
+		playMusic();
+	}
+	
+	public static void previousTitle()
+	{
+		sTitle = (sTitle - 1 + sTitles.length) % sTitles.length;
+		playMusic();
 	}
 	
 	/**
@@ -155,7 +180,7 @@ public class DataManager
 	/**
 	 * Sets the next texture pack.
 	 */
-	public static void setNextTexturePack()
+	public static void nextTexturePack()
 	{
 		sTexturepack = (sTexturepack + 1) % sTexturepacks.length;
 	}
@@ -163,7 +188,7 @@ public class DataManager
 	/**
 	 * Sets the previous texture pack.
 	 */
-	public static void setPreviousTexturePack()
+	public static void previousTexturePack()
 	{
 		sTexturepack = (sTexturepack - 1 + sTexturepacks.length) % sTexturepacks.length;
 	}
@@ -176,6 +201,16 @@ public class DataManager
 	public static String getTexturePack(boolean aSnow)
 	{
 		return sTexturepacks[sTexturepack] + (aSnow ? "Snow" : "");
+	}
+	
+	/**
+	 * Returns the name of the current music title.
+	 * 
+	 * @return the music title.
+	 */
+	public static String getTitle()
+	{
+		return sTitles[sTitle];
 	}
 	
 	private static Image[] loadSplittedImages(String aName, int[] aSize)
@@ -215,9 +250,9 @@ public class DataManager
 			Image[] images = loadSplittedImages("texturepacks/blocks" + aName, size);
 			SPLIT_IMAGES.put(aName, images);
 			images = loadSplittedImages("texturepacks/blocks" + aName + "Snow", size);
-			SPLIT_IMAGES.put(aName + "Snow", images); 
+			SPLIT_IMAGES.put(aName + "Snow", images);
 		}
-		for (String name : sMusicTitles)
+		for (String name : sTitles)
 			MUSIC.put(name, loadMusic(name));
 		sLoaded = true;
 	}

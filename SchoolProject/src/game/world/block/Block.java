@@ -111,7 +111,7 @@ public class Block
 	 * @param aEntity
 	 *            the hitting entity.
 	 */
-	public void hit(int aX, int aY, World aWorld, Entity aEntity, Direction aDirection, HashSet<Block> aOtherBlocks)
+	public void hit(int aX, int aY, World aWorld, Entity aEntity, Direction aDirection, HashMap<Block, Direction> aOtherBlocks)
 	{
 		for (HitAction action : mHitActions)
 			action.execute(aX, aY, aWorld, aEntity, this, aDirection, aOtherBlocks);

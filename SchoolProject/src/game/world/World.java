@@ -61,7 +61,7 @@ public class World
 		else mHeight = 0;
 		mScreen = new Screen(this, gc.getWidth(), gc.getHeight());
 		addPlayer();
-		DataManager.playMusic("world0");
+		DataManager.nextTitle();
 	}
 	
 	private byte[][] loadBlocks()
@@ -121,7 +121,7 @@ public class World
 						if (aXV > 0) result = Util.minAbs(result, aXV - (entity.getMaxX() % Block.SIZE));
 						else result = Util.minAbs(result, -(aEntity.getX() % Block.SIZE));
 					}
-					else 
+					else
 					{
 						if (aYV > 0) result = Util.minAbs(result, aYV - (entity.getMaxY() % Block.SIZE));
 						else result = Util.minAbs(result, -(aEntity.getY() % Block.SIZE));

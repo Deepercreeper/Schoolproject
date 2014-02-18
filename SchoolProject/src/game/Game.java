@@ -98,7 +98,11 @@ public class Game
 		if (mShowingVolume > 0) mShowingVolume-- ;
 		
 		// Input
-		if (mInput.isKeyPressed(Input.KEY_ESCAPE)) mShowingMenu = true;
+		if (mInput.isKeyPressed(Input.KEY_ESCAPE))
+		{
+			mMenu.initKeys(mInput);
+			mShowingMenu = true;
+		}
 		if (mInput.isKeyPressed(Input.KEY_ADD))
 		{
 			DataManager.volumeUp();
