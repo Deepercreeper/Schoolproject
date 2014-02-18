@@ -13,7 +13,7 @@ public class Block
 	/**
 	 * The size of one block.
 	 */
-	public static final int					SIZE						= 16;
+	public static final int					SIZE						= 20;
 	private static HashMap<Byte, Block>		BLOCKS						= new HashMap<>();
 	private static HashMap<Integer, Byte>	COLORS						= new HashMap<>();
 	private static HashSet<Byte>			SNOW_IDS					= new HashSet<>();
@@ -290,12 +290,26 @@ public class Block
 		return COLORS.get(aRGB);
 	}
 	
+	/**
+	 * Renders the specific block at the given position.
+	 * 
+	 * @param aX
+	 *            The x position.
+	 * @param aY
+	 *            The y position.
+	 * @param aId
+	 *            The block id.
+	 * @param g
+	 *            The graphics to draw into.
+	 * @param aWorld
+	 *            The parent world.
+	 */
 	public static void render(int aX, int aY, byte aId, Graphics g, World aWorld)
 	{
 		final Block block = get(aId);
 		final boolean isSnow = isSnowBlock(aX, aY, aWorld);
 		if (block.mFlag) g.drawImage(DataManager.getImage("flag"), aX * SIZE - aWorld.getScreenX(), (aY - 7) * SIZE - aWorld.getScreenY());
-		else g.drawImage(DataManager.getSplitImage(DataManager.getTexturePack(isSnow), block.getId()), aX * SIZE - aWorld.getScreenX(), aY * SIZE - aWorld.getScreenY());
+		else g.drawImage(DataManager.getSplitImage(DataManager.getTexturePack(isSnow), block.getId()).getScaledCopy(SIZE, SIZE), aX * SIZE - aWorld.getScreenX(), aY * SIZE - aWorld.getScreenY());
 	}
 	
 	/**
