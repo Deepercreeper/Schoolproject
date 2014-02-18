@@ -26,7 +26,7 @@ public abstract class Entity
 	/**
 	 * States that tell whether this entity is on the ground, on the wall, on which wall and whether it was hurt at the last update.
 	 */
-	protected boolean							mOnGround, mOnWall, mLeftWall, mHurt, mInLiquid;
+	protected boolean							mOnGround, mOnWall, mLeftWall, mHurt, mInLiquid, mOnIce;
 	
 	private boolean								mRemoved;
 	
@@ -166,7 +166,7 @@ public abstract class Entity
 	
 	public void addTouchingBlock(int aX, int aY, Direction aDir)
 	{
-		mTouchingBlocks.put(aX + aY * mWorld.getWidth(), aDir); 
+		mTouchingBlocks.put(aX + aY * mWorld.getWidth(), aDir);
 	}
 	
 	/**
@@ -321,6 +321,14 @@ public abstract class Entity
 	public int getHeight()
 	{
 		return mHeight;
+	}
+	
+	/**
+	 * Sets the entity state to on an ice block. That influences the moving.
+	 */
+	public void setOnIce()
+	{
+		mOnIce = true;
 	}
 	
 	/**

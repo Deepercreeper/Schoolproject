@@ -56,6 +56,7 @@ public class Player extends Entity
 				if (aInput.isKeyDown(Input.KEY_A)) mXA -= 1.5;
 				if (aInput.isKeyDown(Input.KEY_LSHIFT)) mXA *= 1.5;
 				if ( !mOnGround) mXA *= 0.125;
+				if (mOnIce) mXA *= 0.08;
 				
 				if (aInput.isKeyPressed(Input.KEY_SPACE) && (mOnGround || mOnWall))
 				{
@@ -79,9 +80,12 @@ public class Player extends Entity
 		
 		mXV += mXA;
 		
+		// Reset attributes
+		mOnIce = false;
+		
 		move();
 		
-		mXV *= 0.95f - (mOnGround ? 0.45 : 0) - (mInLiquid ? 0.3 : 0);
+		mXV *= 0.95f - (mOnGround ? 0.45 : 0) + (mOnIce ? 0.48 : 0) - (mInLiquid ? 0.3 : 0);
 		
 		final double gravity = World.GRAVITY - (mInLiquid ? 0.1 : 0), friction = World.FRICTION - (mInLiquid ? 0.1 : 0);
 		

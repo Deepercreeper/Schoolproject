@@ -43,10 +43,10 @@ public class Block
 	public static final Block				SPIKES_LEFT					= new Block(21, 0xA5A5A5).setHurtPlayer(Direction.LEFT);
 	public static final Block				WATER_TOP					= new Block(22, 0x5151FF).setLiquid();
 	public static final Block				WATER						= new Block(23, 0x0000C6).setLiquid();
-	public static final Block				ICE							= new Block(24, 0x00FF7C);
-	public static final Block				ICE_TOP_LEFT				= new Block(25, 0x96FFAA);
-	public static final Block				ICE_TOP						= new Block(26, 0x00FFC9);
-	public static final Block				ICE_TOP_RIGHT				= new Block(27, 0x00E2B1);
+	public static final Block				ICE							= new Block(24, 0x00FF7C).setIce();
+	public static final Block				ICE_TOP_LEFT				= new Block(25, 0x96FFAA).setIce();
+	public static final Block				ICE_TOP						= new Block(26, 0x00FFC9).setIce();
+	public static final Block				ICE_TOP_RIGHT				= new Block(27, 0x00E2B1).setIce();
 	public static final Block				ICE_STOP_LEFT				= new Block(28, 0x93BCB9);
 	public static final Block				ICE_STOP_RIGHT				= new Block(29, 0xA5D3B8);
 	public static final Block				ICE_LEFT					= new Block(30, 0x96C6AA);
@@ -62,7 +62,7 @@ public class Block
 	private Direction						mHurtDirection				= Direction.NONE;
 	private final byte						mId, mSnowId;
 	private Block							mDestination				= null;
-	private boolean							mSolid						= true, mVisible = true, mUpdatable = false, mLiquid = false, mFlag = false;
+	private boolean							mSolid						= true, mVisible = true, mUpdatable = false, mLiquid = false, mFlag = false, mIce = false;
 	
 	private Block(int aId, int aRGB, int aSnowRGB)
 	{
@@ -153,6 +153,13 @@ public class Block
 		return this;
 	}
 	
+	private Block setIce()
+	{
+		mIce = true;
+		mHitActions.add(HitAction.ICE);
+		return this;
+	}
+	
 	private Block setItem(Entity aEntity)
 	{
 		mItem = aEntity;
@@ -216,6 +223,16 @@ public class Block
 	public boolean isSolid()
 	{
 		return mSolid;
+	}
+	
+	/**
+	 * Returns whether entities flow over this block.
+	 * 
+	 * @return return {@code true} if this block is an ice block and {@code false} if not.
+	 */
+	public boolean isIce()
+	{
+		return mIce;
 	}
 	
 	/**

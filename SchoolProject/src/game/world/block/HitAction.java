@@ -27,6 +27,25 @@ abstract class HitAction
 									};
 								};
 	
+	static HitAction	ICE		= new HitAction()
+								{
+									@Override
+									void execute(int aX, int aY, World aWorld, Entity aEntity, Block aBlock, Direction aHitDirection, HashSet<Block> aOtherBlocks)
+									{
+										ice(aEntity, aHitDirection, aOtherBlocks);
+									};
+								};
+	
+	private static void ice(Entity aEntity, Direction aDirection, HashSet<Block> aOtherBlocks)
+	{
+		if (aDirection == Direction.TOP)
+		{
+			for (Block block : aOtherBlocks)
+				if ( !block.isIce()) return;
+			aEntity.setOnIce();
+		}
+	}
+	
 	private static void hurt(int aX, int aY, Entity aEntity, Block aBlock, Direction aHitDirection, HashSet<Block> aOtherBlocks)
 	{
 		if (aHitDirection != aBlock.getHurtDirection()) return;
