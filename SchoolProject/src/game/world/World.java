@@ -60,13 +60,7 @@ public class World
 		else mHeight = 0;
 		mScreen = new Screen(this, gc.getWidth(), gc.getHeight());
 		addPlayer();
-		int songNr = (int)(Math.random()*5);
-		if(songNr==0) DataManager.playMusic("musicOverworld");
-		else if(songNr==1) DataManager.playMusic("musicBossfight");
-		else if(songNr==2) DataManager.playMusic("musicDesert");
-		else if(songNr==3) DataManager.playMusic("musicMenusound");
-		else if(songNr==4) DataManager.playMusic("musicUnderground");
-		else DataManager.playMusic("musicDesert");
+		DataManager.playMusic("world0");
 	}
 	
 	private byte[][] loadBlocks()
