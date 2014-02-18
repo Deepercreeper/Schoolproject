@@ -1,6 +1,7 @@
 package game.entity;
 
 import game.world.World;
+import game.world.block.Block;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
@@ -28,7 +29,7 @@ public class Player extends Entity
 	 */
 	public Player(int aX, int aY)
 	{
-		super(aX, aY, 14, 30);
+		super(aX, aY, Block.SIZE - 2, Block.SIZE * 2 - 2);
 	}
 	
 	@Override
@@ -119,7 +120,7 @@ public class Player extends Entity
 	public void render(Graphics g)
 	{
 		// Player
-		g.drawImage(DataManager.getSplitImage("player", 0), (float) mX - mWorld.getScreenX(), (float) mY - mWorld.getScreenY());
+		g.drawImage(DataManager.getSplitImage("player", 0).getScaledCopy(mWidth, mHeight), (float) mX - mWorld.getScreenX(), (float) mY - mWorld.getScreenY());
 		
 		// HUD
 		g.setColor(Color.red);

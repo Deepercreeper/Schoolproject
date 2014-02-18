@@ -13,7 +13,7 @@ public class Block
 	/**
 	 * The size of one block.
 	 */
-	public static final int					SIZE						= 20;
+	public static final int					SIZE						= 16;
 	private static HashMap<Byte, Block>		BLOCKS						= new HashMap<>();
 	private static HashMap<Integer, Byte>	COLORS						= new HashMap<>();
 	private static HashSet<Byte>			SNOW_IDS					= new HashSet<>();
