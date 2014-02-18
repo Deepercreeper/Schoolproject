@@ -4,7 +4,7 @@ import game.entity.Entity;
 import game.world.World;
 import data.DataManager;
 
-public class QuestionBlock extends Block
+public class QuestionBlock extends OldBlock
 {
 	/**
 	 * Creates a question block that is unbreakable but contains items.
@@ -22,7 +22,7 @@ public class QuestionBlock extends Block
 	@Override
 	protected void hitBottom(int aX, int aY, World aWorld, Entity aEntity, boolean aCannon)
 	{
-		aWorld.setBlock(aX, aY, isSnowBlock() ? Block.SNOW_OPENED.getId() : Block.OPENED.getId());
+		aWorld.setBlock(aX, aY, isSnowBlock() ? OldBlock.SNOW_OPENED.getId() : Block.OPENED.getId());
 		DataManager.playSound("item");
 	}
 	
@@ -31,7 +31,7 @@ public class QuestionBlock extends Block
 	{
 		if (aCannon)
 		{
-			aWorld.setBlock(aX, aY, isSnowBlock() ? Block.SNOW_OPENED.getId() : Block.OPENED.getId());
+			aWorld.setBlock(aX, aY, isSnowBlock() ? OldBlock.SNOW_OPENED.getId() : Block.OPENED.getId());
 			DataManager.playSound("item");
 		}
 	}

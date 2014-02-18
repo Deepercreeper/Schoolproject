@@ -4,7 +4,7 @@ import game.entity.Entity;
 import game.world.World;
 import data.DataManager;
 
-public class BrickBlock extends Block
+public class BrickBlock extends OldBlock
 {
 	/**
 	 * Creates a brick, that may contain items or is breakable.

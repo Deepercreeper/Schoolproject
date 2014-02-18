@@ -2,7 +2,7 @@ package game.world.block;
 
 import game.world.World;
 
-public class LiquidBlock extends Block
+public class LiquidBlock extends OldBlock
 {
 	/**
 	 * Creates a new liquid block, that makes entities swim or float inside this block.

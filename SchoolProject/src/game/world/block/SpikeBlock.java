@@ -3,7 +3,7 @@ package game.world.block;
 import game.entity.Entity;
 import game.world.World;
 
-public class SpikeBlock extends Block
+public class SpikeBlock extends OldBlock
 {
 	private final byte	mDirection;
 	

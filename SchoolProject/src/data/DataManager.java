@@ -173,9 +173,9 @@ public class DataManager
 	 * 
 	 * @return the name of the texture pack.
 	 */
-	public static String getTexturePack()
+	public static String getTexturePack(boolean aSnow)
 	{
-		return sTexturepacks[sTexturepack];
+		return sTexturepacks[sTexturepack] + (aSnow ? "Snow" : "");
 	}
 	
 	private static Image[] loadSplittedImages(String aName, int[] aSize)

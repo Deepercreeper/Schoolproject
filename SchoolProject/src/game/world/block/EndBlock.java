@@ -5,7 +5,7 @@ import org.newdawn.slick.Graphics;
 import util.Rectangle;
 import data.DataManager;
 
-public class EndBlock extends Block
+public class EndBlock extends OldBlock
 {
 	/**
 	 * Creates an end block that makes the player win the level at stepping through this block.

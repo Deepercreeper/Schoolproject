@@ -213,6 +213,28 @@ public abstract class Entity
 	{}
 	
 	/**
+	 * Moves this entity along the x axis.
+	 * 
+	 * @param aX
+	 *            The new x position.
+	 */
+	public void setX(double aX)
+	{
+		mX = aX;
+	}
+	
+	/**
+	 * Moves this entity along the y axis.
+	 * 
+	 * @param aY
+	 *            The new y position.
+	 */
+	public void setY(double aY)
+	{
+		mY = aY;
+	}
+	
+	/**
 	 * Returns the actual x position of this entity.
 	 * 
 	 * @return the x position.

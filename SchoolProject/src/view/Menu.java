@@ -52,7 +52,7 @@ public class Menu
 		g.setColor(Color.black);
 		g.fillRect(xPos, yPos, WIDTH, HEIGHT);
 		g.setColor(Color.white);
-		g.drawString("< > - TexturePack: " + DataManager.getTexturePack(), xPos + 10, yPos + 10);
+		g.drawString("< > - TexturePack: " + DataManager.getTexturePack(false), xPos + 10, yPos + 10);
 		g.drawString("Esc - Beenden", xPos + 10, yPos + 40);
 		g.drawString("Space - Weiter", xPos + 10, yPos + 70);
 	}

@@ -76,11 +76,10 @@ public class World
 			{
 				color = image.getColor(x, y);
 				rgb = color.getRed() * redInt + color.getGreen() * greenInt + color.getBlue();
-				byte id = Block.get(rgb);
-				if (id == -1) blocks[x][y] = Block.AIR.getId();
+				Block block = Block.get(rgb);
+				if (block == null) blocks[x][y] = Block.AIR.getId();
 				else
 				{
-					Block block = Block.get(id);
 					if (block.isUpdatable()) mUpdatableBlocks.add(x + y * width);
 					if (block.isLiquid()) mLiquidBlocks.add(x + y * width);
 					if (block == Block.START)
@@ -89,7 +88,7 @@ public class World
 						mStartY = y - 1;
 						blocks[x][y] = Block.AIR.getId();
 					}
-					else blocks[x][y] = id;
+					else blocks[x][y] = block.getId();
 				}
 			}
 		return blocks;
@@ -223,6 +222,20 @@ public class World
 	}
 	
 	/**
+	 * Returns the id of the block at the given position.
+	 * 
+	 * @param aX
+	 *            The x position.
+	 * @param aY
+	 *            The y position.
+	 * @return the block id.
+	 */
+	public byte getBlock(int aX, int aY)
+	{
+		return mBlocks[aX][aY];
+	}
+	
+	/**
 	 * Adds the given entity to this world.
 	 * 
 	 * @param aEntity
@@ -231,6 +244,22 @@ public class World
 	public void addEntity(Entity aEntity)
 	{
 		aEntity.init(this, generateId());
+		mAddEntities.add(aEntity);
+	}
+	
+	/**
+	 * Adds the given entity to this world at a specific position.
+	 * 
+	 * @param aEntity
+	 *            The entity to add.
+	 * @param aX
+	 *            The entity x position
+	 */
+	public void addEntity(Entity aEntity, int aX, int aY)
+	{
+		aEntity.init(this, generateId());
+		aEntity.setX(aX);
+		aEntity.setY(aY);
 		mAddEntities.add(aEntity);
 	}
 	
@@ -362,6 +391,6 @@ public class World
 	{
 		final Block block = Block.get(mBlocks[aX][aY]);
 		if ( !block.isVisible() && !block.isLiquid()) return;
-		block.render(aX, aY, g, this);
+		Block.render(aX, aY, mBlocks[aX][aY], g, this);
 	}
 }
