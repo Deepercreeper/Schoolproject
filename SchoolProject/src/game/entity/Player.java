@@ -9,6 +9,8 @@ import data.DataManager;
 
 public class Player extends Entity
 {
+	private int			mTime		= 0;
+	
 	private final int	mMaxLife	= 10;
 	
 	private int			mLife		= mMaxLife;
@@ -35,6 +37,7 @@ public class Player extends Entity
 	@Override
 	public void update(Input aInput)
 	{
+		mTime++ ;
 		if (mHurtDelay > 0) mHurtDelay-- ;
 		if ( !mHurt)
 		{
@@ -120,13 +123,21 @@ public class Player extends Entity
 	public void render(Graphics g)
 	{
 		// Player
-		g.drawImage(DataManager.getSplitImage("player", 0).getScaledCopy(mWidth, mHeight), (float) mX - mWorld.getScreenX(), (float) mY - mWorld.getScreenY());
+		if (mHurtDelay > 0 && mTime % 10 < 5) g.drawImage(DataManager.getSplitImage("player", 0), (float) mX - mWorld.getScreenX(), (float) mY - mWorld.getScreenY(), new Color(1, 1, 1, 0.5f));
+		else g.drawImage(DataManager.getSplitImage("player", 0).getScaledCopy(mWidth, mHeight), (float) mX - mWorld.getScreenX(), (float) mY - mWorld.getScreenY());
 		
 		// HUD
 		g.setColor(Color.red);
 		g.fillRect(10, mWorld.getScreenHeight() - 20, 100, 10);
 		g.setColor(Color.green);
 		g.fillRect(10, mWorld.getScreenHeight() - 20, 100 * mLife / mMaxLife, 10);
+	}
+	
+	@Override
+	public void hitEntity(double aXV, double aYV, Entity aEntity)
+	{
+		if (aEntity instanceof Gore) ((Gore) aEntity).hit(this);
+		if (aEntity.isSolid()) hitWall(aXV, aYV);
 	}
 	
 	@Override
@@ -139,6 +150,10 @@ public class Player extends Entity
 			mHurt = true;
 			mXV = aXV;
 			mYV = aYV;
+			for (int i = (int) (Math.random() * 20 + 10 + (mLife <= 0 ? 10 : 0)); i > 0; i-- )
+				mWorld.addEntity(new Blood((int) (mX + mWidth / 2), (int) (mY + mHeight / 2)));
+			for (int i = (int) (Math.random() * 3 + (mLife <= 0 ? 10 : 0)); i > 0; i-- )
+				mWorld.addEntity(new Gore((int) (mX + mWidth / 2), (int) (mY + mHeight / 2)));
 			if (mLife <= 0) remove();
 		}
 	}

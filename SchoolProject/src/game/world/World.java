@@ -20,21 +20,19 @@ public class World
 	/**
 	 * Friction and gravity of the world.
 	 */
-	public static final double				FRICTION	= 0.99, GRAVITY = 0.3;
+	public static final double	FRICTION	= 0.99, GRAVITY = 0.3;
 	
-	private final byte						mId;
+	private final byte			mId;
 	
-	private final int						mWidth, mHeight;
+	private final int			mWidth, mHeight;
 	
-	private int								mStartX, mStartY;
+	private int					mStartX, mStartY;
 	
-	private final Screen					mScreen;
+	private final Screen		mScreen;
 	
-	private byte[][]						mBlocks;
+	private byte[][]			mBlocks;
 	
-	private final HashMap<Integer, Entity>	mEntities;
-	
-	private final HashSet<Entity>			mAddEntities;
+	private final HashMap<Integer, Entity>	mEntities, mAddEntities;
 	
 	private final HashSet<Integer>			mUpdatableBlocks	= new HashSet<>(), mLiquidBlocks = new HashSet<>();
 	
@@ -54,7 +52,7 @@ public class World
 	{
 		mId = (byte) aId;
 		mEntities = new HashMap<>();
-		mAddEntities = new HashSet<>();
+		mAddEntities = new HashMap<>();
 		reload();
 		mWidth = mBlocks.length;
 		if (mWidth > 0) mHeight = mBlocks[0].length;
@@ -135,17 +133,20 @@ public class World
 				}
 			}
 		for (Entity other : mEntities.values())
-			if (other != aEntity && mScreen.contains(other) && other.isSolid() && other.getRect().intersects(entity))
+			if (other != aEntity && mScreen.contains(other) && aEntity.isSolid() && other.getRect().intersects(entity))
 			{
-				if (aXV != 0)
+				if (other.isSolid())
 				{
-					if (aXV > 0) result = Util.minAbs(result, aXV - (entity.getX() + entity.getWidth() - (other.getX())));
-					else result = Util.minAbs(result, aXV + (other.getX() + other.getWidth() - (entity.getX())));
-				}
-				else
-				{
-					if (aYV > 0) result = Util.minAbs(result, aYV - (entity.getY() + entity.getHeight() - (other.getY())));
-					else result = Util.minAbs(result, aYV + (other.getY() + other.getHeight() - (entity.getY())));
+					if (aXV != 0)
+					{
+						if (aXV > 0) result = Util.minAbs(result, aXV - (entity.getX() + entity.getWidth() - (other.getX())));
+						else result = Util.minAbs(result, aXV + (other.getX() + other.getWidth() - (entity.getX())));
+					}
+					else
+					{
+						if (aYV > 0) result = Util.minAbs(result, aYV - (entity.getY() + entity.getHeight() - (other.getY())));
+						else result = Util.minAbs(result, aYV + (other.getY() + other.getHeight() - (entity.getY())));
+					}
 				}
 				aEntity.hitEntity(aEntity.getXV(), aEntity.getYV(), other);
 			}
@@ -251,7 +252,7 @@ public class World
 	public void addEntity(Entity aEntity)
 	{
 		aEntity.init(this, generateId());
-		mAddEntities.add(aEntity);
+		mAddEntities.put(aEntity.getId(), aEntity);
 	}
 	
 	/**
@@ -267,13 +268,13 @@ public class World
 		aEntity.init(this, generateId());
 		aEntity.setX(aX);
 		aEntity.setY(aY);
-		mAddEntities.add(aEntity);
+		mAddEntities.put(aEntity.getId(), aEntity);
 	}
 	
 	private int generateId()
 	{
 		for (int i = 0;; i++ )
-			if ( !mEntities.containsKey(i)) return i;
+			if ( !mEntities.containsKey(i) && !mAddEntities.containsKey(i)) return i;
 	}
 	
 	/**
@@ -289,7 +290,7 @@ public class World
 			if (entity.isRemoved()) remove.add(entity.getId());
 		for (int id : remove)
 			mEntities.remove(id);
-		for (Entity entity : mAddEntities)
+		for (Entity entity : mAddEntities.values())
 			if ( !entity.isRemoved()) mEntities.put(entity.getId(), entity);
 		mAddEntities.clear();
 		

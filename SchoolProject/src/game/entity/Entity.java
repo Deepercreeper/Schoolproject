@@ -62,7 +62,7 @@ public abstract class Entity
 	 * After that {@code hitWall()} is invoked with the current velocity.<br>
 	 * If this entity hits another entity hitEntity is invoked (if the other.{@code isSolid()}).
 	 */
-	protected void move()
+	protected final void move()
 	{
 		mOnGround = false;
 		
@@ -146,7 +146,7 @@ public abstract class Entity
 		if (mY >= height) remove();
 	}
 	
-	private void touchBlocks()
+	private final void touchBlocks()
 	{
 		final HashMap<Block, Direction> blocks = new HashMap<>();
 		for (int tile : mTouchingBlocks.keySet())
@@ -173,7 +173,7 @@ public abstract class Entity
 	 * @param aDir
 	 *            The touching direction.
 	 */
-	public void addTouchingBlock(int aX, int aY, Direction aDir)
+	public final void addTouchingBlock(int aX, int aY, Direction aDir)
 	{
 		mTouchingBlocks.put(aX + aY * mWorld.getWidth(), aDir);
 	}
@@ -190,7 +190,7 @@ public abstract class Entity
 	 */
 	public void hitEntity(double aXV, double aYV, Entity aEntity)
 	{
-		hitWall(aXV, aYV);
+		if (aEntity.isSolid()) hitWall(aXV, aYV);
 	}
 	
 	/**
@@ -201,7 +201,7 @@ public abstract class Entity
 	 * @param aYV
 	 *            The y velocity.
 	 */
-	private void hitWall(double aXV, double aYV)
+	protected void hitWall(double aXV, double aYV)
 	{
 		if (mHurt) return;
 		if (aXV != 0)
@@ -226,7 +226,7 @@ public abstract class Entity
 	 * 
 	 * @return a rectangle with position {@code mX:mY} and size {@code mWidth:mHeight}.
 	 */
-	public Rectangle getRect()
+	public final Rectangle getRect()
 	{
 		return new Rectangle(mX, mY, mWidth, mHeight);
 	}
@@ -256,7 +256,7 @@ public abstract class Entity
 	 * @param aX
 	 *            The new x position.
 	 */
-	public void setX(double aX)
+	public final void setX(double aX)
 	{
 		mX = aX;
 	}
@@ -267,7 +267,7 @@ public abstract class Entity
 	 * @param aY
 	 *            The new y position.
 	 */
-	public void setY(double aY)
+	public final void setY(double aY)
 	{
 		mY = aY;
 	}
@@ -277,7 +277,7 @@ public abstract class Entity
 	 * 
 	 * @return the x position.
 	 */
-	public double getX()
+	public final double getX()
 	{
 		return mX;
 	}
@@ -287,7 +287,7 @@ public abstract class Entity
 	 * 
 	 * @return the y position.
 	 */
-	public double getY()
+	public final double getY()
 	{
 		return mY;
 	}
@@ -297,7 +297,7 @@ public abstract class Entity
 	 * 
 	 * @return the x velocity.
 	 */
-	public double getXV()
+	public final double getXV()
 	{
 		return mXV;
 	}
@@ -307,7 +307,7 @@ public abstract class Entity
 	 * 
 	 * @return the y velocity.
 	 */
-	public double getYV()
+	public final double getYV()
 	{
 		return mYV;
 	}
@@ -317,7 +317,7 @@ public abstract class Entity
 	 * 
 	 * @return the width.
 	 */
-	public int getWidth()
+	public final int getWidth()
 	{
 		return mWidth;
 	}
@@ -327,7 +327,7 @@ public abstract class Entity
 	 * 
 	 * @return the height.
 	 */
-	public int getHeight()
+	public final int getHeight()
 	{
 		return mHeight;
 	}
@@ -335,7 +335,7 @@ public abstract class Entity
 	/**
 	 * Sets the entity state to on an ice block. That influences the moving.
 	 */
-	public void setOnIce()
+	public final void setOnIce()
 	{
 		mOnIce = true;
 	}
@@ -343,7 +343,7 @@ public abstract class Entity
 	/**
 	 * Sets the entity state to inside a liquid. That influences the rendering and updating.
 	 */
-	public void setInLiquid()
+	public final void setInLiquid()
 	{
 		mInLiquid = true;
 	}
@@ -371,7 +371,7 @@ public abstract class Entity
 	/**
 	 * Removes this entity. Maybe seen as killing.
 	 */
-	public void remove()
+	public final void remove()
 	{
 		mRemoved = true;
 	}
@@ -381,7 +381,7 @@ public abstract class Entity
 	 * 
 	 * @return the id of this entity.
 	 */
-	public int getId()
+	public final int getId()
 	{
 		return mId;
 	}
@@ -394,9 +394,10 @@ public abstract class Entity
 	 * @param aId
 	 *            The created id.
 	 */
-	public void init(World aWorld, int aId)
+	public final void init(World aWorld, int aId)
 	{
 		mWorld = aWorld;
+		mId = aId;
 	}
 	
 	/**
@@ -404,8 +405,31 @@ public abstract class Entity
 	 * 
 	 * @return {@code true} if removed and {@code false} if not.
 	 */
-	public boolean isRemoved()
+	public final boolean isRemoved()
 	{
 		return mRemoved;
+	}
+	
+	@Override
+	public final String toString()
+	{
+		return "<" + mId + "> Position: (" + mX + "," + mY + ") Size: (" + mWidth + "," + mHeight + ")";
+	}
+	
+	@Override
+	public final int hashCode()
+	{
+		return mId;
+	}
+	
+	@Override
+	public final boolean equals(Object o)
+	{
+		if (o instanceof Entity)
+		{
+			Entity e = (Entity) o;
+			return e.mWorld == mWorld && e.mId == mId;
+		}
+		return false;
 	}
 }

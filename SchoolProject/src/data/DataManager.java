@@ -16,9 +16,9 @@ public class DataManager
 	
 	private static final String[]					sTitles				= new String[] { "Overworld", "Bossfight", "Desert", "Menu", "Mountain", "Underground" };
 	
-	private static final String[]					sSplitImages		= new String[] { "player" };
+	private static final String[]					sSplitImages		= new String[] { "player", "entity" };
+	private static final int[][]					sSplitImageSizes	= new int[][] { { 14, 30 }, { 16, 16 } };
 	private static final String[]					sTexturepacks		= new String[] { "Mario", "Minecraft", "Illusion" };
-	private static final int[][]					sSplitImageSizes	= new int[][] { { 14, 30 } };
 	
 	private static int								sTexturepack		= 0, sTitle = 0;
 	private static float							sVolume				= 1;
