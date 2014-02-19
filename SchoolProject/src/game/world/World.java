@@ -4,6 +4,7 @@ import game.Stats;
 import game.entity.Entity;
 import game.entity.Player;
 import game.world.block.Block;
+import game.world.block.Item;
 import java.util.HashMap;
 import java.util.HashSet;
 import org.newdawn.slick.Color;
@@ -86,7 +87,7 @@ public class World
 					if (block.isItemBlock())
 					{
 						blocks[x][y] = Block.AIR.getId();
-						addEntity(Block.getItem(x * Block.SIZE, y * Block.SIZE, rgb));
+						addEntity(Item.getItem(x * Block.SIZE, y * Block.SIZE, rgb));
 					}
 					else if (block == Block.START)
 					{

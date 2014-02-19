@@ -1,7 +1,6 @@
 package game;
 
 import game.world.World;
-import game.world.block.Block;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
@@ -67,7 +66,6 @@ public class Game
 	public void init(GameContainer gc)
 	{
 		mRunning = true;
-		Block.initItems();
 	}
 	
 	private void createWorld(GameContainer gc, int aLevel)

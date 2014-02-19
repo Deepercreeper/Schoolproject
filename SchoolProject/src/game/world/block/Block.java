@@ -17,7 +17,6 @@ public class Block
 	private static final HashMap<Byte, Block>	BLOCKS						= new HashMap<>();
 	private static final HashMap<Integer, Byte>	COLORS						= new HashMap<>();
 	private static final HashSet<Byte>			SNOW_IDS					= new HashSet<>();
-	private static final HashMap<Integer, Item>	ITEMS						= new HashMap<>();
 	
 	// Blocks
 	public static final Block					AIR							= new Block(0, 0xffffff).setInvisible().setUnsolid();
@@ -91,30 +90,6 @@ public class Block
 		mSnowId = Byte.MAX_VALUE;
 		BLOCKS.put(mId, this);
 		mItemBlock = true;
-	}
-	
-	/**
-	 * Creates all color references to entities.
-	 */
-	public static void initItems()
-	{
-		ITEMS.put(0x000001, Item.BANANA);
-	}
-	
-	/**
-	 * Creates a new entity that is referenced by the given color code.
-	 * 
-	 * @param aX
-	 *            The x position of the entity.
-	 * @param aY
-	 *            The y position of the entity.
-	 * @param aRGB
-	 *            The color code.
-	 * @return a new item.
-	 */
-	public static Entity getItem(int aX, int aY, int aRGB)
-	{
-		return ITEMS.get(aRGB).create(aX, aY);
 	}
 	
 	/**
@@ -332,7 +307,7 @@ public class Block
 	{
 		if ( !COLORS.containsKey(aRGB))
 		{
-			if (ITEMS.containsKey(aRGB)) return ITEM.getId();
+			if (Item.containsCode(aRGB)) return ITEM.getId();
 			return -1;
 		}
 		return COLORS.get(aRGB);
