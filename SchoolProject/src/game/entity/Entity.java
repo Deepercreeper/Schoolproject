@@ -401,6 +401,16 @@ public abstract class Entity
 	}
 	
 	/**
+	 * Returns whether this entity is able to destroy blocks. Please override if so.
+	 * 
+	 * @return {@code true} if this entity destroys blocks and {@code false} if not.
+	 */
+	public boolean canDestroyBlocks()
+	{
+		return false;
+	}
+	
+	/**
 	 * Returns whether this entity has been removed before.
 	 * 
 	 * @return {@code true} if removed and {@code false} if not.

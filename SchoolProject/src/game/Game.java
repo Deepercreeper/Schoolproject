@@ -1,6 +1,7 @@
 package game;
 
 import game.world.World;
+import game.world.block.Block;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
@@ -30,10 +31,12 @@ public class Game
 	 */
 	public void render(GameContainer gc, Graphics g)
 	{
-		if ( !DataManager.hasLoaded()) g.drawImage(DataManager.getImage("splash"), 0, 0);
+		if ( !DataManager.isInitiated() || DataManager.isLoading()) g.drawImage(DataManager.getImage("splash"), 0, 0);
 		else
 		{
 			mWorld.render(g);
+			
+			Stats.instance().render(g);
 			
 			if (mShowingMenu)
 			{
@@ -64,6 +67,7 @@ public class Game
 	public void init(GameContainer gc)
 	{
 		mRunning = true;
+		Block.initItems();
 	}
 	
 	private void createWorld(GameContainer gc, int aLevel)
@@ -82,7 +86,7 @@ public class Game
 	 */
 	public void update(GameContainer gc, int aDelta)
 	{
-		if ( !DataManager.hasLoaded()) DataManager.init();
+		if ( !DataManager.isInitiated()) DataManager.init();
 		
 		if (mShowingMenu)
 		{
@@ -113,6 +117,8 @@ public class Game
 			DataManager.volumeDown();
 			mShowingVolume = 30;
 		}
+		
+		Stats.instance().tick();
 		
 		// Updating world
 		mWorld.update(mInput);

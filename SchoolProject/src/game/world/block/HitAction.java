@@ -70,14 +70,15 @@ abstract class HitAction
 	
 	private static void destroy(int aX, int aY, World aWorld, Entity aEntity, Block aBlock, Direction aHitDirection)
 	{
+		if ( !aEntity.canDestroyBlocks()) return;
 		final boolean isSnow = Block.isSnowBlock(aX, aY, aWorld);
 		if (aHitDirection == Direction.BOTTOM)
 		{
 			aWorld.setBlock(aX, aY, isSnow ? aBlock.getDestination().getSnowId() : aBlock.getDestination().getId());
-			Entity item = aBlock.getItem();
+			Item item = aBlock.getItem();
 			if (item != null)
 			{
-				aWorld.addEntity(item, aX * Block.SIZE + Block.SIZE / 2 - item.getWidth() / 2, aY * Block.SIZE - item.getHeight());
+				aWorld.addEntity(item.create(aX * Block.SIZE + Block.SIZE / 2 - aBlock.getItem().getWidth() / 2, aY * Block.SIZE - aBlock.getItem().getHeight()));
 				DataManager.playSound("item");
 			}
 			else DataManager.playSound("destroyBlock");
@@ -85,10 +86,10 @@ abstract class HitAction
 		else if (aHitDirection == Direction.TOP && Util.isCannonBall(aEntity, aWorld))
 		{
 			aWorld.setBlock(aX, aY, isSnow ? aBlock.getDestination().getSnowId() : aBlock.getDestination().getId());
-			Entity item = aBlock.getItem();
+			Item item = aBlock.getItem();
 			if (item != null)
 			{
-				aWorld.addEntity(item, aX * Block.SIZE + Block.SIZE / 2 - item.getWidth() / 2, (aY + 1) * Block.SIZE);
+				aWorld.addEntity(item.create(aX * Block.SIZE + Block.SIZE / 2 - aBlock.getItem().getWidth() / 2, (aY + 1) * Block.SIZE));
 				DataManager.playSound("item");
 			}
 			else DataManager.playSound("destroyBlock");

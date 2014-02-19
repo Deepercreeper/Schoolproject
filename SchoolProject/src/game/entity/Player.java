@@ -137,6 +137,7 @@ public class Player extends Entity
 	public void hitEntity(double aXV, double aYV, Entity aEntity)
 	{
 		if (aEntity instanceof Gore) ((Gore) aEntity).hit(this);
+		if (aEntity instanceof Banana) ((Banana) aEntity).collect();
 		if (aEntity.isSolid()) hitWall(aXV, aYV);
 	}
 	
@@ -156,6 +157,12 @@ public class Player extends Entity
 				mWorld.addEntity(new Gore((int) (mX + mWidth / 2), (int) (mY + mHeight / 2)));
 			if (mLife <= 0) remove();
 		}
+	}
+	
+	@Override
+	public boolean canDestroyBlocks()
+	{
+		return true;
 	}
 	
 	@Override

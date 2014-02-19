@@ -14,7 +14,7 @@ public class DataManager
 	private static final HashMap<String, Sound>		SOUNDS				= new HashMap<>();
 	private static final HashMap<String, Music>		MUSIC				= new HashMap<>();
 	
-	private static final String[]					sTitles				= new String[] { "Bossfight", "Overworld", "Mountain", "Desert", "Menu",  "Underground" };
+	private static final String[]					sTitles				= new String[] { "Bossfight", "Overworld", "Mountain", "Desert", "Menu", "Underground" };
 	
 	private static final String[]					sSplitImages		= new String[] { "player", "entity" };
 	private static final int[][]					sSplitImageSizes	= new int[][] { { 14, 30 }, { 16, 16 } };
@@ -22,7 +22,7 @@ public class DataManager
 	
 	private static int								sTexturepack		= 0, sTitle = 0;
 	private static float							sVolume				= 1;
-	private static boolean							sLoaded				= false;
+	private static boolean							sInitiated			= false, sLoading = false;
 	
 	/**
 	 * Plays a sound with the given name. All sounds have to have the type wav and sounds can be played more times simultanely.
@@ -120,9 +120,14 @@ public class DataManager
 	 * 
 	 * @return {@code true} if it has finished or {@code false} if not.
 	 */
-	public static boolean hasLoaded()
+	public static boolean isInitiated()
 	{
-		return sLoaded;
+		return sInitiated;
+	}
+	
+	public static boolean isLoading()
+	{
+		return sLoading;
 	}
 	
 	/**
@@ -174,6 +179,7 @@ public class DataManager
 	 */
 	public static Image getSplitImage(String aName, int aIndex)
 	{
+		checkTexturePack(aName);
 		return SPLIT_IMAGES.get(aName)[aIndex];
 	}
 	
@@ -183,6 +189,7 @@ public class DataManager
 	public static void nextTexturePack()
 	{
 		sTexturepack = (sTexturepack + 1) % sTexturepacks.length;
+		checkTexturePack(sTexturepacks[sTexturepack]);
 	}
 	
 	/**
@@ -191,6 +198,20 @@ public class DataManager
 	public static void previousTexturePack()
 	{
 		sTexturepack = (sTexturepack - 1 + sTexturepacks.length) % sTexturepacks.length;
+		checkTexturePack(sTexturepacks[sTexturepack]);
+	}
+	
+	private static void checkTexturePack(String aName)
+	{
+		if ( !SPLIT_IMAGES.containsKey(aName))
+		{
+			sLoading = true;
+			Image[] images = loadSplittedImages("texturepacks/blocks" + aName, new int[] { 16, 16 });
+			SPLIT_IMAGES.put(aName, images);
+			images = loadSplittedImages("texturepacks/blocks" + aName + "Snow", new int[] { 16, 16 });
+			SPLIT_IMAGES.put(aName + "Snow", images);
+			sLoading = false;
+		}
 	}
 	
 	/**
@@ -239,22 +260,16 @@ public class DataManager
 	 */
 	public static void init()
 	{
+		sLoading = true;
 		for (int tile = 0; tile < sSplitImages.length; tile++ )
 		{
 			Image[] images = loadSplittedImages(sSplitImages[tile], sSplitImageSizes[tile]);
 			SPLIT_IMAGES.put(sSplitImages[tile], images);
 		}
-		final int[] size = new int[] { 16, 16 };
-		for (String aName : sTexturepacks)
-		{
-			Image[] images = loadSplittedImages("texturepacks/blocks" + aName, size);
-			SPLIT_IMAGES.put(aName, images);
-			images = loadSplittedImages("texturepacks/blocks" + aName + "Snow", size);
-			SPLIT_IMAGES.put(aName + "Snow", images);
-		}
 		for (String name : sTitles)
 			MUSIC.put(name, loadMusic(name));
-		sLoaded = true;
+		sLoading = false;
+		sInitiated = true;
 	}
 	
 	private static Image loadImage(String aName)

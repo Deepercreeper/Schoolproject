@@ -1,5 +1,6 @@
 package game.world;
 
+import game.Stats;
 import game.entity.Entity;
 import game.entity.Player;
 import game.world.block.Block;
@@ -82,7 +83,12 @@ public class World
 					final Block block = Block.get(id);
 					if (block.isUpdatable()) mUpdatableBlocks.add(x + y * width);
 					if (block.isLiquid()) mLiquidBlocks.add(x + y * width);
-					if (block == Block.START)
+					if (block.isItemBlock())
+					{
+						blocks[x][y] = Block.AIR.getId();
+						addEntity(Block.getItem(x * Block.SIZE, y * Block.SIZE, rgb));
+					}
+					else if (block == Block.START)
 					{
 						mStartX = x;
 						mStartY = y - 1;
@@ -296,6 +302,7 @@ public class World
 		
 		if (mPlayer.isRemoved())
 		{
+			Stats.instance().addDeath();
 			reload();
 			addPlayer();
 			return;
@@ -324,6 +331,7 @@ public class World
 	
 	private void reload()
 	{
+		Stats.instance().setBananaLevel();
 		mBlocks = loadBlocks();
 	}
 	
