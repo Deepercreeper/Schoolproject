@@ -9,7 +9,7 @@ public class Texture
 	
 	public static final Texture					NORMAL	= new Texture(0, "Normal");
 	public static final Texture					SNOW	= new Texture(1, "Snow");
-	// public static final Texture DESERT = new Texture(2, "Desert");
+	public static final Texture DESERT = new Texture(2, "Desert");
 	
 	private final byte							mId;
 	
