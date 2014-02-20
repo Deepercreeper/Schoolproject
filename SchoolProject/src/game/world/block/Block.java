@@ -52,8 +52,25 @@ public class Block
 	public static final Block					ICE_LEFT					= new Block(30, 0x96C6AA);
 	public static final Block					ICE_MIDDLE					= new Block(31, 0x00FFA7);
 	public static final Block					ICE_RIGHT					= new Block(32, 0x00BEB1);
-	public static final Block					START						= new Block(33, 0x0);
-	public static final Block					END							= new Block(34, 0x0000FF).setFlag();
+	public static final Block					PLATFORM					= new Block(33, 0x74FF8C);
+	public static final Block					BIGGER_ROCK_LEFT			= new Block(34, 0xD34300);
+	public static final Block					BIGGER_ROCK_RIGHT			= new Block(35, 0xFF5200);
+	public static final Block					BIGGER_ROCK_UP				= new Block(36, 0xFF503D);
+	public static final Block					LARGE_ROCK_TOPLEFT			= new Block(37, 0xFF5188);
+	public static final Block					LARGE_ROCK_TOP				= new Block(38, 0xFF51D9);
+	public static final Block					LARGE_ROCK_TOPRIGHT			= new Block(39, 0xFF88D9);
+	public static final Block					LARGE_ROCK_LEFT				= new Block(40, 0xFF0084);
+	public static final Block					LARGE_ROCK_MIDDLE			= new Block(41, 0xFF00C6);
+	public static final Block					LARGE_ROCK_RIGHT			= new Block(42, 0xFF71C6);
+	/*public static final Block					LARGE_ROCK_DOWNLEFT			= new Block(43, 0xB5003E);
+	public static final Block					LARGE_ROCK_DOWN				= new Block(44, 0xB5008D);
+	public static final Block					LARGE_ROCK_DOWNRIGHT		= new Block(45, 0xB5618D);
+	public static final Block					BIGGER_ROCK_DOWN			= new Block(46, 0xCC1400);
+	public static final Block					ROCK   					    = new Block(47, 0xFF1C00);
+	public static final Block					MUD							= new Block(48, 0x788000);
+	public static final Block					MUD_TOP						= new Block(49, 0x7C7F74);*/
+	public static final Block					START						= new Block(50, 0x0);
+	public static final Block					END							= new Block(51, 0x0000FF).setFlag();
 	public static final Block					ITEM						= new Block();
 	
 	// Attributes
