@@ -6,21 +6,24 @@ import data.DataManager;
 
 public class Banana extends Entity
 {
-	public Banana(int aX, int aY)
+	private final boolean	mSuper;
+	
+	public Banana(int aX, int aY, boolean aSuper)
 	{
 		super(aX, aY, 16, 16);
+		mSuper = aSuper;
 	}
 	
 	@Override
 	public void render(Graphics g)
 	{
-		g.drawImage(DataManager.getSplitImage("entity", 1), (float) (mX - mWorld.getScreenX()), (float) (mY - mWorld.getScreenY()));
+		g.drawImage(DataManager.getSplitImage("entity", mSuper ? 2 : 1), (float) (mX - mWorld.getScreenX()), (float) (mY - mWorld.getScreenY()));
 	}
 	
 	public void collect()
 	{
 		if (isRemoved()) return;
-		Stats.instance().addBanana(1);
+		Stats.instance().addBanana(mSuper ? 5 : 1);
 		DataManager.playSound("banana");
 		remove();
 	}

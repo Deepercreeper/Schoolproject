@@ -54,7 +54,7 @@ public class Menu
 		g.setColor(Color.black);
 		g.fillRect(xPos, yPos, WIDTH, HEIGHT);
 		g.setColor(Color.white);
-		g.drawString("< > - TexturePack: " + DataManager.getTexturePack(false), xPos + 10, yPos + 5);
+		g.drawString("< > - TexturePack: " + DataManager.getTexturePack(), xPos + 10, yPos + 5);
 		g.drawString("A D - Music title: " + DataManager.getTitle(), xPos + 10, yPos + 30);
 		g.drawString("Space - Beenden", xPos + 10, yPos + 55);
 		g.drawString("Esc - Weiter", xPos + 10, yPos + 80);

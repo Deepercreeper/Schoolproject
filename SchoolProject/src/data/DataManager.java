@@ -1,5 +1,6 @@
 package data;
 
+import game.world.block.Texture;
 import java.util.HashMap;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.Music;
@@ -18,7 +19,7 @@ public class DataManager
 	
 	private static final String[]					sSplitImages		= new String[] { "player", "entity" };
 	private static final int[][]					sSplitImageSizes	= new int[][] { { 14, 30 }, { 16, 16 } };
-	private static final String[]					sTexturepacks		= new String[] { "Mario", "Minecraft", "Illusion" };
+	private static final String[]					sTexturepacks		= new String[] { "Mario", "Minecraft" };
 	
 	private static int								sTexturepack		= 0, sTitle = 0;
 	private static float							sVolume				= 1;
@@ -179,8 +180,22 @@ public class DataManager
 	 */
 	public static Image getSplitImage(String aName, int aIndex)
 	{
-		checkTexturePack(aName);
 		return SPLIT_IMAGES.get(aName)[aIndex];
+	}
+	
+	/**
+	 * Returns a part of the split image {@code aName.png} with position {@code aIndex}.
+	 * 
+	 * @param aName
+	 *            The name of the split image.
+	 * @param aIndex
+	 *            The index of the image part.
+	 * @return the {@code aIndex}s part of {@code aName}.png.
+	 */
+	public static Image getTextureImage(String aName, Texture aTexture, int aIndex)
+	{
+		checkTexturePack(aName);
+		return SPLIT_IMAGES.get(aName + aTexture.getSuffix())[aIndex];
 	}
 	
 	/**
@@ -203,13 +218,14 @@ public class DataManager
 	
 	private static void checkTexturePack(String aName)
 	{
-		if ( !SPLIT_IMAGES.containsKey(aName))
+		if ( !SPLIT_IMAGES.containsKey(aName + Texture.NORMAL.getSuffix()))
 		{
 			sLoading = true;
-			Image[] images = loadSplittedImages("texturepacks/blocks" + aName, new int[] { 16, 16 });
-			SPLIT_IMAGES.put(aName, images);
-			images = loadSplittedImages("texturepacks/blocks" + aName + "Snow", new int[] { 16, 16 });
-			SPLIT_IMAGES.put(aName + "Snow", images);
+			for (Texture texture : Texture.values())
+			{
+				Image[] images = loadSplittedImages("texturepacks/blocks" + aName + texture.getSuffix(), new int[] { 16, 16 });
+				SPLIT_IMAGES.put(aName + texture.getSuffix(), images);
+			}
 			sLoading = false;
 		}
 	}
@@ -219,9 +235,9 @@ public class DataManager
 	 * 
 	 * @return the name of the texture pack.
 	 */
-	public static String getTexturePack(boolean aSnow)
+	public static String getTexturePack()
 	{
-		return sTexturepacks[sTexturepack] + (aSnow ? "Snow" : "");
+		return sTexturepacks[sTexturepack];
 	}
 	
 	/**

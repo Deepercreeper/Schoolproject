@@ -71,10 +71,10 @@ abstract class HitAction
 	private static void destroy(int aX, int aY, World aWorld, Entity aEntity, Block aBlock, Direction aHitDirection)
 	{
 		if ( !aEntity.canDestroyBlocks()) return;
-		final boolean isSnow = Block.isSnowBlock(aX, aY, aWorld);
+		final Texture texture = Block.getBlockTexture(aX, aY, aWorld);
 		if (aHitDirection == Direction.BOTTOM)
 		{
-			aWorld.setBlock(aX, aY, isSnow ? aBlock.getDestination().getSnowId() : aBlock.getDestination().getId());
+			aWorld.setBlock(aX, aY, aBlock.getDestination().getId(texture));
 			Item item = aBlock.getItem();
 			if (item != null)
 			{
@@ -85,7 +85,7 @@ abstract class HitAction
 		}
 		else if (aHitDirection == Direction.TOP && Util.isCannonBall(aEntity, aWorld))
 		{
-			aWorld.setBlock(aX, aY, isSnow ? aBlock.getDestination().getSnowId() : aBlock.getDestination().getId());
+			aWorld.setBlock(aX, aY, aBlock.getDestination().getId(texture));
 			Item item = aBlock.getItem();
 			if (item != null)
 			{

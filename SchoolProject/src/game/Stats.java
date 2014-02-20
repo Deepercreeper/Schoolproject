@@ -31,13 +31,10 @@ public class Stats
 		mBananasInLevel = 0;
 	}
 	
-	public void addBanana(int aNr)
+	public void addBanana(int aAmount)
 	{
-		for(int i=0; i < aNr; i++)
-		{
-		    mBananas++ ;
-		    mBananasInLevel++ ;
-		}
+		mBananas += aAmount;
+		mBananasInLevel += aAmount;
 	}
 	
 	public void tick()
