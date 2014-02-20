@@ -67,8 +67,8 @@ public class Block
 	public static final Block						LARGE_ROCK_BOTTOM_RIGHT		= new Block(45, 0xB5618D);
 	public static final Block						SMALL_ROCK_BOTTOM			= new Block(46, 0xCC1400);
 	public static final Block						ROCK						= new Block(47, 0xFF1C00);
-	public static final Block						MUD							= new Block(48, 0x788000);
-	public static final Block						MUD_TOP						= new Block(49, 0x7C7F74);
+	public static final Block						MUD							= new Block(48, 0x788000).setLiquid();
+	public static final Block						MUD_TOP						= new Block(49, 0x7C7F74).setLiquid();
 	public static final Block						START						= new Block(50, 0x0);
 	public static final Block						END							= new Block(51, 0x0000FF).setFlag();
 	public static final Block						ITEM						= new Block();
