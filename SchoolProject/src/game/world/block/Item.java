@@ -1,6 +1,7 @@
 package game.world.block;
 
 import game.entity.Banana;
+import game.entity.SuperBanana;
 import game.entity.Entity;
 import java.util.HashMap;
 
@@ -8,7 +9,7 @@ public abstract class Item
 {
 	private static final HashMap<Integer, Item>	ITEMS	= new HashMap<>();
 	
-	public static final Item					BANANA	= new Item(0x000001)
+	public static final Item					BANANA	= new Item(0xFFD800)
 														{
 															@Override
 															public Entity create(int aX, int aY)
@@ -28,6 +29,27 @@ public abstract class Item
 																return 16;
 															}
 														};
+														
+	public static final Item					SUPER_BANANA = new Item(0x000001)		
+															{
+																@Override
+																public Entity create(int aX, int aY)
+																{
+																	return new SuperBanana(aX, aY);
+																}
+																
+																@Override
+																public int getWidth()
+																{
+																	return 16;
+																}
+																
+																@Override
+																public int getHeight()
+																{
+																	return 16;
+																}
+															};
 	
 	private Item(int aRGB)
 	{

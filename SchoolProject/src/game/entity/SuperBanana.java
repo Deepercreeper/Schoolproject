@@ -4,9 +4,9 @@ import game.Stats;
 import org.newdawn.slick.Graphics;
 import data.DataManager;
 
-public class Banana extends Entity
+public class SuperBanana extends Entity
 {
-	public Banana(int aX, int aY)
+	public SuperBanana(int aX, int aY)
 	{
 		super(aX, aY, 16, 16);
 	}
@@ -14,13 +14,13 @@ public class Banana extends Entity
 	@Override
 	public void render(Graphics g)
 	{
-		g.drawImage(DataManager.getSplitImage("entity", 1), (float) (mX - mWorld.getScreenX()), (float) (mY - mWorld.getScreenY()));
+		g.drawImage(DataManager.getSplitImage("entity", 2), (float) (mX - mWorld.getScreenX()), (float) (mY - mWorld.getScreenY()));
 	}
 	
 	public void collect()
 	{
 		if (isRemoved()) return;
-		Stats.instance().addBanana(1);
+		Stats.instance().addBanana(5);
 		DataManager.playSound("banana");
 		remove();
 	}

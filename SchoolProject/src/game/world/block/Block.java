@@ -23,7 +23,7 @@ public class Block
 	public static final Block										STONE						= new Block(1, 0xB89040, 0xC0C0C0);
 	public static final Block										BRICK						= new Block(2, 0xB06000, 0x727272).setDestroyable(AIR);
 	public static final Block										OPENED						= new Block(3, 0xC03010, 0xC03011);
-	public static final Block										QUESTION					= new Block(4, 0xD8B018, 0xFFD800).setDestroyable(OPENED).setItem(Item.BANANA);
+	public static final Block										QUESTION					= new Block(4, 0xD8B018, 0xFFD800).setDestroyable(OPENED).setItem(Item.SUPER_BANANA);
 	public static final Block										GROUND_TOP_LEFT				= new Block(5, 0x00E000, 0x93FFFF);
 	public static final Block										GROUND_TOP					= new Block(6, 0x00BA00, 0x00FFFF);
 	public static final Block										GROUND_TOP_RIGHT			= new Block(7, 0x009300, 0x00D3D3);
