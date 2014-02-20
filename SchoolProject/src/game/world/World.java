@@ -32,7 +32,7 @@ public class World
 	
 	private final Screen		mScreen;
 	
-	private byte[][]			mBlocks;
+	private int[][]				mBlocks;
 	
 	private final HashMap<Integer, Entity>	mEntities, mAddEntities;
 	
@@ -64,12 +64,12 @@ public class World
 		DataManager.nextTitle();
 	}
 	
-	private byte[][] loadBlocks()
+	private int[][] loadBlocks()
 	{
 		Image image = DataManager.getWorldImage(mId);
 		final int width = image.getWidth(), height = image.getHeight();
 		final int redInt = (int) Math.pow(2, 16), greenInt = (int) Math.pow(2, 8);
-		byte[][] blocks = new byte[width][height];
+		int[][] blocks = new int[width][height];
 		Color color;
 		int rgb;
 		for (int x = 0; x < width; x++ )
@@ -77,7 +77,7 @@ public class World
 			{
 				color = image.getColor(x, y);
 				rgb = color.getRed() * redInt + color.getGreen() * greenInt + color.getBlue();
-				byte id = Block.get(rgb);
+				int id = Block.getIdFromCode(rgb);
 				if (id == -1) blocks[x][y] = Block.AIR.getId();
 				else
 				{
@@ -170,7 +170,7 @@ public class World
 	 * @param aId
 	 *            The block id to set.
 	 */
-	public void setBlock(int aX, int aY, byte aId)
+	public void setBlock(int aX, int aY, int aId)
 	{
 		mBlocks[aX][aY] = aId;
 	}
@@ -245,7 +245,7 @@ public class World
 	 *            The y position.
 	 * @return the block id.
 	 */
-	public byte getBlock(int aX, int aY)
+	public int getBlock(int aX, int aY)
 	{
 		return mBlocks[aX][aY];
 	}

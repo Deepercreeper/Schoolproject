@@ -13,80 +13,80 @@ public class Block
 	/**
 	 * The size of one block.
 	 */
-	public static final int						SIZE						= 16;
-	private static final HashMap<Byte, Block>	BLOCKS						= new HashMap<>();
-	private static final HashMap<Integer, Byte>	COLORS						= new HashMap<>();
-	private static final HashMap<Byte, Texture>	TEXTURES					= new HashMap<>();
+	public static final int							SIZE						= 16;
+	private static final HashMap<Integer, Block>	BLOCKS						= new HashMap<>();
+	private static final HashMap<Integer, Integer>	COLORS						= new HashMap<>();
+	private static final HashMap<Integer, Texture>	TEXTURES					= new HashMap<>();
 	
 	// Blocks
-	public static final Block					AIR							= new Block(0, 0xffffff).setInvisible().setUnsolid();
-	public static final Block					STONE						= new Block(1, new int[] { 0xB89040, 0xC0C0C0, 0xB89040 });
-	public static final Block					BRICK						= new Block(2, new int[] { 0xB06000, 0x727272, 0xB06000 }).setDestroyable(AIR);
-	public static final Block					OPENED						= new Block(3, new int[] { 0xC03010, 0xC03011, 0xC03010 });
-	public static final Block					QUESTION					= new Block(4, new int[] { 0xD8B018, 0xFFD800, 0xD8B018 }).setDestroyable(OPENED).setItem(Item.SUPER_BANANA);
-	public static final Block					GROUND_TOP_LEFT				= new Block(5, new int[] { 0x00E000, 0x93FFFF, 0xFFA359 });
-	public static final Block					GROUND_TOP					= new Block(6, new int[] { 0x00BA00, 0x00FFFF, 0xFF7400 });
-	public static final Block					GROUND_TOP_RIGHT			= new Block(7, new int[] { 0x009300, 0x00D3D3, 0xB75200 });
-	public static final Block					GROUND_STOP_LEFT			= new Block(8, new int[] { 0x8CB848, 0x8EF4D5, 0x87612D });
-	public static final Block					GROUND_STOP_RIGHT			= new Block(9, new int[] { 0x73963C, 0x00DDD3, 0x704A00 });
-	public static final Block					GROUND_LEFT					= new Block(10, new int[] { 0xF0B848, 0xAD7854, 0x87512D });
-	public static final Block					GROUND_MIDDLE				= new Block(11, new int[] { 0xD3A23F, 0xAF4600, 0x873600 });
-	public static final Block					GROUND_RIGHT				= new Block(12, new int[] { 0xAD8434, 0x993D00, 0x702C00 });
-	public static final Block					GROUND_BOTTOM_LEFT			= new Block(13, new int[] { 0xA07931, 0xAD9354, 0xBC5F3A });
-	public static final Block					GROUND_BOTTOM				= new Block(14, new int[] { 0x99722F, 0xAF6D00, 0xBE3600 });
-	public static final Block					GROUND_BOTTOM_RIGHT			= new Block(15, new int[] { 0x936C2D, 0x995900, 0xA02D00 });
-	public static final Block					GROUND_BOTTOM_STOP_LEFT		= new Block(16, new int[] { 0xB6B848, 0x997F00, 0xA05500 });
-	public static final Block					GROUND_BOTTOM_STOP_RIGHT	= new Block(17, new int[] { 0xABAD45, 0x7F6A00, 0xBC803A });
-	public static final Block					SPIKES_UP					= new Block(18, 0xBCBCBC).setHurtPlayer(Direction.TOP);
-	public static final Block					SPIKES_DOWN					= new Block(19, 0xB5B5B5).setHurtPlayer(Direction.BOTTOM);
-	public static final Block					SPIKES_RIGHT				= new Block(20, 0xADADAD).setHurtPlayer(Direction.RIGHT);
-	public static final Block					SPIKES_LEFT					= new Block(21, 0xA5A5A5).setHurtPlayer(Direction.LEFT);
-	public static final Block					WATER_TOP					= new Block(22, 0x5151FF).setLiquid();
-	public static final Block					WATER						= new Block(23, 0x0000C6).setLiquid();
-	public static final Block					ICE							= new Block(24, 0x00FF7C).setIce();
-	public static final Block					ICE_TOP_LEFT				= new Block(25, 0x96FFAA).setIce();
-	public static final Block					ICE_TOP						= new Block(26, 0x00FFC9).setIce();
-	public static final Block					ICE_TOP_RIGHT				= new Block(27, 0x00E2B1).setIce();
-	public static final Block					ICE_STOP_LEFT				= new Block(28, 0x93BCB9);
-	public static final Block					ICE_STOP_RIGHT				= new Block(29, 0xA5D3B8);
-	public static final Block					ICE_LEFT					= new Block(30, 0x96C6AA);
-	public static final Block					ICE_MIDDLE					= new Block(31, 0x00FFA7);
-	public static final Block					ICE_RIGHT					= new Block(32, 0x00BEB1);
-	public static final Block					PLATFORM					= new Block(33, 0x74FF8C);
-	public static final Block					BIGGER_ROCK_LEFT			= new Block(34, 0xD34300);
-	public static final Block					BIGGER_ROCK_RIGHT			= new Block(35, 0xFF5200);
-	public static final Block					BIGGER_ROCK_UP				= new Block(36, 0xFF503D);
-	public static final Block					LARGE_ROCK_TOPLEFT			= new Block(37, 0xFF5188);
-	public static final Block					LARGE_ROCK_TOP				= new Block(38, 0xFF51D9);
-	public static final Block					LARGE_ROCK_TOPRIGHT			= new Block(39, 0xFF88D9);
-	public static final Block					LARGE_ROCK_LEFT				= new Block(40, 0xFF0084);
-	public static final Block					LARGE_ROCK_MIDDLE			= new Block(41, 0xFF00C6);
-	public static final Block					LARGE_ROCK_RIGHT			= new Block(42, 0xFF71C6);
-	/*public static final Block					LARGE_ROCK_DOWNLEFT			= new Block(43, 0xB5003E);
-	public static final Block					LARGE_ROCK_DOWN				= new Block(44, 0xB5008D);
-	public static final Block					LARGE_ROCK_DOWNRIGHT		= new Block(45, 0xB5618D);
-	public static final Block					BIGGER_ROCK_DOWN			= new Block(46, 0xCC1400);
-	public static final Block					ROCK   					    = new Block(47, 0xFF1C00);
-	public static final Block					MUD							= new Block(48, 0x788000);
-	public static final Block					MUD_TOP						= new Block(49, 0x7C7F74);*/
-	public static final Block					START						= new Block(50, 0x0);
-	public static final Block					END							= new Block(51, 0x0000FF).setFlag();
-	public static final Block					ITEM						= new Block();
+	public static final Block						AIR							= new Block(0, 0xffffff).setInvisible().setUnsolid();
+	public static final Block						STONE						= new Block(1, new int[] { 0xB89040, 0xC0C0C0, 0xB89040 });
+	public static final Block						BRICK						= new Block(2, new int[] { 0xB06000, 0x727272, 0xB06000 }).setDestroyable(AIR);
+	public static final Block						OPENED						= new Block(3, new int[] { 0xC03010, 0xC03011, 0xC03010 });
+	public static final Block						QUESTION					= new Block(4, new int[] { 0xD8B018, 0xFFD800, 0xD8B018 }).setDestroyable(OPENED).setItem(Item.SUPER_BANANA);
+	public static final Block						GROUND_TOP_LEFT				= new Block(5, new int[] { 0x00E000, 0x93FFFF, 0xFFA359 });
+	public static final Block						GROUND_TOP					= new Block(6, new int[] { 0x00BA00, 0x00FFFF, 0xFF7400 });
+	public static final Block						GROUND_TOP_RIGHT			= new Block(7, new int[] { 0x009300, 0x00D3D3, 0xB75200 });
+	public static final Block						GROUND_STOP_LEFT			= new Block(8, new int[] { 0x8CB848, 0x8EF4D5, 0x87612D });
+	public static final Block						GROUND_STOP_RIGHT			= new Block(9, new int[] { 0x73963C, 0x00DDD3, 0x704A00 });
+	public static final Block						GROUND_LEFT					= new Block(10, new int[] { 0xF0B848, 0xAD7854, 0x87512D });
+	public static final Block						GROUND_MIDDLE				= new Block(11, new int[] { 0xD3A23F, 0xAF4600, 0x873600 });
+	public static final Block						GROUND_RIGHT				= new Block(12, new int[] { 0xAD8434, 0x993D00, 0x702C00 });
+	public static final Block						GROUND_BOTTOM_LEFT			= new Block(13, new int[] { 0xA07931, 0xAD9354, 0xBC5F3A });
+	public static final Block						GROUND_BOTTOM				= new Block(14, new int[] { 0x99722F, 0xAF6D00, 0xBE3600 });
+	public static final Block						GROUND_BOTTOM_RIGHT			= new Block(15, new int[] { 0x936C2D, 0x995900, 0xA02D00 });
+	public static final Block						GROUND_BOTTOM_STOP_LEFT		= new Block(16, new int[] { 0xB6B848, 0x997F00, 0xA05500 });
+	public static final Block						GROUND_BOTTOM_STOP_RIGHT	= new Block(17, new int[] { 0xABAD45, 0x7F6A00, 0xBC803A });
+	public static final Block						SPIKES_UP					= new Block(18, 0xBCBCBC).setHurtPlayer(Direction.TOP);
+	public static final Block						SPIKES_DOWN					= new Block(19, 0xB5B5B5).setHurtPlayer(Direction.BOTTOM);
+	public static final Block						SPIKES_RIGHT				= new Block(20, 0xADADAD).setHurtPlayer(Direction.RIGHT);
+	public static final Block						SPIKES_LEFT					= new Block(21, 0xA5A5A5).setHurtPlayer(Direction.LEFT);
+	public static final Block						WATER_TOP					= new Block(22, 0x5151FF).setLiquid();
+	public static final Block						WATER						= new Block(23, 0x0000C6).setLiquid();
+	public static final Block						ICE							= new Block(24, 0x00FF7C).setIce();
+	public static final Block						ICE_TOP_LEFT				= new Block(25, 0x96FFAA).setIce();
+	public static final Block						ICE_TOP						= new Block(26, 0x00FFC9).setIce();
+	public static final Block						ICE_TOP_RIGHT				= new Block(27, 0x00E2B1).setIce();
+	public static final Block						ICE_STOP_LEFT				= new Block(28, 0x93BCB9);
+	public static final Block						ICE_STOP_RIGHT				= new Block(29, 0xA5D3B8);
+	public static final Block						ICE_LEFT					= new Block(30, 0x96C6AA);
+	public static final Block						ICE_MIDDLE					= new Block(31, 0x00FFA7);
+	public static final Block						ICE_RIGHT					= new Block(32, 0x00BEB1);
+	public static final Block						PLATFORM					= new Block(33, 0x74FF8C);
+	public static final Block						BIGGER_ROCK_LEFT			= new Block(34, 0xD34300);
+	public static final Block						BIGGER_ROCK_RIGHT			= new Block(35, 0xFF5200);
+	public static final Block						BIGGER_ROCK_UP				= new Block(36, 0xFF503D);
+	public static final Block						LARGE_ROCK_TOPLEFT			= new Block(37, 0xFF5188);
+	public static final Block						LARGE_ROCK_TOP				= new Block(38, 0xFF51D9);
+	public static final Block						LARGE_ROCK_TOPRIGHT			= new Block(39, 0xFF88D9);
+	public static final Block						LARGE_ROCK_LEFT				= new Block(40, 0xFF0084);
+	public static final Block						LARGE_ROCK_MIDDLE			= new Block(41, 0xFF00C6);
+	public static final Block						LARGE_ROCK_RIGHT			= new Block(42, 0xFF71C6);
+	public static final Block						LARGE_ROCK_DOWNLEFT			= new Block(43, 0xB5003E);
+	public static final Block						LARGE_ROCK_DOWN				= new Block(44, 0xB5008D);
+	public static final Block						LARGE_ROCK_DOWNRIGHT		= new Block(45, 0xB5618D);
+	public static final Block						BIGGER_ROCK_DOWN			= new Block(46, 0xCC1400);
+	public static final Block						ROCK						= new Block(47, 0xFF1C00);
+	public static final Block						MUD							= new Block(48, 0x788000);
+	public static final Block						MUD_TOP						= new Block(49, 0x7C7F74);
+	public static final Block						START						= new Block(50, 0x0);
+	public static final Block						END							= new Block(51, 0x0000FF).setFlag();
+	public static final Block						ITEM						= new Block();
 	
 	// Attributes
-	private final HashSet<UpdateAction>			mUpdateActions				= new HashSet<>();
-	private final HashSet<HitAction>			mHitActions					= new HashSet<>();
-	private final HashMap<Texture, Byte>		mIds						= new HashMap<>();
-	private Item								mItem						= null;
-	private Direction							mHurtDirection				= Direction.NONE;
-	private Block								mDestination				= null;
-	private boolean								mSolid						= true, mVisible = true, mUpdatable = false, mLiquid = false, mFlag = false, mIce = false, mItemBlock = false;
+	private final HashSet<UpdateAction>				mUpdateActions				= new HashSet<>();
+	private final HashSet<HitAction>				mHitActions					= new HashSet<>();
+	private final HashMap<Texture, Integer>			mIds						= new HashMap<>();
+	private Item									mItem						= null;
+	private Direction								mHurtDirection				= Direction.NONE;
+	private Block									mDestination				= null;
+	private boolean									mSolid						= true, mVisible = true, mUpdatable = false, mLiquid = false, mFlag = false, mIce = false, mItemBlock = false;
 	
 	private Block(int aId, int[] aRGBs)
 	{
 		final int textures = Texture.values().size();
 		for (Texture texture : Texture.values())
-			mIds.put(texture, (byte) (aId * textures + texture.getId()));
+			mIds.put(texture, aId * textures + texture.getId());
 		for (Texture texture : mIds.keySet())
 			BLOCKS.put(mIds.get(texture), this);
 		if (aRGBs.length != textures) throw new IllegalArgumentException("Not the right number of color codes");
@@ -98,7 +98,7 @@ public class Block
 	
 	private Block(int aId, int aRGB)
 	{
-		byte id = (byte) (aId * Texture.values().size());
+		int id = aId * Texture.values().size();
 		for (Texture texture : Texture.values())
 			mIds.put(texture, id);
 		BLOCKS.put(id, this);
@@ -108,7 +108,7 @@ public class Block
 	
 	protected Block()
 	{
-		byte id = Byte.MAX_VALUE;
+		int id = Integer.MAX_VALUE;
 		for (Texture texture : Texture.values())
 			mIds.put(texture, id);
 		BLOCKS.put(id, this);
@@ -233,7 +233,7 @@ public class Block
 	 * 
 	 * @return this blocks id.
 	 */
-	public byte getId(Texture aTexture)
+	public int getId(Texture aTexture)
 	{
 		return mIds.get(aTexture);
 	}
@@ -243,7 +243,7 @@ public class Block
 	 * 
 	 * @return this blocks id.
 	 */
-	public byte getId()
+	public int getId()
 	{
 		return mIds.get(Texture.NORMAL);
 	}
@@ -315,7 +315,7 @@ public class Block
 	 *            The id.
 	 * @return The block.
 	 */
-	public static Block get(byte aId)
+	public static Block get(int aId)
 	{
 		return BLOCKS.get(aId);
 	}
@@ -327,7 +327,7 @@ public class Block
 	 *            The color of any pixel inside a world map image.
 	 * @return the id of the searched block.
 	 */
-	public static byte get(int aRGB)
+	public static int getIdFromCode(int aRGB)
 	{
 		if ( !COLORS.containsKey(aRGB))
 		{
@@ -351,7 +351,7 @@ public class Block
 	 * @param aWorld
 	 *            The parent world.
 	 */
-	public static void render(int aX, int aY, byte aId, Graphics g, World aWorld)
+	public static void render(int aX, int aY, int aId, Graphics g, World aWorld)
 	{
 		final Block block = get(aId);
 		final Texture texture = getBlockTexture(aX, aY, aWorld);
