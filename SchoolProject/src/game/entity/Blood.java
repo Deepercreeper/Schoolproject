@@ -14,7 +14,7 @@ public class Blood extends Entity
 		super(aX, aY, 2, 2);
 		mXV = (Math.random() - Math.random()) * 5;
 		mYV = -Math.random() * 5;
-		mLife = (int) (20 + Math.random() * 100);
+		mLife = (int) (100 + Math.random() * 200);
 	}
 	
 	@Override

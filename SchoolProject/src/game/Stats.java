@@ -23,7 +23,7 @@ public class Stats
 		g.setColor(Color.white);
 		g.drawString("Bananas: " + mBananas, 10, 20);
 		g.drawString("Deaths: " + mDeaths, 10, 35);
-		g.drawString("Time: " + mTime / 100, 10, 50);
+		g.drawString("Time: " + mTime / 1000, 10, 50);
 	}
 	
 	public void setBananaLevel()
@@ -37,9 +37,9 @@ public class Stats
 		mBananasInLevel += aAmount;
 	}
 	
-	public void tick()
+	public void tick(int aAmount)
 	{
-		mTime++ ;
+		mTime += aAmount;
 	}
 	
 	public void addDeath()
@@ -51,6 +51,6 @@ public class Stats
 	
 	public int getScore()
 	{
-		return mBananas * 100 - mTime / 1000 - mDeaths * 10;
+		return mBananas * 100 - mTime / 10000 - mDeaths * 10;
 	}
 }

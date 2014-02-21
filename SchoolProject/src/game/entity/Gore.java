@@ -14,7 +14,7 @@ public class Gore extends Entity
 		super(aX, aY, 4, 3);
 		mXV = (Math.random() - Math.random()) * 5;
 		mYV = -Math.random() * 5;
-		mLife = (int) (100 + Math.random() * 200);
+		mLife = (int) (150 + Math.random() * 250);
 	}
 	
 	@Override

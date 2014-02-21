@@ -332,6 +332,7 @@ public class World
 	
 	private void reload()
 	{
+		mEntities.clear();
 		Stats.instance().setBananaLevel();
 		mBlocks = loadBlocks();
 	}

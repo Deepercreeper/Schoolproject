@@ -151,7 +151,7 @@ public class Player extends Entity
 			mHurt = true;
 			mXV = aXV;
 			mYV = aYV;
-			for (int i = (int) (Math.random() * 20 + 10 + (mLife <= 0 ? 10 : 0)); i > 0; i-- )
+			for (int i = (int) (Math.random() * 100 + 50 + (mLife <= 0 ? 50 : 0)); i > 0; i-- )
 				mWorld.addEntity(new Blood((int) (mX + mWidth / 2), (int) (mY + mHeight / 2)));
 			for (int i = (int) (Math.random() * 3 + (mLife <= 0 ? 10 : 0)); i > 0; i-- )
 				mWorld.addEntity(new Gore((int) (mX + mWidth / 2), (int) (mY + mHeight / 2)));

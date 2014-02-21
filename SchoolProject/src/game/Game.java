@@ -116,7 +116,7 @@ public class Game
 			mShowingVolume = 30;
 		}
 		
-		Stats.instance().tick();
+		Stats.instance().tick(aDelta);
 		
 		// Updating world
 		mWorld.update(mInput);
