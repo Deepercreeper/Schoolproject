@@ -14,9 +14,9 @@ public class Block
 	 * The size of one block.
 	 */
 	public static final int							SIZE						= 16;
-	private static final HashMap<Integer, Block>	BLOCKS						= new HashMap<>();
-	private static final HashMap<Integer, Integer>	COLORS						= new HashMap<>();
-	private static final HashMap<Integer, Texture>	TEXTURES					= new HashMap<>();
+	private static final HashMap<Short, Block>		BLOCKS						= new HashMap<>();
+	private static final HashMap<Integer, Short>	COLORS						= new HashMap<>();
+	private static final HashMap<Short, Texture>	TEXTURES					= new HashMap<>();
 	
 	// Blocks
 	public static final Block						AIR							= new Block(0, 0xffffff).setInvisible().setUnsolid();
@@ -52,7 +52,7 @@ public class Block
 	public static final Block						ICE_LEFT					= new Block(30, 0x96C6AA);
 	public static final Block						ICE_MIDDLE					= new Block(31, 0x00FFA7);
 	public static final Block						ICE_RIGHT					= new Block(32, 0x00BEB1);
-	public static final Block						PLATFORM					= new Block(33, 0x74FF8C);
+	public static final Block						PLATFORM					= new Block(33, 0x74FF8C).setSolidSide(Direction.TOP);
 	public static final Block						SMALL_ROCK_LEFT				= new Block(34, 0xD34300);
 	public static final Block						SMALL_ROCK_RIGHT			= new Block(35, 0xFF5200);
 	public static final Block						SMALL_ROCK_TOP				= new Block(36, 0xFF503D);
@@ -76,17 +76,18 @@ public class Block
 	// Attributes
 	private final HashSet<UpdateAction>				mUpdateActions				= new HashSet<>();
 	private final HashSet<HitAction>				mHitActions					= new HashSet<>();
-	private final HashMap<Texture, Integer>			mIds						= new HashMap<>();
+	private final HashMap<Texture, Short>			mIds						= new HashMap<>();
 	private Item									mItem						= null;
 	private Direction								mHurtDirection				= Direction.NONE;
+	private Direction								mSolid						= Direction.NONE;
 	private Block									mDestination				= null;
-	private boolean									mSolid						= true, mVisible = true, mUpdatable = false, mLiquid = false, mFlag = false, mIce = false, mItemBlock = false;
+	private boolean									mVisible					= true, mUpdatable = false, mLiquid = false, mFlag = false, mIce = false, mItemBlock = false;
 	
 	private Block(int aId, int[] aRGBs)
 	{
 		final int textures = Texture.values().size();
 		for (Texture texture : Texture.values())
-			mIds.put(texture, aId * textures + texture.getId());
+			mIds.put(texture, (short) (aId * textures + texture.getId()));
 		for (Texture texture : mIds.keySet())
 			BLOCKS.put(mIds.get(texture), this);
 		if (aRGBs.length != textures) throw new IllegalArgumentException("Not the right number of color codes");
@@ -98,7 +99,7 @@ public class Block
 	
 	private Block(int aId, int aRGB)
 	{
-		int id = aId * Texture.values().size();
+		short id = (short) (aId * Texture.values().size());
 		for (Texture texture : Texture.values())
 			mIds.put(texture, id);
 		BLOCKS.put(id, this);
@@ -108,7 +109,7 @@ public class Block
 	
 	protected Block()
 	{
-		int id = Integer.MAX_VALUE;
+		short id = Short.MAX_VALUE;
 		for (Texture texture : Texture.values())
 			mIds.put(texture, id);
 		BLOCKS.put(id, this);
@@ -158,7 +159,13 @@ public class Block
 	
 	private Block setUnsolid()
 	{
-		mSolid = false;
+		mSolid = null;
+		return this;
+	}
+	
+	private Block setSolidSide(Direction aDirection)
+	{
+		mSolid = aDirection;
 		return this;
 	}
 	
@@ -233,7 +240,7 @@ public class Block
 	 * 
 	 * @return this blocks id.
 	 */
-	public int getId(Texture aTexture)
+	public short getId(Texture aTexture)
 	{
 		return mIds.get(aTexture);
 	}
@@ -243,7 +250,7 @@ public class Block
 	 * 
 	 * @return this blocks id.
 	 */
-	public int getId()
+	public short getId()
 	{
 		return mIds.get(Texture.NORMAL);
 	}
@@ -253,9 +260,24 @@ public class Block
 	 * 
 	 * @return {@code true} if this block is solid and {@code false} if not.
 	 */
-	public boolean isSolid()
+	public boolean isSolid(int aX, int aY, Entity aEntity)
 	{
-		return mSolid;
+		if (mSolid == null) return false;
+		switch (mSolid)
+		{
+			case NONE :
+				return true;
+			case TOP :
+				return aEntity.getY() + aEntity.getHeight() <= aY * SIZE;
+			case BOTTOM :
+				return aEntity.getY() >= (aY + 1) * SIZE;
+			case LEFT :
+				return aEntity.getX() + aEntity.getWidth() <= aX * SIZE;
+			case RIGHT :
+				return aEntity.getX() >= (aX + 1) * SIZE;
+			default :
+				return true;
+		}
 	}
 	
 	/**
@@ -315,7 +337,7 @@ public class Block
 	 *            The id.
 	 * @return The block.
 	 */
-	public static Block get(int aId)
+	public static Block get(short aId)
 	{
 		return BLOCKS.get(aId);
 	}
@@ -327,7 +349,7 @@ public class Block
 	 *            The color of any pixel inside a world map image.
 	 * @return the id of the searched block.
 	 */
-	public static int getIdFromCode(int aRGB)
+	public static short getIdFromCode(int aRGB)
 	{
 		if ( !COLORS.containsKey(aRGB))
 		{
@@ -351,7 +373,7 @@ public class Block
 	 * @param aWorld
 	 *            The parent world.
 	 */
-	public static void render(int aX, int aY, int aId, Graphics g, World aWorld)
+	public static void render(int aX, int aY, short aId, Graphics g, World aWorld)
 	{
 		final Block block = get(aId);
 		final Texture texture = getBlockTexture(aX, aY, aWorld);

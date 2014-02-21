@@ -32,7 +32,7 @@ public class World
 	
 	private final Screen		mScreen;
 	
-	private int[][]				mBlocks;
+	private short[][]			mBlocks;
 	
 	private final HashMap<Integer, Entity>	mEntities, mAddEntities;
 	
@@ -64,12 +64,12 @@ public class World
 		DataManager.nextTitle();
 	}
 	
-	private int[][] loadBlocks()
+	private short[][] loadBlocks()
 	{
 		Image image = DataManager.getWorldImage(mId);
 		final int width = image.getWidth(), height = image.getHeight();
 		final int redInt = (int) Math.pow(2, 16), greenInt = (int) Math.pow(2, 8);
-		int[][] blocks = new int[width][height];
+		short[][] blocks = new short[width][height];
 		Color color;
 		int rgb;
 		for (int x = 0; x < width; x++ )
@@ -77,7 +77,7 @@ public class World
 			{
 				color = image.getColor(x, y);
 				rgb = color.getRed() * redInt + color.getGreen() * greenInt + color.getBlue();
-				int id = Block.getIdFromCode(rgb);
+				short id = Block.getIdFromCode(rgb);
 				if (id == -1) blocks[x][y] = Block.AIR.getId();
 				else
 				{
@@ -117,9 +117,9 @@ public class World
 		double result = Double.NaN;
 		Rectangle entity = new Rectangle((aEntity.getX() + aXV), (aEntity.getY() + aYV), aEntity.getWidth(), aEntity.getHeight());
 		for (int x = (int) (entity.getX() / Block.SIZE); x <= (int) (entity.getX() + entity.getWidth() - 0.1) / Block.SIZE && x < mWidth; x++ )
-			for (int y = (int) (entity.getY() / Block.SIZE); y <= (int) (entity.getY() + entity.getHeight() - 0.1) / Block.SIZE && y < mHeight; y++ )
+			for (int y = (int) (entity.getY() / Block.SIZE); y <= (int) (entity.getY() + entity.getHeight()) / Block.SIZE && y < mHeight; y++ )
 			{
-				if (Block.get(mBlocks[x][y]).isSolid() && new Rectangle(x * Block.SIZE, y * Block.SIZE, Block.SIZE, Block.SIZE).intersects(entity))
+				if (Block.get(mBlocks[x][y]).isSolid(x, y, aEntity) && new Rectangle(x * Block.SIZE, y * Block.SIZE, Block.SIZE, Block.SIZE).intersects(entity))
 				{
 					if (aXV != 0)
 					{
@@ -170,7 +170,7 @@ public class World
 	 * @param aId
 	 *            The block id to set.
 	 */
-	public void setBlock(int aX, int aY, int aId)
+	public void setBlock(int aX, int aY, short aId)
 	{
 		mBlocks[aX][aY] = aId;
 	}
@@ -245,7 +245,7 @@ public class World
 	 *            The y position.
 	 * @return the block id.
 	 */
-	public int getBlock(int aX, int aY)
+	public short getBlock(int aX, int aY)
 	{
 		return mBlocks[aX][aY];
 	}
