@@ -2,11 +2,54 @@ package game.world.block;
 
 import game.entity.Banana;
 import game.entity.Entity;
+import game.entity.Heart;
 import java.util.HashMap;
 
 public abstract class Item
 {
 	private static final HashMap<Integer, Item>	ITEMS			= new HashMap<>();
+	
+	public static final Item					HEART_STATIC	= new Item(0xFF0000)
+																{
+																	@Override
+																	public Entity create(int aX, int aY)
+																	{
+																		return new Heart(aX, aY, 2, true);
+																	}
+																	
+																	@Override
+																	public int getWidth()
+																	{
+																		return 10;
+																	}
+																	
+																	@Override
+																	public int getHeight()
+																	{
+																		return 10;
+																	}
+																};
+	
+	public static final Item					HEART			= new Item(0xFE0000)
+																{
+																	@Override
+																	public Entity create(int aX, int aY)
+																	{
+																		return new Heart(aX, aY, 2, false);
+																	}
+																	
+																	@Override
+																	public int getWidth()
+																	{
+																		return 10;
+																	}
+																	
+																	@Override
+																	public int getHeight()
+																	{
+																		return 10;
+																	}
+																};
 	
 	public static final Item					BANANA			= new Item(0xFFFF00)
 																{

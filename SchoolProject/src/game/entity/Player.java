@@ -138,6 +138,7 @@ public class Player extends Entity
 	{
 		if (aEntity instanceof Gore) ((Gore) aEntity).hit(this);
 		if (aEntity instanceof Banana) ((Banana) aEntity).collect();
+		if (aEntity instanceof Heart) ((Heart) aEntity).collect();
 		if (aEntity.isSolid()) hitWall(aXV, aYV);
 	}
 	
@@ -157,6 +158,12 @@ public class Player extends Entity
 				mWorld.addEntity(new Gore((int) (mX + mWidth / 2), (int) (mY + mHeight / 2)));
 			if (mLife <= 0) remove();
 		}
+	}
+	
+	public void addLife(int aAmount)
+	{
+		mLife += aAmount;
+		if (mLife > mMaxLife) mLife = mMaxLife;
 	}
 	
 	@Override

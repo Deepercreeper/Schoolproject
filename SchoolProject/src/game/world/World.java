@@ -34,6 +34,8 @@ public class World
 	
 	private short[][]			mBlocks;
 	
+	private short[][]			mAlphas;
+	
 	private final HashMap<Integer, Entity>	mEntities, mAddEntities;
 	
 	private final HashSet<Integer>			mUpdatableBlocks	= new HashSet<>(), mLiquidBlocks = new HashSet<>();
@@ -64,12 +66,13 @@ public class World
 		DataManager.nextTitle();
 	}
 	
-	private short[][] loadBlocks()
+	private void loadBlocks()
 	{
 		Image image = DataManager.getWorldImage(mId);
 		final int width = image.getWidth(), height = image.getHeight();
 		final int redInt = (int) Math.pow(2, 16), greenInt = (int) Math.pow(2, 8);
-		short[][] blocks = new short[width][height];
+		mBlocks = new short[width][height];
+		mAlphas = new short[width][height];
 		Color color;
 		int rgb;
 		for (int x = 0; x < width; x++ )
@@ -77,8 +80,9 @@ public class World
 			{
 				color = image.getColor(x, y);
 				rgb = color.getRed() * redInt + color.getGreen() * greenInt + color.getBlue();
+				mAlphas[x][y] = (short) color.getAlpha();
 				short id = Block.getIdFromCode(rgb);
-				if (id == -1) blocks[x][y] = Block.AIR.getId();
+				if (id == -1) mBlocks[x][y] = Block.AIR.getId();
 				else
 				{
 					final Block block = Block.get(id);
@@ -86,19 +90,18 @@ public class World
 					if (block.isLiquid()) mLiquidBlocks.add(x + y * width);
 					if (block.isItemBlock())
 					{
-						blocks[x][y] = Block.AIR.getId();
+						mBlocks[x][y] = Block.AIR.getId();
 						addEntity(Item.getItem(x * Block.SIZE, y * Block.SIZE, rgb));
 					}
 					else if (block == Block.START)
 					{
 						mStartX = x;
 						mStartY = y - 1;
-						blocks[x][y] = Block.AIR.getId();
+						mBlocks[x][y] = Block.AIR.getId();
 					}
-					else blocks[x][y] = id;
+					else mBlocks[x][y] = id;
 				}
 			}
-		return blocks;
 	}
 	
 	/**
@@ -250,6 +253,11 @@ public class World
 		return mBlocks[aX][aY];
 	}
 	
+	public short getAlpha(int aX, int aY)
+	{
+		return mAlphas[aX][aY];
+	}
+	
 	/**
 	 * Adds the given entity to this world.
 	 * 
@@ -334,7 +342,7 @@ public class World
 	{
 		mEntities.clear();
 		Stats.instance().setBananaLevel();
-		mBlocks = loadBlocks();
+		loadBlocks();
 	}
 	
 	/**

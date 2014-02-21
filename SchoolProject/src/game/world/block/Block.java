@@ -23,7 +23,8 @@ public class Block
 	public static final Block						STONE						= new Block(1, new int[] { 0xB89040, 0xC0C0C0, 0xB89040 });
 	public static final Block						BRICK						= new Block(2, new int[] { 0xB06000, 0x727272, 0xB06000 }).setDestroyable(AIR);
 	public static final Block						OPENED						= new Block(3, new int[] { 0xC03010, 0xC03011, 0xC03010 });
-	public static final Block						QUESTION					= new Block(4, new int[] { 0xD8B018, 0xFFD800, 0xD8B018 }).setDestroyable(OPENED).setItem(Item.SUPER_BANANA);
+	public static final Block						QUESTION					= new Block(4, new int[] { 0xD8B018, 0xFFD800, 0xD8B018 }).setDestroyable(OPENED).setItem(255, Item.SUPER_BANANA)
+																						.setItem(254, Item.BANANA).setItem(253, Item.HEART);
 	public static final Block						GROUND_TOP_LEFT				= new Block(5, new int[] { 0x00E000, 0x93FFFF, 0xFFA359 });
 	public static final Block						GROUND_TOP					= new Block(6, new int[] { 0x00BA00, 0x00FFFF, 0xFF7400 });
 	public static final Block						GROUND_TOP_RIGHT			= new Block(7, new int[] { 0x009300, 0x00D3D3, 0xB75200 });
@@ -77,7 +78,7 @@ public class Block
 	private final HashSet<UpdateAction>				mUpdateActions				= new HashSet<>();
 	private final HashSet<HitAction>				mHitActions					= new HashSet<>();
 	private final HashMap<Texture, Short>			mIds						= new HashMap<>();
-	private Item									mItem						= null;
+	private final HashMap<Short, Item>				mItems						= new HashMap<>();
 	private Direction								mHurtDirection				= Direction.NONE;
 	private Direction								mSolid						= Direction.NONE;
 	private Block									mDestination				= null;
@@ -200,9 +201,9 @@ public class Block
 		return this;
 	}
 	
-	private Block setItem(Item aItem)
+	private Block setItem(int aAlpha, Item aItem)
 	{
-		mItem = aItem;
+		mItems.put((short) aAlpha, aItem);
 		return this;
 	}
 	
@@ -230,9 +231,9 @@ public class Block
 		return mDestination;
 	}
 	
-	Item getItem()
+	Item getItem(short aAlpha)
 	{
-		return mItem;
+		return mItems.get(aAlpha);
 	}
 	
 	/**

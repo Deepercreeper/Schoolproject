@@ -75,10 +75,11 @@ abstract class HitAction
 		if (aHitDirection == Direction.BOTTOM)
 		{
 			aWorld.setBlock(aX, aY, aBlock.getDestination().getId(texture));
-			Item item = aBlock.getItem();
+			short alpha = aWorld.getAlpha(aX, aY);
+			Item item = aBlock.getItem(alpha);
 			if (item != null)
 			{
-				aWorld.addEntity(item.create(aX * Block.SIZE + Block.SIZE / 2 - aBlock.getItem().getWidth() / 2, aY * Block.SIZE - aBlock.getItem().getHeight()));
+				aWorld.addEntity(item.create(aX * Block.SIZE + Block.SIZE / 2 - aBlock.getItem(alpha).getWidth() / 2, aY * Block.SIZE - aBlock.getItem(alpha).getHeight()));
 				DataManager.playSound("item");
 			}
 			else DataManager.playSound("destroyBlock");
@@ -86,10 +87,11 @@ abstract class HitAction
 		else if (aHitDirection == Direction.TOP && Util.isCannonBall(aEntity, aWorld))
 		{
 			aWorld.setBlock(aX, aY, aBlock.getDestination().getId(texture));
-			Item item = aBlock.getItem();
+			short alpha = aWorld.getAlpha(aX, aY);
+			Item item = aBlock.getItem(alpha);
 			if (item != null)
 			{
-				aWorld.addEntity(item.create(aX * Block.SIZE + Block.SIZE / 2 - aBlock.getItem().getWidth() / 2, (aY + 1) * Block.SIZE));
+				aWorld.addEntity(item.create(aX * Block.SIZE + Block.SIZE / 2 - aBlock.getItem(alpha).getWidth() / 2, (aY + 1) * Block.SIZE));
 				DataManager.playSound("item");
 			}
 			else DataManager.playSound("destroyBlock");
