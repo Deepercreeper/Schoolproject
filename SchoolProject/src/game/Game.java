@@ -6,45 +6,53 @@ import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
+import view.MainMenu;
 import view.Menu;
+import view.PauseMenu;
 import data.DataManager;
 
 public class Game
 {
-	private boolean		mRunning		= true, mShowingMenu;
+	private boolean			mRunning		= true, mPause, mMain = true;
 	
-	private final Menu	mMenu			= new Menu(this);
+	private Menu			mPauseMenu, mMainMenu;
 	
-	private World		mWorld;
+	private World			mWorld;
 	
-	private int[][]		mWorlds;
+	private int[][]			mWorlds;
 	
-	private int			mWorldIndex;
+	private int				mWorldIndex;
 	
-	private Input		mInput;
+	private Input			mInput;
 	
-	private int			mShowingVolume	= 0;
+	private int				mShowingVolume	= 0;
+	
+	private GameContainer	mGC;
 	
 	/**
 	 * Renders the splash screen and the world. The volume is also displayed.
 	 * 
-	 * @param gc
-	 *            The containing game container.
 	 * @param g
 	 *            The graphics to draw into.
 	 */
-	public void render(GameContainer gc, Graphics g)
+	public void render(Graphics g)
 	{
 		if ( !DataManager.isInitiated() || DataManager.isLoading()) g.drawImage(DataManager.getImage("splash"), 0, 0);
 		else
 		{
+			if (mMain)
+			{
+				mMainMenu.render(g);
+				return;
+			}
+			
 			mWorld.render(g);
 			
 			Stats.instance().render(g);
 			
-			if (mShowingMenu)
+			if (mPause)
 			{
-				mMenu.render(gc, g);
+				mPauseMenu.render(g);
 				return;
 			}
 			
@@ -53,43 +61,45 @@ public class Game
 			{
 				float volume = DataManager.getVolume();
 				g.setColor(Color.white);
-				g.drawString("Volume", gc.getWidth() / 2 - 25, gc.getHeight() - 40);
+				g.drawString("Volume", mGC.getWidth() / 2 - 25, mGC.getHeight() - 40);
 				g.setColor(Color.darkGray);
-				g.fillRect(gc.getWidth() / 2 - 50, gc.getHeight() - 20, 100, 10);
+				g.fillRect(mGC.getWidth() / 2 - 50, mGC.getHeight() - 20, 100, 10);
 				g.setColor(Color.lightGray);
-				g.fillRect(gc.getWidth() / 2 - 50, gc.getHeight() - 20, 100 * volume, 10);
+				g.fillRect(mGC.getWidth() / 2 - 50, mGC.getHeight() - 20, 100 * volume, 10);
 			}
 		}
 	}
 	
-	private void nextWorld(GameContainer gc)
+	private void nextWorld()
 	{
 		Player player = mWorld.getPlayer();
 		if (mWorldIndex == mWorlds.length - 1) stop();
-		else mWorld = new World(++mWorldIndex, gc, player, mWorlds[mWorldIndex]);
+		else mWorld = new World(++mWorldIndex, mGC, player, mWorlds[mWorldIndex]);
 	}
 	
 	/**
 	 * Initiates the data manager, creates a world, handles menu input and updates the world.
 	 * 
-	 * @param gc
-	 *            The containing game container.
 	 * @param aDelta
 	 *            The done ticks after the last update.
 	 */
-	public void update(GameContainer gc, int aDelta)
+	public void update(int aDelta)
 	{
 		if ( !DataManager.isInitiated()) DataManager.init();
 		
-		if (mShowingMenu)
+		if (mMain)
 		{
-			mMenu.update(mInput);
+			mMainMenu.update(mInput);
+			return;
+		}
+		if (mPause)
+		{
+			mPauseMenu.update(mInput);
 			return;
 		}
 		
 		// Creating world
-		if (mWorld == null) init(gc);
-		if (mWorld.hasWon()) nextWorld(gc);
+		if (mWorld.hasWon()) nextWorld();
 		
 		// Updates
 		if (mShowingVolume > 0) mShowingVolume-- ;
@@ -97,8 +107,8 @@ public class Game
 		// Input
 		if (mInput.isKeyPressed(Input.KEY_ESCAPE))
 		{
-			mMenu.initKeys(mInput);
-			mShowingMenu = true;
+			mPauseMenu.initKeys(mInput);
+			mPause = true;
 		}
 		if (mInput.isKeyPressed(Input.KEY_ADD))
 		{
@@ -117,20 +127,41 @@ public class Game
 		mWorld.update(mInput);
 	}
 	
-	private void init(GameContainer gc)
+	public void init(GameContainer gc)
 	{
-		mInput = gc.getInput();
+		mGC = gc;
+		mInput = mGC.getInput();
+		mMainMenu = new MainMenu(mGC, this);
+	}
+	
+	private void initWorld(int aWorld)
+	{
+		mInput = mGC.getInput();
+		mPauseMenu = new PauseMenu(mGC, this);
 		mWorlds = DataManager.getWorlds();
-		mWorldIndex = 0;
-		mWorld = new World(mWorldIndex, gc, mWorlds[mWorldIndex]);
+		mWorldIndex = aWorld;
+		mWorld = new World(mWorldIndex, mGC, mWorlds[mWorldIndex]);
+	}
+	
+	public void mainMenu()
+	{
+		mPause = false;
+		mMain = true;
+		// TODO kill all worlds.
+	}
+	
+	public void start(int aWorld)
+	{
+		mMain = false;
+		initWorld(aWorld);
 	}
 	
 	/**
 	 * Hides the menu.
 	 */
-	public void hideMenu()
+	public void resume()
 	{
-		mShowingMenu = false;
+		mPause = false;
 	}
 	
 	/**
