@@ -11,22 +11,26 @@ public class Screen
 	
 	private final Rectangle	mRect;
 	
-	private final World		mWorld;
+	private Level			mLevel;
 	
 	/**
 	 * Creates a screen that defines which area should be rendered.
 	 * 
-	 * @param aWorld
+	 * @param aLevel
 	 *            The parent world.
 	 * @param aWidth
 	 *            The screen width.
 	 * @param aHeight
 	 *            The screen height.
 	 */
-	public Screen(World aWorld, int aWidth, int aHeight)
+	public Screen(int aWidth, int aHeight)
 	{
-		mWorld = aWorld;
 		mRect = new Rectangle(0, 0, aWidth, aHeight);
+	}
+	
+	public void init(Level aLevel)
+	{
+		mLevel = aLevel;
 	}
 	
 	/**
@@ -45,8 +49,8 @@ public class Screen
 		mRect.setCenterY(Math.round(aPlayer.getY()) + aPlayer.getHeight());
 		if (mRect.getX() < 0) mRect.setX(0);
 		if (mRect.getY() < 0) mRect.setY(0);
-		if (mRect.getMaxX() > mWorld.getWidth() * Block.SIZE) mRect.setX(mWorld.getWidth() * Block.SIZE - mRect.getWidth());
-		if (mRect.getMaxY() > mWorld.getHeight() * Block.SIZE) mRect.setY(mWorld.getHeight() * Block.SIZE - mRect.getHeight());
+		if (mRect.getMaxX() > mLevel.getWidth() * Block.SIZE) mRect.setX(mLevel.getWidth() * Block.SIZE - mRect.getWidth());
+		if (mRect.getMaxY() > mLevel.getHeight() * Block.SIZE) mRect.setY(mLevel.getHeight() * Block.SIZE - mRect.getHeight());
 	}
 	
 	/**

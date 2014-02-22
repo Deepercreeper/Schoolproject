@@ -1,6 +1,6 @@
 package game.entity;
 
-import game.world.World;
+import game.world.Level;
 import game.world.block.Block;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
@@ -29,9 +29,9 @@ public class Player extends Entity
 	 * @param aY
 	 *            The y position.
 	 */
-	public Player(int aX, int aY)
+	public Player()
 	{
-		super(aX, aY, Block.SIZE - 2, Block.SIZE * 2 - 2);
+		super(0, 0, Block.SIZE - 2, Block.SIZE * 2 - 2);
 	}
 	
 	@Override
@@ -91,7 +91,7 @@ public class Player extends Entity
 		
 		mXV *= 0.95f - (mOnGround ? 0.45 : 0) + (mOnIce ? 0.48 : 0) - (mInLiquid ? 0.3 : 0);
 		
-		final double gravity = World.GRAVITY - (mInLiquid ? 0.1 : 0), friction = World.FRICTION - (mInLiquid ? 0.1 : 0);
+		final double gravity = Level.GRAVITY - (mInLiquid ? 0.1 : 0), friction = Level.FRICTION - (mInLiquid ? 0.1 : 0);
 		
 		if (mYV < 0 && aInput.isKeyDown(Input.KEY_SPACE))
 		{
@@ -123,14 +123,14 @@ public class Player extends Entity
 	public void render(Graphics g)
 	{
 		// Player
-		if (mHurtDelay > 0 && mTime % 10 < 5) g.drawImage(DataManager.getSplitImage("player", 0), (float) mX - mWorld.getScreenX(), (float) mY - mWorld.getScreenY(), new Color(1, 1, 1, 0.5f));
-		else g.drawImage(DataManager.getSplitImage("player", 0).getScaledCopy(mWidth, mHeight), (float) mX - mWorld.getScreenX(), (float) mY - mWorld.getScreenY());
+		if (mHurtDelay > 0 && mTime % 10 < 5) g.drawImage(DataManager.getSplitImage("player", 0), (float) mX - mLevel.getScreenX(), (float) mY - mLevel.getScreenY(), new Color(1, 1, 1, 0.5f));
+		else g.drawImage(DataManager.getSplitImage("player", 0).getScaledCopy(mWidth, mHeight), (float) mX - mLevel.getScreenX(), (float) mY - mLevel.getScreenY());
 		
 		// HUD
 		g.setColor(Color.red);
-		g.fillRect(10, mWorld.getScreenHeight() - 20, 100, 10);
+		g.fillRect(10, mLevel.getScreenHeight() - 20, 100, 10);
 		g.setColor(Color.green);
-		g.fillRect(10, mWorld.getScreenHeight() - 20, 100 * mLife / mMaxLife, 10);
+		g.fillRect(10, mLevel.getScreenHeight() - 20, 100 * mLife / mMaxLife, 10);
 	}
 	
 	@Override
@@ -153,11 +153,17 @@ public class Player extends Entity
 			mXV = aXV;
 			mYV = aYV;
 			for (int i = (int) (Math.random() * 100 + 50 + (mLife <= 0 ? 50 : 0)); i > 0; i-- )
-				mWorld.addEntity(new Blood((int) (mX + mWidth / 2), (int) (mY + mHeight / 2)));
+				mLevel.addEntity(new Blood((int) (mX + mWidth / 2), (int) (mY + mHeight / 2)));
 			for (int i = (int) (Math.random() * 3 + (mLife <= 0 ? 10 : 0)); i > 0; i-- )
-				mWorld.addEntity(new Gore((int) (mX + mWidth / 2), (int) (mY + mHeight / 2)));
-			if (mLife <= 0) remove();
+				mLevel.addEntity(new Gore((int) (mX + mWidth / 2), (int) (mY + mHeight / 2)));
+			if (mLife <= 0) die();
 		}
+	}
+	
+	@Override
+	public void die()
+	{
+		mDead = true;
 	}
 	
 	public void addLife(int aAmount)

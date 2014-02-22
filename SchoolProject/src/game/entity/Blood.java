@@ -1,6 +1,6 @@
 package game.entity;
 
-import game.world.World;
+import game.world.Level;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
@@ -32,7 +32,7 @@ public class Blood extends Entity
 		
 		mXV *= 0.95f - (mOnGround ? 0.45 : 0) + (mOnIce ? 0.48 : 0) - (mInLiquid ? 0.3 : 0);
 		
-		final double gravity = World.GRAVITY - (mInLiquid ? 0.1 : 0), friction = World.FRICTION - (mInLiquid ? 0.1 : 0);
+		final double gravity = Level.GRAVITY - (mInLiquid ? 0.1 : 0), friction = Level.FRICTION - (mInLiquid ? 0.1 : 0);
 		
 		mYV *= friction;
 		mYV += gravity;
@@ -45,7 +45,7 @@ public class Blood extends Entity
 	public void render(Graphics g)
 	{
 		g.setColor(Color.red);
-		g.fillRect((float) (mX - mWorld.getScreenX()), (float) (mY - mWorld.getScreenY()), mWidth, mHeight);
+		g.fillRect((float) (mX - mLevel.getScreenX()), (float) (mY - mLevel.getScreenY()), mWidth, mHeight);
 	}
 	
 	@Override

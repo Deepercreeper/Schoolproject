@@ -1,5 +1,6 @@
 package game;
 
+import game.entity.Player;
 import game.world.World;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
@@ -10,11 +11,15 @@ import data.DataManager;
 
 public class Game
 {
-	private boolean		mRunning, mShowingMenu;
+	private boolean		mRunning		= true, mShowingMenu;
 	
 	private final Menu	mMenu			= new Menu(this);
 	
 	private World		mWorld;
+	
+	private int[][]		mWorlds;
+	
+	private int			mWorldIndex;
 	
 	private Input		mInput;
 	
@@ -57,21 +62,11 @@ public class Game
 		}
 	}
 	
-	/**
-	 * Prepares this game for running.
-	 * 
-	 * @param gc
-	 *            The containing game container.
-	 */
-	public void init(GameContainer gc)
+	private void nextWorld(GameContainer gc)
 	{
-		mRunning = true;
-	}
-	
-	private void createWorld(GameContainer gc, int aLevel)
-	{
-		if (mInput == null) mInput = gc.getInput();
-		mWorld = new World(aLevel, gc);
+		Player player = mWorld.getPlayer();
+		if (mWorldIndex == mWorlds.length - 1) stop();
+		mWorld = new World(++mWorldIndex, gc, player, mWorlds[mWorldIndex]);
 	}
 	
 	/**
@@ -93,8 +88,8 @@ public class Game
 		}
 		
 		// Creating world
-		if (mWorld == null) createWorld(gc, 0);
-		if (mWorld.hasWon()) createWorld(gc, mWorld.getId() + 1);
+		if (mWorld == null) init(gc);
+		if (mWorld.hasWon()) nextWorld(gc);
 		
 		// Updates
 		if (mShowingVolume > 0) mShowingVolume-- ;
@@ -120,6 +115,14 @@ public class Game
 		
 		// Updating world
 		mWorld.update(mInput);
+	}
+	
+	private void init(GameContainer gc)
+	{
+		mInput = gc.getInput();
+		mWorlds = DataManager.getWorlds();
+		mWorldIndex = 0;
+		mWorld = new World(mWorldIndex, gc, mWorlds[mWorldIndex]);
 	}
 	
 	/**

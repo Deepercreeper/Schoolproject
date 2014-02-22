@@ -39,15 +39,15 @@ public class View extends BasicGame
 	}
 	
 	@Override
-	public void init(GameContainer gc)
-	{
-		mGame.init(gc);
-	}
-	
-	@Override
 	public void update(GameContainer gc, int aDelta)
 	{
 		if (mGame.isRunning()) mGame.update(gc, aDelta);
 		else mGameContainer.exit();
+	}
+	
+	@Override
+	public void init(GameContainer aArg0) throws SlickException
+	{
+		// Nothing to do
 	}
 }

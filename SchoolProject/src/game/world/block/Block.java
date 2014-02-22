@@ -1,7 +1,7 @@
 package game.world.block;
 
 import game.entity.Entity;
-import game.world.World;
+import game.world.Level;
 import java.util.HashMap;
 import java.util.HashSet;
 import org.newdawn.slick.Graphics;
@@ -128,7 +128,7 @@ public class Block
 	 * @param aWorld
 	 *            the parent world.
 	 */
-	public void update(int aX, int aY, World aWorld)
+	public void update(int aX, int aY, Level aWorld)
 	{
 		for (UpdateAction action : mUpdateActions)
 			action.execute(aX, aY, aWorld);
@@ -146,7 +146,7 @@ public class Block
 	 * @param aEntity
 	 *            the hitting entity.
 	 */
-	public void hit(int aX, int aY, World aWorld, Entity aEntity, Direction aDirection, HashMap<Block, Direction> aOtherBlocks)
+	public void hit(int aX, int aY, Level aWorld, Entity aEntity, Direction aDirection, HashMap<Block, Direction> aOtherBlocks)
 	{
 		for (HitAction action : mHitActions)
 			action.execute(aX, aY, aWorld, aEntity, this, aDirection, aOtherBlocks);
@@ -374,7 +374,7 @@ public class Block
 	 * @param aWorld
 	 *            The parent world.
 	 */
-	public static void render(int aX, int aY, short aId, Graphics g, World aWorld)
+	public static void render(int aX, int aY, short aId, Graphics g, Level aWorld)
 	{
 		final Block block = get(aId);
 		final Texture texture = getBlockTexture(aX, aY, aWorld);
@@ -394,7 +394,7 @@ public class Block
 	 *            The parent world.
 	 * @return the texture of the given block.
 	 */
-	public static Texture getBlockTexture(int aX, int aY, World aWorld)
+	public static Texture getBlockTexture(int aX, int aY, Level aWorld)
 	{
 		return TEXTURES.get(aWorld.getBlock(aX, aY));
 	}

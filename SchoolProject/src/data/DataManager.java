@@ -20,6 +20,7 @@ public class DataManager
 	private static final String[]					sSplitImages		= new String[] { "player", "entity" };
 	private static final int[][]					sSplitImageSizes	= new int[][] { { 14, 30 }, { 16, 16 } };
 	private static final String[]					sTexturepacks		= new String[] { "Mario", "Minecraft" };
+	private static final int[][]					sLevels				= new int[][] { { 0, 1 }, { 2, 3 } };
 	
 	private static int								sTexturepack		= 0, sTitle = 0;
 	private static float							sVolume				= 1;
@@ -131,6 +132,11 @@ public class DataManager
 		return sLoading;
 	}
 	
+	public static int[][] getWorlds()
+	{
+		return sLevels;
+	}
+	
 	/**
 	 * Loads and caches an image that is not split but a simple png image.
 	 * 
@@ -152,7 +158,7 @@ public class DataManager
 	 *            The world id.
 	 * @return an image that contains world data.
 	 */
-	public static Image getWorldImage(int aId)
+	public static Image getLevelImage(int aId)
 	{
 		return getImage("worldData/worldData" + aId);
 	}

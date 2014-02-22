@@ -1,6 +1,6 @@
 package game.entity;
 
-import game.world.World;
+import game.world.Level;
 import game.world.block.Block;
 import java.util.HashMap;
 import org.newdawn.slick.Graphics;
@@ -25,7 +25,7 @@ public abstract class Entity
 	/**
 	 * States that tell whether this entity is on the ground, on the wall, on which wall and whether it was hurt at the last update.
 	 */
-	protected boolean							mOnGround, mOnWall, mLeftWall, mHurt, mInLiquid, mOnIce;
+	protected boolean							mOnGround, mOnWall, mLeftWall, mHurt, mInLiquid, mOnIce, mDead;
 	
 	private boolean								mRemoved;
 	
@@ -34,7 +34,7 @@ public abstract class Entity
 	/**
 	 * The parent world within this entity is living.
 	 */
-	protected World								mWorld;
+	protected Level								mLevel;
 	
 	/**
 	 * Creates a entity with position {@code aX:aY} and size {@code aWidth:aHeight}.
@@ -67,7 +67,7 @@ public abstract class Entity
 		mOnGround = false;
 		
 		// On Wall?
-		if (mLeftWall && mXV > 0 || !mLeftWall && mXV < 0 || Double.isNaN(mWorld.isFree(mLeftWall ? -0.1 : 0.1, 0, this))) mOnWall = false;
+		if (mLeftWall && mXV > 0 || !mLeftWall && mXV < 0 || Double.isNaN(mLevel.isFree(mLeftWall ? -0.1 : 0.1, 0, this))) mOnWall = false;
 		if (mXV == 0 && mYV == 0) return;
 		
 		final double a = Math.acos(Math.abs(mXV) / Math.sqrt(mXV * mXV + mYV * mYV));
@@ -95,7 +95,7 @@ public abstract class Entity
 			if (restX != 0 && !hitX)
 			{
 				if (Math.abs(stepX) > Math.abs(restX)) stepX = restX;
-				xd = mWorld.isFree(stepX, 0, this);
+				xd = mLevel.isFree(stepX, 0, this);
 				if (Double.isNaN(xd)) mX += stepX;
 				else
 				{
@@ -110,7 +110,7 @@ public abstract class Entity
 			if (restY != 0 && !hitY)
 			{
 				if (Math.abs(stepY) > Math.abs(restY)) stepY = restY;
-				yd = mWorld.isFree(0, stepY, this);
+				yd = mLevel.isFree(0, stepY, this);
 				if (Double.isNaN(yd)) mY += stepY;
 				else
 				{
@@ -125,7 +125,7 @@ public abstract class Entity
 		touchBlocks();
 		
 		// Out of bounds
-		final int width = mWorld.getWidth() * Block.SIZE, height = mWorld.getHeight() * Block.SIZE;
+		final int width = mLevel.getWidth() * Block.SIZE, height = mLevel.getHeight() * Block.SIZE;
 		if (mX <= 0)
 		{
 			mXV = 0;
@@ -143,7 +143,7 @@ public abstract class Entity
 			mYV = 0;
 			mY = 0;
 		}
-		if (mY >= height) remove();
+		if (mY >= height) die();
 	}
 	
 	private final void touchBlocks()
@@ -151,14 +151,14 @@ public abstract class Entity
 		final HashMap<Block, Direction> blocks = new HashMap<>();
 		for (int tile : mTouchingBlocks.keySet())
 		{
-			final int x = tile % mWorld.getWidth(), y = tile / mWorld.getWidth();
-			blocks.put(Block.get(mWorld.getBlock(x, y)), mTouchingBlocks.get(tile));
+			final int x = tile % mLevel.getWidth(), y = tile / mLevel.getWidth();
+			blocks.put(Block.get(mLevel.getBlock(x, y)), mTouchingBlocks.get(tile));
 		}
 		for (int tile : mTouchingBlocks.keySet())
 		{
-			final int x = tile % mWorld.getWidth(), y = tile / mWorld.getWidth();
+			final int x = tile % mLevel.getWidth(), y = tile / mLevel.getWidth();
 			final Direction dir = mTouchingBlocks.get(tile);
-			Block.get(mWorld.getBlock(x, y)).hit(x, y, mWorld, this, dir, blocks);
+			Block.get(mLevel.getBlock(x, y)).hit(x, y, mLevel, this, dir, blocks);
 		}
 		mTouchingBlocks.clear();
 	}
@@ -175,7 +175,7 @@ public abstract class Entity
 	 */
 	public final void addTouchingBlock(int aX, int aY, Direction aDir)
 	{
-		mTouchingBlocks.put(aX + aY * mWorld.getWidth(), aDir);
+		mTouchingBlocks.put(aX + aY * mLevel.getWidth(), aDir);
 	}
 	
 	/**
@@ -242,7 +242,7 @@ public abstract class Entity
 	
 	/**
 	 * Invoked to render this entity on the screen.<br>
-	 * Please don't render at {@code mX:mY} but at {@code mX - mWorld.getScreenX():mY - mWorld.getScreenY()}.
+	 * Please don't render at {@code mX:mY} but at {@code mX - mLevel.getScreenX():mY - mLevel.getScreenY()}.
 	 * 
 	 * @param g
 	 *            The graphics wherein this entity is rendered.
@@ -368,10 +368,26 @@ public abstract class Entity
 	 */
 	public abstract boolean isSolid();
 	
+	public void die()
+	{
+		mDead = true;
+		remove();
+	}
+	
+	public void respawn()
+	{
+		mDead = false;
+	}
+	
+	public boolean isDead()
+	{
+		return mDead;
+	}
+	
 	/**
 	 * Removes this entity. Maybe seen as killing.
 	 */
-	public final void remove()
+	protected final void remove()
 	{
 		mRemoved = true;
 	}
@@ -389,14 +405,14 @@ public abstract class Entity
 	/**
 	 * Binds this entity to the given world and sets the created id.
 	 * 
-	 * @param aWorld
+	 * @param aLevel
 	 *            The parent world.
 	 * @param aId
 	 *            The created id.
 	 */
-	public final void init(World aWorld, int aId)
+	public final void init(Level aLevel, int aId)
 	{
-		mWorld = aWorld;
+		mLevel = aLevel;
 		mId = aId;
 	}
 	
@@ -438,7 +454,7 @@ public abstract class Entity
 		if (o instanceof Entity)
 		{
 			Entity e = (Entity) o;
-			return e.mWorld == mWorld && e.mId == mId;
+			return e.mLevel == mLevel && e.mId == mId;
 		}
 		return false;
 	}

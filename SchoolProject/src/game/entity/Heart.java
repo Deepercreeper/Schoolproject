@@ -1,6 +1,6 @@
 package game.entity;
 
-import game.world.World;
+import game.world.Level;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
 import data.DataManager;
@@ -30,7 +30,7 @@ public class Heart extends Entity
 		
 		mXV *= 0.95f - (mOnGround ? 0.45 : 0) + (mOnIce ? 0.48 : 0) - (mInLiquid ? 0.3 : 0);
 		
-		final double gravity = World.GRAVITY * 0.7 - (mInLiquid ? 0.1 : 0), friction = World.FRICTION - (mInLiquid ? 0.1 : 0);
+		final double gravity = Level.GRAVITY * 0.7 - (mInLiquid ? 0.1 : 0), friction = Level.FRICTION - (mInLiquid ? 0.1 : 0);
 		
 		mYV *= friction;
 		mYV += gravity;
@@ -43,13 +43,13 @@ public class Heart extends Entity
 	@Override
 	public void render(Graphics g)
 	{
-		g.drawImage(DataManager.getSplitImage("entity", 3).getScaledCopy(mWidth, mHeight), (float) (mX - mWorld.getScreenX()), (float) (mY - mWorld.getScreenY()));
+		g.drawImage(DataManager.getSplitImage("entity", 3).getScaledCopy(mWidth, mHeight), (float) (mX - mLevel.getScreenX()), (float) (mY - mLevel.getScreenY()));
 	}
 	
 	public void collect()
 	{
 		if (isRemoved()) return;
-		mWorld.getPlayer().addLife(mSize);
+		mLevel.getPlayer().addLife(mSize);
 		DataManager.playSound("heart");
 		remove();
 	}

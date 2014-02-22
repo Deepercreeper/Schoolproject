@@ -1,7 +1,7 @@
 package util;
 
 import game.entity.Entity;
-import game.world.World;
+import game.world.Level;
 import game.world.block.Block;
 
 public class Util
@@ -16,13 +16,13 @@ public class Util
 	 *            The x position of the block.
 	 * @param aY
 	 *            The y position of the block.
-	 * @param aWorld
+	 * @param aLevel
 	 *            The parent world.
 	 * @return {@code true} if the player is inside the block and {@code false} if not.
 	 */
-	public static boolean isPlayerInsideBlock(int aX, int aY, World aWorld)
+	public static boolean isPlayerInsideBlock(int aX, int aY, Level aLevel)
 	{
-		return aWorld.getPlayer().getRect().intersects(new Rectangle(aX * Block.SIZE, (aY) * Block.SIZE, Block.SIZE, Block.SIZE));
+		return aLevel.getPlayer().getRect().intersects(new Rectangle(aX * Block.SIZE, (aY) * Block.SIZE, Block.SIZE, Block.SIZE));
 	}
 	
 	/**
@@ -46,12 +46,12 @@ public class Util
 	 * 
 	 * @param aEntity
 	 *            The requested entity.
-	 * @param aWorld
+	 * @param aLevel
 	 *            The parent world.
 	 * @return {@code true} if the entity is doing a cannon ball and {@code false} if not.
 	 */
-	public static boolean isCannonBall(Entity aEntity, World aWorld)
+	public static boolean isCannonBall(Entity aEntity, Level aLevel)
 	{
-		return aEntity == aWorld.getPlayer() && aWorld.getPlayer().isCannonBall();
+		return aEntity == aLevel.getPlayer() && aLevel.getPlayer().isCannonBall();
 	}
 }
