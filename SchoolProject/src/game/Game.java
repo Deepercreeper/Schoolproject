@@ -66,7 +66,7 @@ public class Game
 	{
 		Player player = mWorld.getPlayer();
 		if (mWorldIndex == mWorlds.length - 1) stop();
-		mWorld = new World(++mWorldIndex, gc, player, mWorlds[mWorldIndex]);
+		else mWorld = new World(++mWorldIndex, gc, player, mWorlds[mWorldIndex]);
 	}
 	
 	/**
