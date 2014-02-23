@@ -1,5 +1,6 @@
 package data;
 
+import game.Save;
 import game.world.block.Texture;
 import java.util.HashMap;
 import org.newdawn.slick.Image;
@@ -292,6 +293,17 @@ public class DataManager
 			MUSIC.put(name, loadMusic(name));
 		sLoading = false;
 		sInitiated = true;
+	}
+	
+	public static Save loadSave(String aName)
+	{
+		// TODO Loading a save
+		return new Save(aName);
+	}
+	
+	public static void save(Save aSave)
+	{
+		// TODO Saving
 	}
 	
 	private static Image loadImage(String aName)

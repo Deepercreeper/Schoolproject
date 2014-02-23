@@ -23,5 +23,4 @@ public abstract class Menu
 	
 	public abstract void update(Input aInput);
 	
-	public abstract void initKeys(Input aInput);
 }

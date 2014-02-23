@@ -56,14 +56,4 @@ public class PauseMenu extends Menu
 		g.drawString("Space - Main menu", mX + 10, mY + 55);
 		g.drawString("Esc - Weiter", mX + 10, mY + 80);
 	}
-	
-	@Override
-	public void initKeys(Input aInput)
-	{
-		// Prevents switching title when no key was pressed.
-		aInput.isKeyPressed(Input.KEY_RIGHT);
-		aInput.isKeyPressed(Input.KEY_LEFT);
-		aInput.isKeyPressed(Input.KEY_D);
-		aInput.isKeyPressed(Input.KEY_A);
-	}
 }

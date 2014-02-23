@@ -166,7 +166,6 @@ public class Player extends Entity
 		mDead = false;
 		mLife = mMaxLife;
 		mXV = mYV = 0;
-		
 	}
 	
 	@Override

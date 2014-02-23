@@ -29,6 +29,8 @@ public class Game
 	
 	private GameContainer	mGC;
 	
+	private Save			mSave;
+	
 	/**
 	 * Renders the splash screen and the world. The volume is also displayed.
 	 * 
@@ -73,7 +75,7 @@ public class Game
 	private void nextWorld()
 	{
 		Player player = mWorld.getPlayer();
-		if (mWorldIndex == mWorlds.length - 1) stop();
+		if (mWorldIndex == mWorlds.length - 1) mainMenu();
 		else mWorld = new World(++mWorldIndex, mGC, player, mWorlds[mWorldIndex]);
 	}
 	
@@ -111,7 +113,7 @@ public class Game
 		// Input
 		if (mInput.isKeyPressed(Input.KEY_ESCAPE))
 		{
-			mPauseMenu.initKeys(mInput);
+			mInput.clearKeyPressedRecord();
 			mPause = true;
 		}
 		if (mInput.isKeyPressed(Input.KEY_ADD))
