@@ -53,7 +53,7 @@ public class PauseMenu extends Menu
 		g.setColor(Color.white);
 		g.drawString("< > - TexturePack: " + DataManager.getTexturePack(), mX + 10, mY + 5);
 		g.drawString("A D - Music title: " + DataManager.getTitle(), mX + 10, mY + 30);
-		g.drawString("Space - Beenden", mX + 10, mY + 55);
+		g.drawString("Space - Main menu", mX + 10, mY + 55);
 		g.drawString("Esc - Weiter", mX + 10, mY + 80);
 	}
 	

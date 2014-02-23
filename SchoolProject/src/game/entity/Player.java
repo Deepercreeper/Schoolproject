@@ -161,6 +161,15 @@ public class Player extends Entity
 	}
 	
 	@Override
+	public void respawn()
+	{
+		mDead = false;
+		mLife = mMaxLife;
+		mXV = mYV = 0;
+		
+	}
+	
+	@Override
 	public void die()
 	{
 		mDead = true;

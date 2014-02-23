@@ -13,7 +13,7 @@ import data.DataManager;
 
 public class Game
 {
-	private boolean			mRunning		= true, mPause, mMain = true;
+	private boolean			mRunning		= true, mPause, mMain;
 	
 	private Menu			mPauseMenu, mMainMenu;
 	
@@ -85,7 +85,11 @@ public class Game
 	 */
 	public void update(int aDelta)
 	{
-		if ( !DataManager.isInitiated()) DataManager.init();
+		if ( !DataManager.isInitiated())
+		{
+			DataManager.init();
+			mainMenu();
+		}
 		
 		if (mMain)
 		{
@@ -147,6 +151,7 @@ public class Game
 	{
 		mPause = false;
 		mMain = true;
+		DataManager.playMusic("Menu");
 		// TODO kill all worlds.
 	}
 	

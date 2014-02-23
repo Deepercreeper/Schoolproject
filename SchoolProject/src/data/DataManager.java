@@ -59,7 +59,7 @@ public class DataManager
 	/**
 	 * Starts to play a music with the current name. All music titles have to have the type ogg and only one music title can be played at one time.
 	 */
-	public static void playMusic()
+	private static void playMusic()
 	{
 		float volume = 1;
 		Music lastMusic = MUSIC.get(sTitles[sTitle]);
