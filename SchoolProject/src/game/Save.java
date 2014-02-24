@@ -128,9 +128,9 @@ public class Save
 		return mLastLevelIndex;
 	}
 	
-	public void openLevel(int aWorld, int aLevel)
+	public void openLevel(int aWorld, int aLevelIndex)
 	{
-		if (mScores.containsKey(aWorld) && !mScores.get(aWorld).containsKey(aLevel)) mScores.get(aWorld).put(aLevel, -1);
+		if (mScores.containsKey(aWorld) && !mScores.get(aWorld).containsKey(aLevelIndex)) mScores.get(aWorld).put(aLevelIndex, -1);
 	}
 	
 	public void openWorld(int aWorld)

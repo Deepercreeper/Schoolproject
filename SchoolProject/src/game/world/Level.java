@@ -8,6 +8,7 @@ import game.world.block.Item;
 import java.util.HashMap;
 import java.util.HashSet;
 import org.newdawn.slick.Color;
+import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
@@ -23,7 +24,7 @@ public class Level
 	 */
 	public static final double	FRICTION	= 0.99, GRAVITY = 0.3;
 	
-	private final byte			mId;
+	private final byte			mLevelId, mWorldId;
 	
 	private final int			mWidth, mHeight;
 	
@@ -39,36 +40,56 @@ public class Level
 	
 	private final HashSet<Integer>			mUpdatableBlocks	= new HashSet<>(), mLiquidBlocks = new HashSet<>();
 	
-	private Player							mPlayer;
+	private final Player					mPlayer;
 	
 	private boolean							mWon;
 	
-	/**
-	 * Creates a world defined by the given id and the given game container.
-	 * 
-	 * @param aId
-	 *            The id of this world.
-	 * @param gc
-	 *            the containing game container.
-	 */
-	public Level(int aId, Screen aScreen, Player aPlayer)
+	public Level(int aWorldId, int aLevelId, GameContainer gc)
 	{
-		mId = (byte) aId;
-		mScreen = aScreen;
+		mWorldId = (byte) aWorldId;
+		mLevelId = (byte) aLevelId;
+		mScreen = new Screen(gc.getWidth(), gc.getHeight());
 		mScreen.init(this);
-		mPlayer = aPlayer;
+		mPlayer = new Player();
 		mEntities = new HashMap<>();
 		mAddEntities = new HashMap<>();
 		reload();
 		mWidth = mBlocks.length;
 		if (mWidth > 0) mHeight = mBlocks[0].length;
 		else mHeight = 0;
-		addPlayer(aPlayer);
+		addPlayer(mPlayer);
+		DataManager.nextTitle();
+	}
+	
+	/**
+	 * Creates a world defined by the given id and the given game container.
+	 * 
+	 * @param aLevelId
+	 *            The id of this world.
+	 * @param gc
+	 *            the containing game container.
+	 */
+	public Level(int aWorldId, int aLevelId, GameContainer gc, Player aPlayer)
+	{
+		mWorldId = (byte) aWorldId;
+		mLevelId = (byte) aLevelId;
+		mScreen = new Screen(gc.getWidth(), gc.getHeight());
+		mScreen.init(this);
+		mPlayer = aPlayer;
+		mEntities = new HashMap<>();
+		mAddEntities = new HashMap<>();
+		mPlayer.respawn();
+		reload();
+		mWidth = mBlocks.length;
+		if (mWidth > 0) mHeight = mBlocks[0].length;
+		else mHeight = 0;
+		addPlayer(mPlayer);
+		DataManager.nextTitle();
 	}
 	
 	private void loadBlocks()
 	{
-		Image image = DataManager.getLevelImage(mId);
+		Image image = DataManager.getLevelImage(mLevelId);
 		final int width = image.getWidth(), height = image.getHeight();
 		final int redInt = (int) Math.pow(2, 16), greenInt = (int) Math.pow(2, 8);
 		mBlocks = new short[width][height];
@@ -300,6 +321,15 @@ public class Level
 	 */
 	public void update(Input aInput)
 	{
+		if (mPlayer.isDead())
+		{
+			Stats.instance().addDeath();
+			reload();
+			mPlayer.respawn();
+			addPlayer(mPlayer);
+			return;
+		}
+		
 		final HashSet<Integer> remove = new HashSet<>();
 		for (Entity entity : mEntities.values())
 			if (entity.isRemoved()) remove.add(entity.getId());
@@ -326,7 +356,6 @@ public class Level
 	
 	public void addPlayer(Player aPlayer)
 	{
-		mPlayer = aPlayer;
 		mPlayer.setX(mStartX * Block.SIZE);
 		mPlayer.setY(mStartY * Block.SIZE);
 		addEntity(mPlayer);
@@ -344,9 +373,14 @@ public class Level
 	 * 
 	 * @return the id.
 	 */
-	public byte getId()
+	public byte getLevelId()
 	{
-		return mId;
+		return mLevelId;
+	}
+	
+	public byte getWorldId()
+	{
+		return mWorldId;
 	}
 	
 	/**

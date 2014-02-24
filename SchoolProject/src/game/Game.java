@@ -1,7 +1,7 @@
 package game;
 
 import game.entity.Player;
-import game.world.World;
+import game.world.Level;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
@@ -17,7 +17,7 @@ public class Game
 	
 	private Menu			mPauseMenu, mMainMenu;
 	
-	private World			mWorld;
+	private Level			mLevel;
 	
 	private Input			mInput;
 	
@@ -46,7 +46,7 @@ public class Game
 				return;
 			}
 			
-			mWorld.render(g);
+			mLevel.render(g);
 			
 			Stats.instance().render(g);
 			
@@ -96,19 +96,17 @@ public class Game
 		}
 		
 		// Creating world
-		if (mWorld.hasWon())
+		if (mLevel.hasWon())
 		{
-			int levelId = mWorld.getLevelId();
-			mSave.setScore(mWorld.getId(), levelId, Stats.instance().getScore());
-			int[] levels = DataManager.getWorlds()[mWorld.getId()];
-			for (int i = 0; i < levels.length; i++ )
-				if (levelId == levels[i] && i < levels.length - 1)
-				{
-					mSave.openLevel(mWorld.getId(), levels[i + 1]);
-					mainMenu();
-					return;
-				}
-			if (mWorld.getId() < DataManager.getWorlds().length - 1) mSave.openWorld(mWorld.getId() + 1);
+			int levelIndex = mLevel.getLevelId();
+			mSave.setScore(mLevel.getWorldId(), levelIndex, Stats.instance().getScore());
+			if (levelIndex < DataManager.getWorlds()[mLevel.getWorldId()].length - 1)
+			{
+				mSave.openLevel(mLevel.getWorldId(), levelIndex + 1);
+				mainMenu();
+				return;
+			}
+			if (mLevel.getWorldId() < DataManager.getWorlds().length - 1) mSave.openWorld(mLevel.getWorldId() + 1);
 			mainMenu();
 			return;
 		}
@@ -136,7 +134,7 @@ public class Game
 		Stats.instance().tick(aDelta);
 		
 		// Updating world
-		mWorld.update(mInput);
+		mLevel.update(mInput);
 	}
 	
 	public void init(GameContainer gc)
@@ -146,16 +144,16 @@ public class Game
 		mMainMenu = new MainMenu(mGC, this);
 	}
 	
-	private void initWorld(int aWorld, int aLevel)
+	private void initWorld(int aWorld, int aLevelIndex)
 	{
 		if (mInput == null) mInput = mGC.getInput();
 		if (mPauseMenu == null) mPauseMenu = new PauseMenu(mGC, this);
 		if (mPlayer == null)
 		{
-			mWorld = new World(aWorld, mGC, aLevel);
-			mPlayer = mWorld.getPlayer();
+			mLevel = new Level(aWorld, aLevelIndex, mGC);
+			mPlayer = mLevel.getPlayer();
 		}
-		else mWorld = new World(aWorld, mGC, mPlayer, aLevel);
+		else mLevel = new Level(aWorld, aLevelIndex, mGC, mPlayer);
 	}
 	
 	public void mainMenu()
@@ -163,15 +161,15 @@ public class Game
 		mPause = false;
 		mMain = true;
 		DataManager.playMusic("Menu");
-		mWorld = null;
+		mLevel = null;
 	}
 	
-	public void start(int aWorld, int aLevel, Save aSave)
+	public void start(int aWorld, int aLevelIndex, Save aSave)
 	{
 		mMain = false;
 		mSave = aSave;
 		Stats.instance().reset();
-		initWorld(aWorld, aLevel);
+		initWorld(aWorld, aLevelIndex);
 	}
 	
 	/**

@@ -76,7 +76,7 @@ public class MainMenu extends Menu
 				if (mState == State.NEW_INPUT || mState == State.LOAD_INPUT) aInput.addKeyListener(new Listener(aInput));
 				break;
 			case GAME :
-				if (aInput.isKeyPressed(Input.KEY_SPACE)) mGame.start(mWorld, DataManager.getWorlds()[mWorld][mLevelIndex], mSave);
+				if (aInput.isKeyPressed(Input.KEY_SPACE)) mGame.start(mWorld, mLevelIndex, mSave);
 				else if (aInput.isKeyPressed(Input.KEY_ESCAPE))
 				{
 					save();

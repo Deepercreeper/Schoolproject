@@ -136,7 +136,7 @@ public class Player extends Entity
 		g.setColor(Color.green);
 		g.fillRect(10, mLevel.getScreenHeight() - 20, 100 * mLife / mMaxLife, 10);
 		g.setColor(Color.white);
-		g.drawString(mLife + "/" + mMaxLife, 120, mLevel.getScreenHeight() - 20);
+		g.drawString(mLife + "/" + mMaxLife, 120, mLevel.getScreenHeight() - 25);
 	}
 	
 	@Override
