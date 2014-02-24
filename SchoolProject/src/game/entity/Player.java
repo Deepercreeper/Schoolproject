@@ -19,7 +19,7 @@ public class Player extends Entity
 	
 	private boolean		mCannon;
 	
-	private int			mCannonDelay;
+	private int			mCannonTime;
 	
 	/**
 	 * Creates a new player at the given position.
@@ -41,10 +41,10 @@ public class Player extends Entity
 		if (mHurtDelay > 0) mHurtDelay-- ;
 		if ( !mHurt)
 		{
-			if (aInput.isKeyPressed(Input.KEY_S) && !mOnGround)
+			if (aInput.isKeyPressed(Input.KEY_S) && !mOnGround && mCannonTime <= 0)
 			{
 				mCannon = true;
-				mCannonDelay = 10;
+				mCannonTime = 10;
 				DataManager.playSound("cannon");
 			}
 			if (aInput.isKeyPressed(Input.KEY_W) || mOnGround)
@@ -76,8 +76,12 @@ public class Player extends Entity
 			else
 			{
 				mXV = 0;
-				if (--mCannonDelay <= 0) mYV = 10;
-				else mYV = 0;
+				if (mCannonTime > 0)
+				{
+					mCannonTime-- ;
+					mYV = 0;
+				}
+				else mYV = 10;
 			}
 		}
 		mHurt = false;
@@ -131,6 +135,8 @@ public class Player extends Entity
 		g.fillRect(10, mLevel.getScreenHeight() - 20, 100, 10);
 		g.setColor(Color.green);
 		g.fillRect(10, mLevel.getScreenHeight() - 20, 100 * mLife / mMaxLife, 10);
+		g.setColor(Color.white);
+		g.drawString(mLife + "/" + mMaxLife, 120, mLevel.getScreenHeight() - 20);
 	}
 	
 	@Override
@@ -165,6 +171,7 @@ public class Player extends Entity
 	{
 		mDead = false;
 		mLife = mMaxLife;
+		mHurtDelay = 0;
 		mXV = mYV = 0;
 	}
 	

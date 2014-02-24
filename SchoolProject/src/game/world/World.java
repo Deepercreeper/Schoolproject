@@ -40,6 +40,7 @@ public class World
 		mId = (byte) aId;
 		mScreen = new Screen(gc.getWidth(), gc.getHeight());
 		mPlayer = aPlayer;
+		mPlayer.respawn();
 		mLevel = new Level(aLevel, mScreen, mPlayer);
 		DataManager.nextTitle();
 	}

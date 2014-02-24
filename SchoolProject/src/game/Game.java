@@ -1,5 +1,6 @@
 package game;
 
+import game.entity.Player;
 import game.world.World;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
@@ -25,6 +26,8 @@ public class Game
 	private GameContainer	mGC;
 	
 	private Save			mSave;
+	
+	private Player			mPlayer;
 	
 	/**
 	 * Renders the splash screen and the world. The volume is also displayed.
@@ -150,7 +153,12 @@ public class Game
 	{
 		if (mInput == null) mInput = mGC.getInput();
 		if (mPauseMenu == null) mPauseMenu = new PauseMenu(mGC, this);
-		mWorld = new World(aWorld, mGC, aLevel);
+		if (mPlayer == null)
+		{
+			mWorld = new World(aWorld, mGC, aLevel);
+			mPlayer = mWorld.getPlayer();
+		}
+		else mWorld = new World(aWorld, mGC, mPlayer, aLevel);
 	}
 	
 	public void mainMenu()
