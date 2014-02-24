@@ -99,9 +99,6 @@ public class Game
 		if (mWorld.hasWon())
 		{
 			int levelId = mWorld.getLevelId();
-			final int[] levelIds = DataManager.getWorlds()[mWorld.getId()];
-			for (int i = 0; i < levelIds.length; i++ )
-				if (levelId == levelIds[i]) levelId = i;
 			mSave.setScore(mWorld.getId(), levelId, Stats.instance().getScore());
 			int[] levels = DataManager.getWorlds()[mWorld.getId()];
 			for (int i = 0; i < levels.length; i++ )
@@ -173,6 +170,7 @@ public class Game
 	{
 		mMain = false;
 		mSave = aSave;
+		Stats.instance().reset();
 		initWorld(aWorld, aLevel);
 	}
 	

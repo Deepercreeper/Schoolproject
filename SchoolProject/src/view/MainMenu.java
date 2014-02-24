@@ -53,7 +53,8 @@ public class MainMenu extends Menu
 				break;
 			case GAME :
 				g.drawString("Spiel: " + mSave.getName(), mWidth / 2 - 100, mHeight / 2 - 15);
-				g.drawString("World, Level: " + mWorld + ":" + mLevelIndex + " Best Score: " + mSave.getScore(mWorld, mLevelIndex), mWidth / 2 - 100, mHeight / 2);
+				g.drawString("< > - World, Level: " + mWorld + ":" + mLevelIndex + " Level Score: " + mSave.getScore(mWorld, mLevelIndex) + " World Score: " + mSave.getScore(mWorld),
+						mWidth / 2 - 100, mHeight / 2);
 				g.drawString("Space - Start", mWidth / 2 - 100, mHeight / 2 + 15);
 				g.drawString("Escape - Ende", mWidth / 2 - 100, mHeight / 2 + 30);
 				break;
@@ -169,7 +170,7 @@ public class MainMenu extends Menu
 		public void keyPressed(int aKey, char aChar)
 		{
 			if (Character.isLetter(aChar) || aChar == ' ') mText += aChar;
-			else if (aKey == Input.KEY_BACK) mText = mText.substring(0, mText.length() - 1);
+			else if (aKey == Input.KEY_BACK && mText.length() > 0) mText = mText.substring(0, mText.length() - 1);
 			else if (aKey == Input.KEY_ENTER)
 			{
 				if (mState == State.NEW_INPUT) newGame(mText);
