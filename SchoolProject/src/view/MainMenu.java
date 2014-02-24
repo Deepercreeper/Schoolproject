@@ -13,20 +13,21 @@ public class MainMenu extends Menu
 {
 	private enum State
 	{
-		NOTHING, NEW, LOAD;
+		MAIN, NEW_INPUT, LOAD_INPUT, GAME;
 	}
 	
-	private final int	mWorld		= 0;
+	private final int	mWorld	= 1;
 	
-	private Save		mSave		= null;
+	private Save		mSave	= null;
 	
-	private String		mTextBar	= "";
+	private String		mText	= "";
 	
-	private State		mInput		= State.NOTHING;
+	private State		mState;
 	
 	public MainMenu(GameContainer gc, Game aGame)
 	{
 		super(aGame, 0, 0, gc.getWidth(), gc.getHeight());
+		mState = State.MAIN;
 	}
 	
 	@Override
@@ -35,88 +36,55 @@ public class MainMenu extends Menu
 		g.setColor(Color.black);
 		g.fillRect(mX, mY, mWidth, mHeight);
 		g.setColor(Color.white);
-		if (mInput != State.NOTHING)
+		switch (mState)
 		{
-			g.drawString("Name: " + mTextBar, mWidth / 2 - 100, mHeight / 2 - 15);
-			g.drawString("Enter - Bestätigen", mWidth / 2 - 100, mHeight / 2);
-			g.drawString("Escape - Zurück", mWidth / 2 - 100, mHeight / 2 + 15);
-			return;
-		}
-		if (mSave == null)
-		{
-			g.drawString("Space - Neues Spiel", mWidth / 2 - 100, mHeight / 2 - 15);
-			g.drawString("Enter - Spiel Laden", mWidth / 2 - 100, mHeight / 2);
-			g.drawString("Escape - Ende", mWidth / 2 - 100, mHeight / 2 + 15);
-		}
-		else
-		{
-			// TODO Selection
-			g.drawString("Spiel: " + mSave.getName(), mWidth / 2 - 100, mHeight / 2 - 15);
-			g.drawString("Space - Start", mWidth / 2 - 100, mHeight / 2);
-			g.drawString("Escape - Ende", mWidth / 2 - 100, mHeight / 2 + 15);
+			case MAIN :
+				g.drawString("Space - Neues Spiel", mWidth / 2 - 100, mHeight / 2 - 15);
+				g.drawString("Enter - Spiel Laden", mWidth / 2 - 100, mHeight / 2);
+				g.drawString("Escape - Ende", mWidth / 2 - 100, mHeight / 2 + 15);
+				break;
+			case LOAD_INPUT :
+			case NEW_INPUT :
+				g.drawString("Name: " + mText, mWidth / 2 - 100, mHeight / 2 - 15);
+				g.drawString("Enter - Bestätigen", mWidth / 2 - 100, mHeight / 2);
+				g.drawString("Escape - Zurück", mWidth / 2 - 100, mHeight / 2 + 15);
+				break;
+			case GAME :
+				g.drawString("Spiel: " + mSave.getName(), mWidth / 2 - 100, mHeight / 2 - 15);
+				g.drawString("Space - Start", mWidth / 2 - 100, mHeight / 2);
+				g.drawString("Escape - Ende", mWidth / 2 - 100, mHeight / 2 + 15);
+				break;
+			default :
+				break;
+		
 		}
 	}
 	
 	@Override
 	public void update(final Input aInput)
 	{
-		if (mInput != State.NOTHING) return;
-		if (mSave == null)
+		switch (mState)
 		{
-			if (aInput.isKeyPressed(Input.KEY_SPACE)) mInput = State.NEW;
-			if (aInput.isKeyPressed(Input.KEY_ENTER)) mInput = State.LOAD;
-			if (mInput != State.NOTHING)
-			{
-				aInput.addKeyListener(new KeyListener()
+			case MAIN :
+				if (aInput.isKeyPressed(Input.KEY_SPACE)) mState = State.NEW_INPUT;
+				else if (aInput.isKeyPressed(Input.KEY_ENTER)) mState = State.LOAD_INPUT;
+				else if (aInput.isKeyPressed(Input.KEY_ESCAPE)) mGame.stop();
+				if (mState == State.NEW_INPUT || mState == State.LOAD_INPUT) aInput.addKeyListener(new Listener(aInput));
+				break;
+			case GAME :
+				if (aInput.isKeyPressed(Input.KEY_SPACE)) mGame.start(mWorld);
+				else if (aInput.isKeyPressed(Input.KEY_ESCAPE))
 				{
-					@Override
-					public void setInput(Input aArg0)
-					{}
-					
-					@Override
-					public boolean isAcceptingInput()
-					{
-						return true;
-					}
-					
-					@Override
-					public void inputStarted()
-					{}
-					
-					@Override
-					public void inputEnded()
-					{}
-					
-					@Override
-					public void keyReleased(int aKey, char aChar)
-					{}
-					
-					@Override
-					public void keyPressed(int aKey, char aChar)
-					{
-						if (aKey == Input.KEY_ENTER)
-						{
-							if (mInput == State.NEW) newGame(mTextBar);
-							else if (mInput == State.LOAD) loadGame(mTextBar);
-							mInput = State.NOTHING;
-							aInput.removeAllKeyListeners();
-							mTextBar = "";
-						}
-						else if (Character.isLetter(aChar) || aChar == ' ') mTextBar += aChar;
-						else if (aKey == Input.KEY_BACK && mTextBar.length() > 0) mTextBar = mTextBar.substring(0, mTextBar.length() - 1);
-						else if (aKey == Input.KEY_ESCAPE) mInput = State.NOTHING;
-					}
-				});
-			}
-			else if (aInput.isKeyPressed(Input.KEY_ESCAPE)) mGame.stop();
+					save();
+					mState = State.MAIN;
+					aInput.clearKeyPressedRecord();
+				}
+				break;
+			case LOAD_INPUT :
+			case NEW_INPUT :
+			default :
+				break;
 		}
-		else
-		{
-			if (aInput.isKeyPressed(Input.KEY_SPACE)) mGame.start(mSave.getLastWorld());
-			if (aInput.isKeyPressed(Input.KEY_ESCAPE)) save();
-		}
-		// if (aInput.isKeyPressed(Input.KEY_LEFT)) mWorld = (mWorld - 1 + DataManager.getWorlds().length) % DataManager.getWorlds().length;
-		// if (aInput.isKeyPressed(Input.KEY_RIGHT)) mWorld = (mWorld + 1) % DataManager.getWorlds().length;
 	}
 	
 	private void newGame(String aName)
@@ -133,5 +101,60 @@ public class MainMenu extends Menu
 	{
 		DataManager.save(mSave);
 		mSave = null;
+	}
+	
+	private class Listener implements KeyListener
+	{
+		private final Input	mInput;
+		
+		public Listener(Input aInput)
+		{
+			mInput = aInput;
+		}
+		
+		@Override
+		public void inputEnded()
+		{}
+		
+		@Override
+		public void inputStarted()
+		{}
+		
+		@Override
+		public boolean isAcceptingInput()
+		{
+			return true;
+		}
+		
+		@Override
+		public void setInput(Input aArg0)
+		{}
+		
+		@Override
+		public void keyPressed(int aKey, char aChar)
+		{
+			if (Character.isLetter(aChar) || aChar == ' ') mText += aChar;
+			else if (aKey == Input.KEY_BACK) mText = mText.substring(0, mText.length() - 1);
+			else if (aKey == Input.KEY_ENTER)
+			{
+				if (mState == State.NEW_INPUT) newGame(mText);
+				else if (mState == State.LOAD_INPUT) loadGame(mText);
+				mText = "";
+				mState = State.GAME;
+				mInput.removeAllKeyListeners();
+				mInput.clearKeyPressedRecord();
+			}
+			else if (aKey == Input.KEY_ESCAPE)
+			{
+				mText = "";
+				mState = State.MAIN;
+				mInput.removeAllKeyListeners();
+				mInput.clearKeyPressedRecord();
+			}
+		}
+		
+		@Override
+		public void keyReleased(int aKey, char aChar)
+		{}
 	}
 }
