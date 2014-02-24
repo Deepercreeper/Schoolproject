@@ -1,6 +1,5 @@
 package game;
 
-import game.entity.Player;
 import game.world.World;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
@@ -18,10 +17,6 @@ public class Game
 	private Menu			mPauseMenu, mMainMenu;
 	
 	private World			mWorld;
-	
-	private int[][]			mWorlds;
-	
-	private int				mWorldIndex;
 	
 	private Input			mInput;
 	
@@ -72,13 +67,6 @@ public class Game
 		}
 	}
 	
-	private void nextWorld()
-	{
-		Player player = mWorld.getPlayer();
-		if (mWorldIndex == mWorlds.length - 1) mainMenu();
-		else mWorld = new World(++mWorldIndex, mGC, player, mWorlds[mWorldIndex]);
-	}
-	
 	/**
 	 * Initiates the data manager, creates a world, handles menu input and updates the world.
 	 * 
@@ -105,7 +93,25 @@ public class Game
 		}
 		
 		// Creating world
-		if (mWorld.hasWon()) nextWorld();
+		if (mWorld.hasWon())
+		{
+			int levelId = mWorld.getLevelId();
+			final int[] levelIds = DataManager.getWorlds()[mWorld.getId()];
+			for (int i = 0; i < levelIds.length; i++ )
+				if (levelId == levelIds[i]) levelId = i;
+			mSave.setScore(mWorld.getId(), levelId, Stats.instance().getScore());
+			int[] levels = DataManager.getWorlds()[mWorld.getId()];
+			for (int i = 0; i < levels.length; i++ )
+				if (levelId == levels[i] && i < levels.length - 1)
+				{
+					mSave.openLevel(mWorld.getId(), levels[i + 1]);
+					mainMenu();
+					return;
+				}
+			if (mWorld.getId() < DataManager.getWorlds().length - 1) mSave.openWorld(mWorld.getId() + 1);
+			mainMenu();
+			return;
+		}
 		
 		// Updates
 		if (mShowingVolume > 0) mShowingVolume-- ;
@@ -140,13 +146,11 @@ public class Game
 		mMainMenu = new MainMenu(mGC, this);
 	}
 	
-	private void initWorld(int aWorld)
+	private void initWorld(int aWorld, int aLevel)
 	{
-		mInput = mGC.getInput();
-		mPauseMenu = new PauseMenu(mGC, this);
-		mWorlds = DataManager.getWorlds();
-		mWorldIndex = aWorld;
-		mWorld = new World(mWorldIndex, mGC, mWorlds[mWorldIndex]);
+		if (mInput == null) mInput = mGC.getInput();
+		if (mPauseMenu == null) mPauseMenu = new PauseMenu(mGC, this);
+		mWorld = new World(aWorld, mGC, aLevel);
 	}
 	
 	public void mainMenu()
@@ -154,13 +158,14 @@ public class Game
 		mPause = false;
 		mMain = true;
 		DataManager.playMusic("Menu");
-		// TODO kill all worlds.
+		mWorld = null;
 	}
 	
-	public void start(int aWorld)
+	public void start(int aWorld, int aLevel, Save aSave)
 	{
 		mMain = false;
-		initWorld(aWorld);
+		mSave = aSave;
+		initWorld(aWorld, aLevel);
 	}
 	
 	/**

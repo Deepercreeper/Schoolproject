@@ -2,6 +2,12 @@ package data;
 
 import game.Save;
 import game.world.block.Texture;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.HashMap;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.Music;
@@ -297,13 +303,39 @@ public class DataManager
 	
 	public static Save loadSave(String aName)
 	{
-		// TODO Loading a save
-		return new Save(aName);
+		File save = new File("data/saves/" + aName + ".txt");
+		StringBuilder data = new StringBuilder();
+		if (save.exists()) try
+		{
+			BufferedReader reader = new BufferedReader(new FileReader(save));
+			int c;
+			while ((c = reader.read()) != -1)
+				data.append((char) c);
+			reader.close();
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+			return null;
+		}
+		return new Save(data.toString().split("\n"));
 	}
 	
 	public static void save(Save aSave)
 	{
-		// TODO Saving
+		File save = new File("data/saves/" + aSave.getName() + ".txt");
+		if (save.exists()) save.delete();
+		try
+		{
+			save.createNewFile();
+			BufferedWriter writer = new BufferedWriter(new FileWriter(save));
+			writer.write(aSave.getSaveData());
+			writer.close();
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
 	}
 	
 	private static Image loadImage(String aName)

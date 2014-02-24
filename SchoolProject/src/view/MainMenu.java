@@ -16,13 +16,15 @@ public class MainMenu extends Menu
 		MAIN, NEW_INPUT, LOAD_INPUT, GAME;
 	}
 	
-	private final int	mWorld	= 1;
+	private int		mWorld		= 0;
 	
-	private Save		mSave	= null;
+	private int		mLevelIndex	= 0;
 	
-	private String		mText	= "";
+	private Save	mSave		= null;
 	
-	private State		mState;
+	private String	mText		= "";
+	
+	private State	mState;
 	
 	public MainMenu(GameContainer gc, Game aGame)
 	{
@@ -51,8 +53,9 @@ public class MainMenu extends Menu
 				break;
 			case GAME :
 				g.drawString("Spiel: " + mSave.getName(), mWidth / 2 - 100, mHeight / 2 - 15);
-				g.drawString("Space - Start", mWidth / 2 - 100, mHeight / 2);
-				g.drawString("Escape - Ende", mWidth / 2 - 100, mHeight / 2 + 15);
+				g.drawString("World, Level: " + mWorld + ":" + mLevelIndex + " Best Score: " + mSave.getScore(mWorld, mLevelIndex), mWidth / 2 - 100, mHeight / 2);
+				g.drawString("Space - Start", mWidth / 2 - 100, mHeight / 2 + 15);
+				g.drawString("Escape - Ende", mWidth / 2 - 100, mHeight / 2 + 30);
 				break;
 			default :
 				break;
@@ -72,12 +75,38 @@ public class MainMenu extends Menu
 				if (mState == State.NEW_INPUT || mState == State.LOAD_INPUT) aInput.addKeyListener(new Listener(aInput));
 				break;
 			case GAME :
-				if (aInput.isKeyPressed(Input.KEY_SPACE)) mGame.start(mWorld);
+				if (aInput.isKeyPressed(Input.KEY_SPACE)) mGame.start(mWorld, DataManager.getWorlds()[mWorld][mLevelIndex], mSave);
 				else if (aInput.isKeyPressed(Input.KEY_ESCAPE))
 				{
 					save();
 					mState = State.MAIN;
 					aInput.clearKeyPressedRecord();
+				}
+				else if (aInput.isKeyPressed(Input.KEY_RIGHT))
+				{
+					int[][] worlds = DataManager.getWorlds();
+					if (mLevelIndex < worlds[mWorld].length - 1)
+					{
+						if (mSave.isAvailable(mWorld, mLevelIndex + 1)) mLevelIndex++ ;
+					}
+					else if (mWorld < worlds.length - 1 && mSave.isAvailable(mWorld + 1))
+					{
+						mWorld++ ;
+						mLevelIndex = 0;
+					}
+				}
+				else if (aInput.isKeyPressed(Input.KEY_LEFT))
+				{
+					int[][] worlds = DataManager.getWorlds();
+					if (mLevelIndex > 0)
+					{
+						if (mSave.isAvailable(mWorld, mLevelIndex - 1)) mLevelIndex-- ;
+					}
+					else if (mWorld > 0 && mSave.isAvailable(mWorld - 1))
+					{
+						mWorld-- ;
+						mLevelIndex = worlds[mWorld].length - 1;
+					}
 				}
 				break;
 			case LOAD_INPUT :
@@ -90,15 +119,21 @@ public class MainMenu extends Menu
 	private void newGame(String aName)
 	{
 		mSave = new Save(aName);
+		mWorld = mSave.getLastWorld();
+		mLevelIndex = mSave.getLastLevelIndex();
 	}
 	
 	private void loadGame(String aName)
 	{
 		mSave = DataManager.loadSave(aName);
+		mWorld = mSave.getLastWorld();
+		mLevelIndex = mSave.getLastLevelIndex();
 	}
 	
 	private void save()
 	{
+		mSave.setLastWorld(mWorld);
+		mSave.setLastLevelIndex(mLevelIndex);
 		DataManager.save(mSave);
 		mSave = null;
 	}

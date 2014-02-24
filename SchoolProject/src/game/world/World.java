@@ -14,15 +14,9 @@ public class World
 	
 	private final Player	mPlayer;
 	
-	private final int[]		mLevels;
-	
-	private Level			mLevel;
-	
-	private int				mLevelIndex;
+	private final Level		mLevel;
 	
 	private final Screen	mScreen;
-	
-	private boolean			mWon;
 	
 	/**
 	 * Creates a world defined by the given id and the given game container.
@@ -32,25 +26,21 @@ public class World
 	 * @param gc
 	 *            the containing game container.
 	 */
-	public World(int aId, GameContainer gc, int[] aLevels)
+	public World(int aId, GameContainer gc, int aLevel)
 	{
 		mId = (byte) aId;
-		mLevels = aLevels;
 		mScreen = new Screen(gc.getWidth(), gc.getHeight());
 		mPlayer = new Player();
-		mLevelIndex = 0;
-		mLevel = new Level(mLevels[mLevelIndex], mScreen, mPlayer);
+		mLevel = new Level(aLevel, mScreen, mPlayer);
 		DataManager.nextTitle();
 	}
 	
-	public World(int aId, GameContainer gc, Player aPlayer, int[] aLevels)
+	public World(int aId, GameContainer gc, Player aPlayer, int aLevel)
 	{
 		mId = (byte) aId;
-		mLevels = aLevels;
 		mScreen = new Screen(gc.getWidth(), gc.getHeight());
 		mPlayer = aPlayer;
-		mLevelIndex = 0;
-		mLevel = new Level(mLevels[mLevelIndex], mScreen, mPlayer);
+		mLevel = new Level(aLevel, mScreen, mPlayer);
 		DataManager.nextTitle();
 	}
 	
@@ -71,13 +61,12 @@ public class World
 			return;
 		}
 		
-		if (mLevel.hasWon())
-		{
-			if (mLevelIndex == mLevels.length - 1) mWon = true;
-			else mLevel = new Level(mLevels[++mLevelIndex], mScreen, mPlayer);
-		}
-		
 		mLevel.update(aInput);
+	}
+	
+	public byte getLevelId()
+	{
+		return mLevel.getId();
 	}
 	
 	/**
@@ -97,7 +86,7 @@ public class World
 	 */
 	public boolean hasWon()
 	{
-		return mWon;
+		return mLevel.hasWon();
 	}
 	
 	/**

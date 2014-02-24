@@ -18,12 +18,18 @@ public class Stats
 		return STATS;
 	}
 	
+	public void reset()
+	{
+		mBananas = mDeaths = mTime = mBananasInLevel = 0;
+	}
+	
 	public void render(Graphics g)
 	{
 		g.setColor(Color.white);
 		g.drawString("Bananas: " + mBananas, 10, 20);
 		g.drawString("Deaths: " + mDeaths, 10, 35);
 		g.drawString("Time: " + mTime / 1000, 10, 50);
+		g.drawString("Score: " + getScore(), 10, 80);
 	}
 	
 	public void setBananaLevel()
@@ -51,6 +57,6 @@ public class Stats
 	
 	public int getScore()
 	{
-		return mBananas * 100 - mTime / 10000 - mDeaths * 10;
+		return Math.max(mBananas * 100 + 500 - mTime / 1000 - mDeaths * 10, 0);
 	}
 }
