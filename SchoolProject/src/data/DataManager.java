@@ -327,6 +327,7 @@ public class DataManager
 		if (save.exists()) save.delete();
 		try
 		{
+			new File(save.getParent()).mkdir();
 			save.createNewFile();
 			BufferedWriter writer = new BufferedWriter(new FileWriter(save));
 			writer.write(aSave.getSaveData());
