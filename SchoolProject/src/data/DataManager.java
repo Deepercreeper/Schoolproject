@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.Music;
@@ -32,6 +33,8 @@ public class DataManager
 	private static int								sTexturepack		= 0, sTitle = 0;
 	private static float							sVolume				= 1;
 	private static boolean							sInitiated			= false, sLoading = false;
+	
+	private static final ArrayList<String>			mSaves				= new ArrayList<>();
 	
 	/**
 	 * Plays a sound with the given name. All sounds have to have the type wav and sounds can be played more times simultanely.
@@ -297,8 +300,29 @@ public class DataManager
 		}
 		for (String name : sTitles)
 			MUSIC.put(name, loadMusic(name));
+		loadSaves();
 		sLoading = false;
 		sInitiated = true;
+	}
+	
+	private static void loadSaves()
+	{
+		File saves = new File("data/saves/#Saves#.txt");
+		StringBuilder data = new StringBuilder();
+		if (saves.exists()) try
+		{
+			BufferedReader reader = new BufferedReader(new FileReader(saves));
+			int c;
+			while ((c = reader.read()) != -1)
+				data.append((char) c);
+			reader.close();
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
+		for (String save : data.toString().split("\n"))
+			mSaves.add(save);
 	}
 	
 	public static Save loadSave(String aName)
@@ -337,6 +361,53 @@ public class DataManager
 		{
 			e.printStackTrace();
 		}
+		if ( !mSaves.contains(aSave.getName()))
+		{
+			save = new File("data/saves/#Saves#.txt");
+			if (save.exists()) save.delete();
+			try
+			{
+				new File(save.getParent()).mkdir();
+				save.createNewFile();
+				BufferedWriter writer = new BufferedWriter(new FileWriter(save));
+				for (String saveName : mSaves)
+					writer.write(saveName + "\n");
+				writer.write(aSave.getName());
+				mSaves.add(aSave.getName());
+				writer.close();
+			}
+			catch (IOException e)
+			{
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	public static void deleteSave(int aIndex)
+	{
+		File save = new File("data/saves/" + mSaves.get(aIndex) + ".txt");
+		if (save.exists()) save.delete();
+		mSaves.remove(aIndex);
+		save = new File("data/saves/#Saves#.txt");
+		if (save.exists()) save.delete();
+		try
+		{
+			new File(save.getParent()).mkdir();
+			save.createNewFile();
+			BufferedWriter writer = new BufferedWriter(new FileWriter(save));
+			for (int i = 0; i < mSaves.size(); i++ )
+				writer.write(mSaves.get(i) + (i < mSaves.size() - 1 ? "\n" : ""));
+			writer.close();
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
+	}
+	
+	public static ArrayList<String> getSaves()
+	{
+		return mSaves;
 	}
 	
 	private static Image loadImage(String aName)

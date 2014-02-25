@@ -16,9 +16,9 @@ public class MainMenu extends Menu
 		MAIN, NEW_INPUT, LOAD_INPUT, GAME;
 	}
 	
-	private int		mWorld		= 0;
+	private int		mWorld		= 0, mLevelIndex = 0;
 	
-	private int		mLevelIndex	= 0;
+	private int		mSaveIndex	= 0;
 	
 	private Save	mSave		= null;
 	
@@ -47,9 +47,16 @@ public class MainMenu extends Menu
 				break;
 			case LOAD_INPUT :
 			case NEW_INPUT :
-				g.drawString("Name: " + mText, mWidth / 2 - 100, mHeight / 2 - 15);
-				g.drawString("Enter - Bestätigen", mWidth / 2 - 100, mHeight / 2);
-				g.drawString("Escape - Zurück", mWidth / 2 - 100, mHeight / 2 + 15);
+				for (int i = 1; i <= DataManager.getSaves().size() && mHeight / 2 - i * 15 > 0; i++ )
+					g.drawString(DataManager.getSaves().get(DataManager.getSaves().size() - i), mWidth / 2 - 100, mHeight / 2 - 15 - i * 15);
+				if (mState == State.NEW_INPUT) g.drawString("Name: " + mText, mWidth / 2 - 100, mHeight / 2);
+				else
+				{
+					g.drawString("< > - Save: " + DataManager.getSaves().get(mSaveIndex), mWidth / 2 - 100, mHeight / 2);
+					g.drawString("Entf - Löschen", mWidth / 2 - 100, mHeight / 2 + 45);
+				}
+				g.drawString("Enter - Bestätigen", mWidth / 2 - 100, mHeight / 2 + 15);
+				g.drawString("Escape - Zurück", mWidth / 2 - 100, mHeight / 2 + 30);
 				break;
 			case GAME :
 				g.drawString("Spiel: " + mSave.getName(), mWidth / 2 - 100, mHeight / 2 - 15);
@@ -71,9 +78,9 @@ public class MainMenu extends Menu
 		{
 			case MAIN :
 				if (aInput.isKeyPressed(Input.KEY_SPACE)) mState = State.NEW_INPUT;
-				else if (aInput.isKeyPressed(Input.KEY_ENTER)) mState = State.LOAD_INPUT;
+				else if (aInput.isKeyPressed(Input.KEY_ENTER) && !DataManager.getSaves().isEmpty()) mState = State.LOAD_INPUT;
 				else if (aInput.isKeyPressed(Input.KEY_ESCAPE)) mGame.stop();
-				if (mState == State.NEW_INPUT || mState == State.LOAD_INPUT) aInput.addKeyListener(new Listener(aInput));
+				if (mState == State.NEW_INPUT) aInput.addKeyListener(new Listener(aInput));
 				break;
 			case GAME :
 				if (aInput.isKeyPressed(Input.KEY_SPACE)) mGame.start(mWorld, mLevelIndex, mSave);
@@ -111,6 +118,30 @@ public class MainMenu extends Menu
 				}
 				break;
 			case LOAD_INPUT :
+				if (aInput.isKeyPressed(Input.KEY_RIGHT)) mSaveIndex = (mSaveIndex + 1) % DataManager.getSaves().size();
+				else if (aInput.isKeyPressed(Input.KEY_LEFT)) mSaveIndex = (mSaveIndex - 1 + DataManager.getSaves().size()) % DataManager.getSaves().size();
+				else if (aInput.isKeyPressed(Input.KEY_DELETE))
+				{
+					DataManager.deleteSave(mSaveIndex);
+					if (DataManager.getSaves().isEmpty())
+					{
+						mState = State.MAIN;
+						aInput.clearKeyPressedRecord();
+					}
+					else if (mSaveIndex == DataManager.getSaves().size()) mSaveIndex-- ;
+				}
+				else if (aInput.isKeyPressed(Input.KEY_ENTER))
+				{
+					loadGame(DataManager.getSaves().get(mSaveIndex));
+					mState = State.GAME;
+					aInput.clearKeyPressedRecord();
+				}
+				else if (aInput.isKeyPressed(Input.KEY_ESCAPE))
+				{
+					mState = State.MAIN;
+					aInput.clearKeyPressedRecord();
+				}
+				break;
 			case NEW_INPUT :
 			default :
 				break;
@@ -169,12 +200,11 @@ public class MainMenu extends Menu
 		@Override
 		public void keyPressed(int aKey, char aChar)
 		{
-			if (Character.isLetter(aChar) || aChar == ' ') mText += aChar;
+			if (Character.isLetter(aChar) || Character.isDigit(aChar) || aChar == ' ') mText += aChar;
 			else if (aKey == Input.KEY_BACK && mText.length() > 0) mText = mText.substring(0, mText.length() - 1);
 			else if (aKey == Input.KEY_ENTER)
 			{
-				if (mState == State.NEW_INPUT) newGame(mText);
-				else if (mState == State.LOAD_INPUT) loadGame(mText);
+				newGame(mText);
 				mText = "";
 				mState = State.GAME;
 				mInput.removeAllKeyListeners();
