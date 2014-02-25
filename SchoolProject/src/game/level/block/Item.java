@@ -1,4 +1,4 @@
-package game.world.block;
+package game.level.block;
 
 import game.entity.Banana;
 import game.entity.Entity;

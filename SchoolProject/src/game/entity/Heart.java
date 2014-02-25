@@ -1,6 +1,7 @@
 package game.entity;
 
-import game.world.Level;
+import game.level.Level;
+import game.level.block.Block;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
 import data.DataManager;
@@ -25,6 +26,10 @@ public class Heart extends Entity
 		if ( !mStatic && --mLife < 0) remove();
 		
 		mOnIce = false;
+		
+		final double distance = Math.sqrt(Math.pow(mLevel.getPlayer().getY() + mLevel.getPlayer().getHeight() / 2 - mY - mHeight / 2, 2)
+				+ Math.pow(mLevel.getPlayer().getX() + mLevel.getPlayer().getWidth() / 2 - mX - mWidth / 2, 2));
+		if (distance < Block.SIZE * 3) mXV = -(Block.SIZE * 3 - distance) * 0.05;
 		
 		move();
 		

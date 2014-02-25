@@ -1,6 +1,6 @@
-package game.world.block;
+package game.level.block;
 
-import game.world.Level;
+import game.level.Level;
 import util.Rectangle;
 import util.Util;
 

@@ -1,8 +1,8 @@
-package game.world;
+package game.level;
 
 import game.entity.Entity;
 import game.entity.Player;
-import game.world.block.Block;
+import game.level.block.Block;
 import util.Rectangle;
 
 public class Screen

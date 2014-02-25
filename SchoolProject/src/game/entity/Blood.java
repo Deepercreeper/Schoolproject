@@ -1,6 +1,6 @@
 package game.entity;
 
-import game.world.Level;
+import game.level.Level;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;

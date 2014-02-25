@@ -1,8 +1,8 @@
 package util;
 
 import game.entity.Entity;
-import game.world.Level;
-import game.world.block.Block;
+import game.level.Level;
+import game.level.block.Block;
 
 public class Util
 {

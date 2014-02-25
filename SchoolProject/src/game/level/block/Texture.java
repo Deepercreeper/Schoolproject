@@ -1,4 +1,4 @@
-package game.world.block;
+package game.level.block;
 
 import java.util.Collection;
 import java.util.HashMap;

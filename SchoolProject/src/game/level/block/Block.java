@@ -1,7 +1,7 @@
-package game.world.block;
+package game.level.block;
 
 import game.entity.Entity;
-import game.world.Level;
+import game.level.Level;
 import java.util.HashMap;
 import java.util.HashSet;
 import org.newdawn.slick.Graphics;
