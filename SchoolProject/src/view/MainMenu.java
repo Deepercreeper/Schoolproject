@@ -92,8 +92,8 @@ public class MainMenu extends Menu
 				}
 				else if (aInput.isKeyPressed(Input.KEY_RIGHT))
 				{
-					int[][] worlds = DataManager.getWorlds();
-					if (mLevelIndex < worlds[mWorld].length - 1)
+					int[] worlds = DataManager.getLevels();
+					if (mLevelIndex < worlds[mWorld] - 1)
 					{
 						if (mSave.isAvailable(mWorld, mLevelIndex + 1)) mLevelIndex++ ;
 					}
@@ -105,7 +105,7 @@ public class MainMenu extends Menu
 				}
 				else if (aInput.isKeyPressed(Input.KEY_LEFT))
 				{
-					int[][] worlds = DataManager.getWorlds();
+					int[] worlds = DataManager.getLevels();
 					if (mLevelIndex > 0)
 					{
 						if (mSave.isAvailable(mWorld, mLevelIndex - 1)) mLevelIndex-- ;
@@ -113,7 +113,7 @@ public class MainMenu extends Menu
 					else if (mWorld > 0 && mSave.isAvailable(mWorld - 1))
 					{
 						mWorld-- ;
-						mLevelIndex = worlds[mWorld].length - 1;
+						mLevelIndex = worlds[mWorld] - 1;
 					}
 				}
 				break;

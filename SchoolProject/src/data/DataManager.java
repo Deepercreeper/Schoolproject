@@ -28,7 +28,7 @@ public class DataManager
 	private static final String[]					sSplitImages		= new String[] { "player", "entity" };
 	private static final int[][]					sSplitImageSizes	= new int[][] { { 14, 30 }, { 16, 16 } };
 	private static final String[]					sTexturepacks		= new String[] { "Mario", "Minecraft" };
-	private static final int[][]					sLevels				= new int[][] { { 0, 1 }, { 2, 3, 4 } };
+	private static final int[]						sLevels				= new int[] { 2, 3 };
 	
 	private static int								sTexturepack		= 0, sTitle = 0;
 	private static float							sVolume				= 1;
@@ -142,7 +142,7 @@ public class DataManager
 		return sLoading;
 	}
 	
-	public static int[][] getWorlds()
+	public static int[] getLevels()
 	{
 		return sLevels;
 	}
@@ -168,9 +168,9 @@ public class DataManager
 	 *            The world id.
 	 * @return an image that contains world data.
 	 */
-	public static Image getLevelImage(int aId)
+	public static Image getLevelImage(int aWorldId, int aLevel)
 	{
-		return getImage("worldData/worldData" + aId);
+		return getImage("worldData/level" + aWorldId + "-" + aLevel);
 	}
 	
 	/**
@@ -321,7 +321,7 @@ public class DataManager
 		{
 			e.printStackTrace();
 		}
-		for (String save : data.toString().split("\n"))
+		if ( !data.toString().isEmpty()) for (String save : data.toString().split("\n"))
 			mSaves.add(save);
 	}
 	

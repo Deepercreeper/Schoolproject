@@ -100,13 +100,13 @@ public class Game
 		{
 			int levelIndex = mLevel.getLevelId();
 			mSave.setScore(mLevel.getWorldId(), levelIndex, Stats.instance().getScore());
-			if (levelIndex < DataManager.getWorlds()[mLevel.getWorldId()].length - 1)
+			if (levelIndex < DataManager.getLevels()[mLevel.getWorldId()] - 1)
 			{
 				mSave.openLevel(mLevel.getWorldId(), levelIndex + 1);
 				mainMenu();
 				return;
 			}
-			if (mLevel.getWorldId() < DataManager.getWorlds().length - 1) mSave.openWorld(mLevel.getWorldId() + 1);
+			if (mLevel.getWorldId() < DataManager.getLevels().length - 1) mSave.openWorld(mLevel.getWorldId() + 1);
 			mainMenu();
 			return;
 		}

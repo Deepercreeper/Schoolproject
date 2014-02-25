@@ -75,7 +75,7 @@ public class Level
 	
 	private void loadBlocks()
 	{
-		Image image = DataManager.getLevelImage(mLevelId);
+		Image image = DataManager.getLevelImage(mWorldId, mLevelId);
 		final int width = image.getWidth(), height = image.getHeight();
 		final int redInt = (int) Math.pow(2, 16), greenInt = (int) Math.pow(2, 8);
 		mBlocks = new short[width][height];

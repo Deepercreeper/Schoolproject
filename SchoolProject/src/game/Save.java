@@ -1,7 +1,6 @@
 package game;
 
 import java.util.HashMap;
-import data.DataManager;
 
 public class Save
 {
@@ -138,7 +137,7 @@ public class Save
 		if ( !mScores.containsKey(aWorld))
 		{
 			HashMap<Integer, Integer> levelScore = new HashMap<>();
-			levelScore.put(DataManager.getWorlds()[aWorld][0], -1);
+			levelScore.put(0, -1);
 			mScores.put(aWorld, levelScore);
 		}
 	}
