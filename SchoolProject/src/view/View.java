@@ -27,6 +27,7 @@ public class View extends BasicGame
 		mGameContainer.setDisplayMode(tk.getScreenSize().width, tk.getScreenSize().height, true);
 		mGameContainer.setVSync(true);
 		mGameContainer.setTargetFrameRate(60);
+		mGameContainer.setShowFPS(false);
 		
 		mGame = new Game();
 		mGameContainer.start();

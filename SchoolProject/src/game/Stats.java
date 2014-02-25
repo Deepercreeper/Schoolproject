@@ -57,6 +57,6 @@ public class Stats
 	
 	public int getScore()
 	{
-		return Math.max(mBananas * 100 + 500 - mTime / 1000 - mDeaths * 10, 0);
+		return Math.max(mBananas * 100 + 500 - mTime / 100 - mDeaths * 1000, 0);
 	}
 }

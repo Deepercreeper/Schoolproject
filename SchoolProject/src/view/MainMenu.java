@@ -59,11 +59,7 @@ public class MainMenu extends Menu
 				aG.drawString("Escape - Zurück", mWidth / 2 - 100, mHeight / 2 + 30);
 				break;
 			case GAME :
-				aG.drawString("Spiel: " + mSave.getName(), mWidth / 2 - 100, mHeight / 2 - 15);
-				aG.drawString("< > - World, Level: " + mWorld + ":" + mLevelIndex + " Level Score: " + mSave.getScore(mWorld, mLevelIndex) + " World Score: " + mSave.getScore(mWorld),
-						mWidth / 2 - 100, mHeight / 2);
-				aG.drawString("Space - Start", mWidth / 2 - 100, mHeight / 2 + 15);
-				aG.drawString("Escape - Ende", mWidth / 2 - 100, mHeight / 2 + 30);
+				renderLevelSelection(aG);
 				break;
 			default :
 				break;
@@ -145,6 +141,34 @@ public class MainMenu extends Menu
 			case NEW_INPUT :
 			default :
 				break;
+		}
+	}
+	
+	private void renderLevelSelection(Graphics aG)
+	{
+		aG.drawString("World: " + mWorld + " Level: " + mLevelIndex, mWidth / 2 - 100, 5);
+		
+		aG.drawString("Spiel: " + mSave.getName(), 10, mHeight - 50);
+		aG.drawString("Level score: " + mSave.getScore(mWorld, mLevelIndex), 10, mHeight - 35);
+		aG.drawString("World score: " + mSave.getScore(mWorld), 10, mHeight - 20);
+		
+		aG.drawString("< > - Level auswählen", mWidth / 2 - 100, mHeight - 50);
+		aG.drawString("Space - Start", mWidth / 2 - 100, mHeight - 35);
+		aG.drawString("Escape - Ende", mWidth / 2 - 100, mHeight - 20);
+		
+		int levels = DataManager.getLevels()[mWorld];
+		
+		for (int i = 0; i < levels; i++ )
+		{
+			if (mSave.isAvailable(mWorld, i)) aG.setColor(Color.white);
+			else aG.setColor(Color.gray);
+			if (i == mLevelIndex) aG.setColor(Color.red);
+			aG.fillRect(mWidth / (levels + 1) * (i + 1) - 25, mHeight / 2 - 15, 50, 30);
+			if (i > 0)
+			{
+				aG.setColor(Color.white);
+				aG.drawLine(mWidth / (levels + 1) * i + 25, mHeight / 2, mWidth / (levels + 1) * (i + 1) - 25, mHeight / 2);
+			}
 		}
 	}
 	
