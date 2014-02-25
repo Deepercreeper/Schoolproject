@@ -29,7 +29,7 @@ public class Heart extends Entity
 		
 		final double distance = Math.sqrt(Math.pow(mLevel.getPlayer().getY() + mLevel.getPlayer().getHeight() / 2 - mY - mHeight / 2, 2)
 				+ Math.pow(mLevel.getPlayer().getX() + mLevel.getPlayer().getWidth() / 2 - mX - mWidth / 2, 2));
-		if (distance < Block.SIZE * 3) mXV = -(Block.SIZE * 3 - distance) * 0.05;
+		if (distance < Block.SIZE * 3) mXV = (Block.SIZE * 3 - distance) * 0.05 * Math.signum(mLevel.getPlayer().getX() + mLevel.getPlayer().getWidth() / 2 - mX - mWidth / 2);
 		
 		move();
 		

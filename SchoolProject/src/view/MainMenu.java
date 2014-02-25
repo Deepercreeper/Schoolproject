@@ -164,11 +164,21 @@ public class MainMenu extends Menu
 			else aG.setColor(Color.gray);
 			if (i == mLevelIndex) aG.setColor(Color.red);
 			aG.fillRect(mWidth / (levels + 1) * (i + 1) - 25, mHeight / 2 - 15, 50, 30);
-			if (i > 0)
+			if (i > 0 && mSave.isAvailable(mWorld, i))
 			{
 				aG.setColor(Color.white);
 				aG.drawLine(mWidth / (levels + 1) * i + 25, mHeight / 2, mWidth / (levels + 1) * (i + 1) - 25, mHeight / 2);
 			}
+		}
+		if (mWorld > 0)
+		{
+			aG.setColor(Color.white);
+			aG.drawLine(0, mHeight / 2, mWidth / (levels + 1) - 25, mHeight / 2);
+		}
+		if (mWorld < DataManager.getLevels().length - 1 && mSave.isAvailable(mWorld + 1))
+		{
+			aG.setColor(Color.white);
+			aG.drawLine(mWidth / (levels + 1) * levels + 25, mHeight / 2, mWidth, mHeight / 2);
 		}
 	}
 	
