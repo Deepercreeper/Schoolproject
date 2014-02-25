@@ -36,7 +36,7 @@ public class Level
 	
 	private short[][]			mAlphas;
 	
-	private final HashMap<Integer, Entity>	mEntities, mAddEntities;
+	private final HashMap<Integer, Entity>	mEntities	= new HashMap<>(), mAddEntities = new HashMap<>();
 	
 	private final HashSet<Integer>			mUpdatableBlocks	= new HashSet<>(), mLiquidBlocks = new HashSet<>();
 	
@@ -44,21 +44,9 @@ public class Level
 	
 	private boolean							mWon;
 	
-	public Level(int aWorldId, int aLevelId, GameContainer gc)
+	public Level(int aWorldId, int aLevelId, GameContainer aGC)
 	{
-		mWorldId = (byte) aWorldId;
-		mLevelId = (byte) aLevelId;
-		mScreen = new Screen(gc.getWidth(), gc.getHeight());
-		mScreen.init(this);
-		mPlayer = new Player();
-		mEntities = new HashMap<>();
-		mAddEntities = new HashMap<>();
-		reload();
-		mWidth = mBlocks.length;
-		if (mWidth > 0) mHeight = mBlocks[0].length;
-		else mHeight = 0;
-		addPlayer(mPlayer);
-		DataManager.nextTitle();
+		this(aWorldId, aLevelId, aGC, new Player());
 	}
 	
 	/**
@@ -66,18 +54,16 @@ public class Level
 	 * 
 	 * @param aLevelId
 	 *            The id of this world.
-	 * @param gc
+	 * @param aGC
 	 *            the containing game container.
 	 */
-	public Level(int aWorldId, int aLevelId, GameContainer gc, Player aPlayer)
+	public Level(int aWorldId, int aLevelId, GameContainer aGC, Player aPlayer)
 	{
 		mWorldId = (byte) aWorldId;
 		mLevelId = (byte) aLevelId;
-		mScreen = new Screen(gc.getWidth(), gc.getHeight());
+		mScreen = new Screen(aGC.getWidth(), aGC.getHeight());
 		mScreen.init(this);
 		mPlayer = aPlayer;
-		mEntities = new HashMap<>();
-		mAddEntities = new HashMap<>();
 		mPlayer.respawn();
 		reload();
 		mWidth = mBlocks.length;
@@ -414,37 +400,37 @@ public class Level
 	/**
 	 * Renders the background, all blocks and entities.
 	 * 
-	 * @param g
+	 * @param aG
 	 *            the graphics to draw into.
 	 */
-	public void render(Graphics g)
+	public void render(Graphics aG)
 	{
 		// Render background
 		Image background = DataManager.getBackgroundImage(0);
-		g.drawImage(background, -(mScreen.getX() / 5 % background.getWidth()), 0);
-		g.drawImage(background, background.getWidth() - (mScreen.getX() / 5 % background.getWidth()), 0);
+		aG.drawImage(background, -(mScreen.getX() / 5 % background.getWidth()), 0);
+		aG.drawImage(background, background.getWidth() - (mScreen.getX() / 5 % background.getWidth()), 0);
 		
 		// Render Blocks
 		for (int x = Math.max(mScreen.getX() / Block.SIZE, 0); x <= (mScreen.getX() + mScreen.getWidth()) / Block.SIZE && x < mWidth; x++ )
 			for (int y = Math.max(mScreen.getY() / Block.SIZE, 0); y <= (mScreen.getY() + mScreen.getHeight()) / Block.SIZE && y < mHeight; y++ )
-				renderBlock(x, y, g);
+				renderBlock(x, y, aG);
 		
 		// Render entities
 		for (Entity entity : mEntities.values())
-			entity.render(g);
+			entity.render(aG);
 		
 		// Render liquid blocks
 		for (int tile : mLiquidBlocks)
 		{
 			final int x = tile % mWidth, y = tile / mWidth;
-			renderBlock(x, y, g);
+			renderBlock(x, y, aG);
 		}
 	}
 	
-	private void renderBlock(int aX, int aY, Graphics g)
+	private void renderBlock(int aX, int aY, Graphics aG)
 	{
 		final Block block = Block.get(mBlocks[aX][aY]);
 		if ( !block.isVisible() && !block.isLiquid()) return;
-		Block.render(aX, aY, mBlocks[aX][aY], g, this);
+		Block.render(aX, aY, mBlocks[aX][aY], aG, this);
 	}
 }

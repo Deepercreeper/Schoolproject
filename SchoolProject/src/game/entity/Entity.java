@@ -244,10 +244,10 @@ public abstract class Entity
 	 * Invoked to render this entity on the screen.<br>
 	 * Please don't render at {@code mX:mY} but at {@code mX - mLevel.getScreenX():mY - mLevel.getScreenY()}.
 	 * 
-	 * @param g
+	 * @param aG
 	 *            The graphics wherein this entity is rendered.
 	 */
-	public void render(Graphics g)
+	public void render(Graphics aG)
 	{}
 	
 	/**

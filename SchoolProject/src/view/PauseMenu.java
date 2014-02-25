@@ -15,9 +15,9 @@ public class PauseMenu extends Menu
 	 * @param aGame
 	 *            The parent game.
 	 */
-	public PauseMenu(GameContainer gc, Game aGame)
+	public PauseMenu(GameContainer aGC, Game aGame)
 	{
-		super(aGame, gc.getWidth() / 2 - 300 / 2, gc.getHeight() / 2 - 100 / 2, 300, 100);
+		super(aGame, aGC.getWidth() / 2 - 300 / 2, aGC.getHeight() / 2 - 100 / 2, 300, 100);
 	}
 	
 	/**
@@ -40,20 +40,18 @@ public class PauseMenu extends Menu
 	/**
 	 * Renders the menu into the middle of the screen.
 	 * 
-	 * @param gc
-	 *            The containing game container.
-	 * @param g
+	 * @param aG
 	 *            The graphics to draw into.
 	 */
 	@Override
-	public void render(Graphics g)
+	public void render(Graphics aG)
 	{
-		g.setColor(Color.black);
-		g.fillRect(mX, mY, mWidth, mHeight);
-		g.setColor(Color.white);
-		g.drawString("< > - TexturePack: " + DataManager.getTexturePack(), mX + 10, mY + 5);
-		g.drawString("A D - Music title: " + DataManager.getTitle(), mX + 10, mY + 30);
-		g.drawString("Space - Main menu", mX + 10, mY + 55);
-		g.drawString("Esc - Weiter", mX + 10, mY + 80);
+		aG.setColor(Color.black);
+		aG.fillRect(mX, mY, mWidth, mHeight);
+		aG.setColor(Color.white);
+		aG.drawString("< > - TexturePack: " + DataManager.getTexturePack(), mX + 10, mY + 5);
+		aG.drawString("A D - Music title: " + DataManager.getTitle(), mX + 10, mY + 30);
+		aG.drawString("Space - Main menu", mX + 10, mY + 55);
+		aG.drawString("Esc - Weiter", mX + 10, mY + 80);
 	}
 }

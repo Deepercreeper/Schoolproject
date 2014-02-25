@@ -23,13 +23,13 @@ public class Stats
 		mBananas = mDeaths = mTime = mBananasInLevel = 0;
 	}
 	
-	public void render(Graphics g)
+	public void render(Graphics aG)
 	{
-		g.setColor(Color.white);
-		g.drawString("Bananas: " + mBananas, 10, 20);
-		g.drawString("Deaths: " + mDeaths, 10, 35);
-		g.drawString("Time: " + mTime / 1000, 10, 50);
-		g.drawString("Score: " + getScore(), 10, 80);
+		aG.setColor(Color.white);
+		aG.drawString("Bananas: " + mBananas, 10, 20);
+		aG.drawString("Deaths: " + mDeaths, 10, 35);
+		aG.drawString("Time: " + mTime / 1000, 10, 50);
+		aG.drawString("Score: " + getScore(), 10, 80);
 	}
 	
 	public void setBananaLevel()

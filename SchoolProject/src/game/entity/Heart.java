@@ -41,9 +41,9 @@ public class Heart extends Entity
 	}
 	
 	@Override
-	public void render(Graphics g)
+	public void render(Graphics aG)
 	{
-		g.drawImage(DataManager.getSplitImage("entity", 3).getScaledCopy(mWidth, mHeight), (float) (mX - mLevel.getScreenX()), (float) (mY - mLevel.getScreenY()));
+		aG.drawImage(DataManager.getSplitImage("entity", 3).getScaledCopy(mWidth, mHeight), (float) (mX - mLevel.getScreenX()), (float) (mY - mLevel.getScreenY()));
 	}
 	
 	public void collect()

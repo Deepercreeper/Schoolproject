@@ -42,10 +42,10 @@ public class Blood extends Entity
 	}
 	
 	@Override
-	public void render(Graphics g)
+	public void render(Graphics aG)
 	{
-		g.setColor(Color.red);
-		g.fillRect((float) (mX - mLevel.getScreenX()), (float) (mY - mLevel.getScreenY()), mWidth, mHeight);
+		aG.setColor(Color.red);
+		aG.fillRect((float) (mX - mLevel.getScreenX()), (float) (mY - mLevel.getScreenY()), mWidth, mHeight);
 	}
 	
 	@Override

@@ -26,44 +26,44 @@ public class MainMenu extends Menu
 	
 	private State	mState;
 	
-	public MainMenu(GameContainer gc, Game aGame)
+	public MainMenu(GameContainer aGC, Game aGame)
 	{
-		super(aGame, 0, 0, gc.getWidth(), gc.getHeight());
+		super(aGame, 0, 0, aGC.getWidth(), aGC.getHeight());
 		mState = State.MAIN;
 	}
 	
 	@Override
-	public void render(Graphics g)
+	public void render(Graphics aG)
 	{
-		g.setColor(Color.black);
-		g.fillRect(mX, mY, mWidth, mHeight);
-		g.setColor(Color.white);
+		aG.setColor(Color.black);
+		aG.fillRect(mX, mY, mWidth, mHeight);
+		aG.setColor(Color.white);
 		switch (mState)
 		{
 			case MAIN :
-				g.drawString("Space - Neues Spiel", mWidth / 2 - 100, mHeight / 2 - 15);
-				g.drawString("Enter - Spiel Laden", mWidth / 2 - 100, mHeight / 2);
-				g.drawString("Escape - Ende", mWidth / 2 - 100, mHeight / 2 + 15);
+				aG.drawString("Space - Neues Spiel", mWidth / 2 - 100, mHeight / 2 - 15);
+				aG.drawString("Enter - Spiel Laden", mWidth / 2 - 100, mHeight / 2);
+				aG.drawString("Escape - Ende", mWidth / 2 - 100, mHeight / 2 + 15);
 				break;
 			case LOAD_INPUT :
 			case NEW_INPUT :
 				for (int i = 1; i <= DataManager.getSaves().size() && mHeight / 2 - i * 15 > 0; i++ )
-					g.drawString(DataManager.getSaves().get(DataManager.getSaves().size() - i), mWidth / 2 - 100, mHeight / 2 - 15 - i * 15);
-				if (mState == State.NEW_INPUT) g.drawString("Name: " + mText, mWidth / 2 - 100, mHeight / 2);
+					aG.drawString(DataManager.getSaves().get(DataManager.getSaves().size() - i), mWidth / 2 - 100, mHeight / 2 - 15 - i * 15);
+				if (mState == State.NEW_INPUT) aG.drawString("Name: " + mText, mWidth / 2 - 100, mHeight / 2);
 				else
 				{
-					g.drawString("< > - Save: " + DataManager.getSaves().get(mSaveIndex), mWidth / 2 - 100, mHeight / 2);
-					g.drawString("Entf - Löschen", mWidth / 2 - 100, mHeight / 2 + 45);
+					aG.drawString("< > - Save: " + DataManager.getSaves().get(mSaveIndex), mWidth / 2 - 100, mHeight / 2);
+					aG.drawString("Entf - Löschen", mWidth / 2 - 100, mHeight / 2 + 45);
 				}
-				g.drawString("Enter - Bestätigen", mWidth / 2 - 100, mHeight / 2 + 15);
-				g.drawString("Escape - Zurück", mWidth / 2 - 100, mHeight / 2 + 30);
+				aG.drawString("Enter - Bestätigen", mWidth / 2 - 100, mHeight / 2 + 15);
+				aG.drawString("Escape - Zurück", mWidth / 2 - 100, mHeight / 2 + 30);
 				break;
 			case GAME :
-				g.drawString("Spiel: " + mSave.getName(), mWidth / 2 - 100, mHeight / 2 - 15);
-				g.drawString("< > - World, Level: " + mWorld + ":" + mLevelIndex + " Level Score: " + mSave.getScore(mWorld, mLevelIndex) + " World Score: " + mSave.getScore(mWorld),
+				aG.drawString("Spiel: " + mSave.getName(), mWidth / 2 - 100, mHeight / 2 - 15);
+				aG.drawString("< > - World, Level: " + mWorld + ":" + mLevelIndex + " Level Score: " + mSave.getScore(mWorld, mLevelIndex) + " World Score: " + mSave.getScore(mWorld),
 						mWidth / 2 - 100, mHeight / 2);
-				g.drawString("Space - Start", mWidth / 2 - 100, mHeight / 2 + 15);
-				g.drawString("Escape - Ende", mWidth / 2 - 100, mHeight / 2 + 30);
+				aG.drawString("Space - Start", mWidth / 2 - 100, mHeight / 2 + 15);
+				aG.drawString("Escape - Ende", mWidth / 2 - 100, mHeight / 2 + 30);
 				break;
 			default :
 				break;

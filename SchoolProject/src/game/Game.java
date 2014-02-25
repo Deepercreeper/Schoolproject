@@ -32,27 +32,27 @@ public class Game
 	/**
 	 * Renders the splash screen and the world. The volume is also displayed.
 	 * 
-	 * @param g
+	 * @param aG
 	 *            The graphics to draw into.
 	 */
-	public void render(Graphics g)
+	public void render(Graphics aG)
 	{
-		if ( !DataManager.isInitiated() || DataManager.isLoading()) g.drawImage(DataManager.getImage("splash"), 0, 0);
+		if ( !DataManager.isInitiated() || DataManager.isLoading()) aG.drawImage(DataManager.getImage("splash"), 0, 0);
 		else
 		{
 			if (mMain)
 			{
-				mMainMenu.render(g);
+				mMainMenu.render(aG);
 				return;
 			}
 			
-			mLevel.render(g);
+			mLevel.render(aG);
 			
-			Stats.instance().render(g);
+			Stats.instance().render(aG);
 			
 			if (mPause)
 			{
-				mPauseMenu.render(g);
+				mPauseMenu.render(aG);
 				return;
 			}
 			
@@ -60,12 +60,12 @@ public class Game
 			if (mShowingVolume > 0)
 			{
 				float volume = DataManager.getVolume();
-				g.setColor(Color.white);
-				g.drawString("Volume", mGC.getWidth() / 2 - 25, mGC.getHeight() - 40);
-				g.setColor(Color.darkGray);
-				g.fillRect(mGC.getWidth() / 2 - 50, mGC.getHeight() - 20, 100, 10);
-				g.setColor(Color.lightGray);
-				g.fillRect(mGC.getWidth() / 2 - 50, mGC.getHeight() - 20, 100 * volume, 10);
+				aG.setColor(Color.white);
+				aG.drawString("Volume", mGC.getWidth() / 2 - 25, mGC.getHeight() - 40);
+				aG.setColor(Color.darkGray);
+				aG.fillRect(mGC.getWidth() / 2 - 50, mGC.getHeight() - 20, 100, 10);
+				aG.setColor(Color.lightGray);
+				aG.fillRect(mGC.getWidth() / 2 - 50, mGC.getHeight() - 20, 100 * volume, 10);
 			}
 		}
 	}
@@ -137,9 +137,9 @@ public class Game
 		mLevel.update(mInput);
 	}
 	
-	public void init(GameContainer gc)
+	public void init(GameContainer aGC)
 	{
-		mGC = gc;
+		mGC = aGC;
 		mInput = mGC.getInput();
 		mMainMenu = new MainMenu(mGC, this);
 	}

@@ -19,7 +19,7 @@ public abstract class Menu
 		mHeight = aHeight;
 	}
 	
-	public abstract void render(Graphics g);
+	public abstract void render(Graphics aG);
 	
 	public abstract void update(Input aInput);
 	

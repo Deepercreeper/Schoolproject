@@ -124,19 +124,19 @@ public class Player extends Entity
 	}
 	
 	@Override
-	public void render(Graphics g)
+	public void render(Graphics aG)
 	{
 		// Player
-		if (mHurtDelay > 0 && mTime % 10 < 5) g.drawImage(DataManager.getSplitImage("player", 0), (float) mX - mLevel.getScreenX(), (float) mY - mLevel.getScreenY(), new Color(1, 1, 1, 0.5f));
-		else g.drawImage(DataManager.getSplitImage("player", 0).getScaledCopy(mWidth, mHeight), (float) mX - mLevel.getScreenX(), (float) mY - mLevel.getScreenY());
+		if (mHurtDelay > 0 && mTime % 10 < 5) aG.drawImage(DataManager.getSplitImage("player", 0), (float) mX - mLevel.getScreenX(), (float) mY - mLevel.getScreenY(), new Color(1, 1, 1, 0.5f));
+		else aG.drawImage(DataManager.getSplitImage("player", 0).getScaledCopy(mWidth, mHeight), (float) mX - mLevel.getScreenX(), (float) mY - mLevel.getScreenY());
 		
 		// HUD
-		g.setColor(Color.red);
-		g.fillRect(10, mLevel.getScreenHeight() - 20, 100, 10);
-		g.setColor(Color.green);
-		g.fillRect(10, mLevel.getScreenHeight() - 20, 100 * mLife / mMaxLife, 10);
-		g.setColor(Color.white);
-		g.drawString(mLife + "/" + mMaxLife, 120, mLevel.getScreenHeight() - 25);
+		aG.setColor(Color.red);
+		aG.fillRect(10, mLevel.getScreenHeight() - 20, 100, 10);
+		aG.setColor(Color.green);
+		aG.fillRect(10, mLevel.getScreenHeight() - 20, 100 * mLife / mMaxLife, 10);
+		aG.setColor(Color.white);
+		aG.drawString(mLife + "/" + mMaxLife, 120, mLevel.getScreenHeight() - 25);
 	}
 	
 	@Override

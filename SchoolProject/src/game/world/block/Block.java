@@ -369,17 +369,17 @@ public class Block
 	 *            The y position.
 	 * @param aId
 	 *            The block id.
-	 * @param g
+	 * @param aG
 	 *            The graphics to draw into.
 	 * @param aWorld
 	 *            The parent world.
 	 */
-	public static void render(int aX, int aY, short aId, Graphics g, Level aWorld)
+	public static void render(int aX, int aY, short aId, Graphics aG, Level aWorld)
 	{
 		final Block block = get(aId);
 		final Texture texture = getBlockTexture(aX, aY, aWorld);
-		if (block.mFlag) g.drawImage(DataManager.getImage("flag"), aX * SIZE - aWorld.getScreenX(), (aY - 7) * SIZE - aWorld.getScreenY());
-		else g.drawImage(DataManager.getTextureImage(DataManager.getTexturePack(), texture, block.getId(texture) / Texture.values().size()).getScaledCopy(SIZE, SIZE), aX * SIZE - aWorld.getScreenX(),
+		if (block.mFlag) aG.drawImage(DataManager.getImage("flag"), aX * SIZE - aWorld.getScreenX(), (aY - 7) * SIZE - aWorld.getScreenY());
+		else aG.drawImage(DataManager.getTextureImage(DataManager.getTexturePack(), texture, block.getId(texture) / Texture.values().size()).getScaledCopy(SIZE, SIZE), aX * SIZE - aWorld.getScreenX(),
 				aY * SIZE - aWorld.getScreenY());
 	}
 	
