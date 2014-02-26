@@ -9,6 +9,14 @@ public class Blood extends Entity
 {
 	private int	mLife;
 	
+	/**
+	 * Creates a blood drop that will fly in a random direction and decay after a random time.
+	 * 
+	 * @param aX
+	 *            The x position.
+	 * @param aY
+	 *            The y position.
+	 */
 	public Blood(int aX, int aY)
 	{
 		super(aX, aY, 2, 2);

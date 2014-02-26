@@ -9,6 +9,14 @@ public class Gore extends Entity
 {
 	private int	mLife;
 	
+	/**
+	 * Creates a new gore that will fly in a random direction and decay after a random time. It can be kicked by a solid entity.
+	 * 
+	 * @param aX
+	 *            The x position.
+	 * @param aY
+	 *            The y position.
+	 */
 	public Gore(int aX, int aY)
 	{
 		super(aX, aY, 4, 3);
@@ -21,6 +29,12 @@ public class Gore extends Entity
 	public void hitEntity(double aXV, double aYV, Entity aEntity)
 	{}
 	
+	/**
+	 * If this gore is kicked by another entity this method is invoked.
+	 * 
+	 * @param aEntity
+	 *            The kicking entity.
+	 */
 	public void hit(Entity aEntity)
 	{
 		if ( !mOnGround) return;

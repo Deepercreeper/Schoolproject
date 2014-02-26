@@ -14,23 +14,17 @@ import data.DataManager;
 public class Game
 {
 	private boolean			mRunning		= true, mPause, mMain;
-	
-	private Menu			mPauseMenu, mMainMenu;
-	
-	private Level			mLevel;
-	
-	private Input			mInput;
-	
 	private int				mShowingVolume	= 0;
 	
+	private Menu			mPauseMenu, mMainMenu;
+	private Level			mLevel;
+	private Input			mInput;
 	private GameContainer	mGC;
-	
 	private Save			mSave;
-	
 	private Player			mPlayer;
 	
 	/**
-	 * Renders the splash screen and the world. The volume is also displayed.
+	 * Renders the splash screen and the level. The volume is also displayed.
 	 * 
 	 * @param aG
 	 *            The graphics to draw into.
@@ -71,7 +65,7 @@ public class Game
 	}
 	
 	/**
-	 * Initiates the data manager, creates a world, handles menu input and updates the world.
+	 * Initiates the data manager, creates a level, handles menu input and updates the level.
 	 * 
 	 * @param aDelta
 	 *            The done ticks after the last update.
@@ -95,18 +89,18 @@ public class Game
 			return;
 		}
 		
-		// Creating world
+		// Creating level
 		if (mLevel.hasWon())
 		{
 			int levelIndex = mLevel.getLevelId();
 			mSave.setScore(mLevel.getWorldId(), levelIndex, Stats.instance().getScore());
-			if (levelIndex < DataManager.getLevels()[mLevel.getWorldId()] - 1)
+			if (levelIndex < DataManager.getLevelsPerWorld()[mLevel.getWorldId()] - 1)
 			{
 				mSave.openLevel(mLevel.getWorldId(), levelIndex + 1);
 				mainMenu();
 				return;
 			}
-			if (mLevel.getWorldId() < DataManager.getLevels().length - 1) mSave.openWorld(mLevel.getWorldId() + 1);
+			if (mLevel.getWorldId() < DataManager.getLevelsPerWorld().length - 1) mSave.openWorld(mLevel.getWorldId() + 1);
 			mainMenu();
 			return;
 		}
@@ -133,10 +127,16 @@ public class Game
 		
 		Stats.instance().tick(aDelta);
 		
-		// Updating world
+		// Updating level
 		mLevel.update(mInput);
 	}
 	
+	/**
+	 * Initiates the containing game container.
+	 * 
+	 * @param aGC
+	 *            The containing game container.
+	 */
 	public void init(GameContainer aGC)
 	{
 		mGC = aGC;
@@ -156,6 +156,9 @@ public class Game
 		else mLevel = new Level(aWorld, aLevelIndex, mGC, mPlayer);
 	}
 	
+	/**
+	 * Shows the main menu and deletes all current levels.
+	 */
 	public void mainMenu()
 	{
 		mPause = false;
@@ -164,12 +167,22 @@ public class Game
 		mLevel = null;
 	}
 	
-	public void start(int aWorld, int aLevelIndex, Save aSave)
+	/**
+	 * Starts the given level.
+	 * 
+	 * @param aWorldId
+	 *            The world id.
+	 * @param aLevelId
+	 *            The level id.
+	 * @param aSave
+	 *            The save to play with.
+	 */
+	public void start(int aWorldId, int aLevelId, Save aSave)
 	{
 		mMain = false;
 		mSave = aSave;
 		Stats.instance().reset();
-		initWorld(aWorld, aLevelIndex);
+		initWorld(aWorldId, aLevelId);
 	}
 	
 	/**

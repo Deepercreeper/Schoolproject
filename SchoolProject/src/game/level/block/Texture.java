@@ -9,9 +9,9 @@ public class Texture
 	
 	public static final Texture					NORMAL	= new Texture(0, "Normal");
 	public static final Texture					SNOW	= new Texture(1, "Snow");
-	public static final Texture 				DESERT  = new Texture(2, "Desert");
-    public static final Texture					CASTLE  = new Texture(3, "Castle");
-	//public static final Texture 				UNDERGROUND	= new Texture(4, "Underground");
+	public static final Texture					DESERT	= new Texture(2, "Desert");
+	public static final Texture					CASTLE	= new Texture(3, "Castle");
+	// public static final Texture UNDERGROUND = new Texture(4, "Underground");
 	
 	private final byte							mId;
 	
@@ -30,21 +30,43 @@ public class Texture
 		return mSuffix;
 	}
 	
+	/**
+	 * The texture id.
+	 * 
+	 * @return the id.
+	 */
 	public byte getId()
 	{
 		return mId;
 	}
 	
+	/**
+	 * The suffix of this texture used to load texture images.
+	 * 
+	 * @return this textures suffix.
+	 */
 	public String getSuffix()
 	{
 		return mSuffix;
 	}
 	
+	/**
+	 * Returns all defined textures.
+	 * 
+	 * @return all textures.
+	 */
 	public static Collection<Texture> values()
 	{
 		return PARTS.values();
 	}
 	
+	/**
+	 * Returns the texture with the given id.
+	 * 
+	 * @param aId
+	 *            The texture id.
+	 * @return the texture with the given id and {@code null} if no texture with the given id exists.
+	 */
 	public static Texture get(byte aId)
 	{
 		return PARTS.get(aId);

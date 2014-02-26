@@ -22,12 +22,7 @@ public class Player extends Entity
 	private int			mCannonTime;
 	
 	/**
-	 * Creates a new player at the given position.
-	 * 
-	 * @param aX
-	 *            The x position.
-	 * @param aY
-	 *            The y position.
+	 * Creates a new player at {@code (0,0)}.
 	 */
 	public Player()
 	{
@@ -181,6 +176,12 @@ public class Player extends Entity
 		mDead = true;
 	}
 	
+	/**
+	 * Increases the current life by the given amount.
+	 * 
+	 * @param aAmount
+	 *            The amount of life to add.
+	 */
 	public void addLife(int aAmount)
 	{
 		mLife += aAmount;

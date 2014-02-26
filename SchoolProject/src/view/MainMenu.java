@@ -16,7 +16,7 @@ public class MainMenu extends Menu
 		MAIN, NEW_INPUT, LOAD_INPUT, GAME;
 	}
 	
-	private int		mWorld		= 0, mLevelIndex = 0;
+	private int		mWorldId	= 0, mLevelId = 0;
 	
 	private int		mSaveIndex	= 0;
 	
@@ -26,6 +26,14 @@ public class MainMenu extends Menu
 	
 	private State	mState;
 	
+	/**
+	 * Creates a new main menu, that is displayed when starting the game or selecting levels.
+	 * 
+	 * @param aGC
+	 *            The containing game container.
+	 * @param aGame
+	 *            The parent game.
+	 */
 	public MainMenu(GameContainer aGC, Game aGame)
 	{
 		super(aGame, 0, 0, aGC.getWidth(), aGC.getHeight());
@@ -79,7 +87,7 @@ public class MainMenu extends Menu
 				if (mState == State.NEW_INPUT) aInput.addKeyListener(new Listener(aInput));
 				break;
 			case GAME :
-				if (aInput.isKeyPressed(Input.KEY_SPACE)) mGame.start(mWorld, mLevelIndex, mSave);
+				if (aInput.isKeyPressed(Input.KEY_SPACE)) mGame.start(mWorldId, mLevelId, mSave);
 				else if (aInput.isKeyPressed(Input.KEY_ESCAPE))
 				{
 					save();
@@ -88,28 +96,28 @@ public class MainMenu extends Menu
 				}
 				else if (aInput.isKeyPressed(Input.KEY_RIGHT))
 				{
-					int[] worlds = DataManager.getLevels();
-					if (mLevelIndex < worlds[mWorld] - 1)
+					int[] worlds = DataManager.getLevelsPerWorld();
+					if (mLevelId < worlds[mWorldId] - 1)
 					{
-						if (mSave.isAvailable(mWorld, mLevelIndex + 1)) mLevelIndex++ ;
+						if (mSave.isAvailable(mWorldId, mLevelId + 1)) mLevelId++ ;
 					}
-					else if (mWorld < worlds.length - 1 && mSave.isAvailable(mWorld + 1))
+					else if (mWorldId < worlds.length - 1 && mSave.isAvailable(mWorldId + 1))
 					{
-						mWorld++ ;
-						mLevelIndex = 0;
+						mWorldId++ ;
+						mLevelId = 0;
 					}
 				}
 				else if (aInput.isKeyPressed(Input.KEY_LEFT))
 				{
-					int[] worlds = DataManager.getLevels();
-					if (mLevelIndex > 0)
+					int[] worlds = DataManager.getLevelsPerWorld();
+					if (mLevelId > 0)
 					{
-						if (mSave.isAvailable(mWorld, mLevelIndex - 1)) mLevelIndex-- ;
+						if (mSave.isAvailable(mWorldId, mLevelId - 1)) mLevelId-- ;
 					}
-					else if (mWorld > 0 && mSave.isAvailable(mWorld - 1))
+					else if (mWorldId > 0 && mSave.isAvailable(mWorldId - 1))
 					{
-						mWorld-- ;
-						mLevelIndex = worlds[mWorld] - 1;
+						mWorldId-- ;
+						mLevelId = worlds[mWorldId] - 1;
 					}
 				}
 				break;
@@ -146,36 +154,36 @@ public class MainMenu extends Menu
 	
 	private void renderLevelSelection(Graphics aG)
 	{
-		aG.drawString("World: " + mWorld + " Level: " + mLevelIndex, mWidth / 2 - 100, 5);
+		aG.drawString("World: " + mWorldId + " Level: " + mLevelId, mWidth / 2 - 100, 5);
 		
 		aG.drawString("Spiel: " + mSave.getName(), 10, mHeight - 50);
-		aG.drawString("Level score: " + mSave.getScore(mWorld, mLevelIndex), 10, mHeight - 35);
-		aG.drawString("World score: " + mSave.getScore(mWorld), 10, mHeight - 20);
+		aG.drawString("Level score: " + mSave.getScore(mWorldId, mLevelId), 10, mHeight - 35);
+		aG.drawString("World score: " + mSave.getScore(mWorldId), 10, mHeight - 20);
 		
 		aG.drawString("< > - Level auswählen", mWidth / 2 - 100, mHeight - 50);
 		aG.drawString("Space - Start", mWidth / 2 - 100, mHeight - 35);
 		aG.drawString("Escape - Ende", mWidth / 2 - 100, mHeight - 20);
 		
-		int levels = DataManager.getLevels()[mWorld];
+		int levels = DataManager.getLevelsPerWorld()[mWorldId];
 		
 		for (int i = 0; i < levels; i++ )
 		{
-			if (mSave.isAvailable(mWorld, i)) aG.setColor(Color.white);
+			if (mSave.isAvailable(mWorldId, i)) aG.setColor(Color.white);
 			else aG.setColor(Color.gray);
-			if (i == mLevelIndex) aG.setColor(Color.red);
+			if (i == mLevelId) aG.setColor(Color.red);
 			aG.fillRect(mWidth / (levels + 1) * (i + 1) - 25, mHeight / 2 - 15, 50, 30);
-			if (i > 0 && mSave.isAvailable(mWorld, i))
+			if (i > 0 && mSave.isAvailable(mWorldId, i))
 			{
 				aG.setColor(Color.white);
 				aG.drawLine(mWidth / (levels + 1) * i + 25, mHeight / 2, mWidth / (levels + 1) * (i + 1) - 25, mHeight / 2);
 			}
 		}
-		if (mWorld > 0)
+		if (mWorldId > 0)
 		{
 			aG.setColor(Color.white);
 			aG.drawLine(0, mHeight / 2, mWidth / (levels + 1) - 25, mHeight / 2);
 		}
-		if (mWorld < DataManager.getLevels().length - 1 && mSave.isAvailable(mWorld + 1))
+		if (mWorldId < DataManager.getLevelsPerWorld().length - 1 && mSave.isAvailable(mWorldId + 1))
 		{
 			aG.setColor(Color.white);
 			aG.drawLine(mWidth / (levels + 1) * levels + 25, mHeight / 2, mWidth, mHeight / 2);
@@ -185,21 +193,21 @@ public class MainMenu extends Menu
 	private void newGame(String aName)
 	{
 		mSave = new Save(aName);
-		mWorld = mSave.getLastWorld();
-		mLevelIndex = mSave.getLastLevelIndex();
+		mWorldId = mSave.getLastWorldId();
+		mLevelId = mSave.getLastLevelId();
 	}
 	
 	private void loadGame(String aName)
 	{
 		mSave = DataManager.loadSave(aName);
-		mWorld = mSave.getLastWorld();
-		mLevelIndex = mSave.getLastLevelIndex();
+		mWorldId = mSave.getLastWorldId();
+		mLevelId = mSave.getLastLevelId();
 	}
 	
 	private void save()
 	{
-		mSave.setLastWorld(mWorld);
-		mSave.setLastLevelIndex(mLevelIndex);
+		mSave.setLastWorld(mWorldId);
+		mSave.setLastLevelId(mLevelId);
 		DataManager.save(mSave);
 		mSave = null;
 	}

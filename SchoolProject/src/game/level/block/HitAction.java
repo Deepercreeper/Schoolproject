@@ -9,6 +9,9 @@ import data.DataManager;
 
 abstract class HitAction
 {
+	/**
+	 * Destroys this block if the entity is able to destroy blocks.
+	 */
 	static HitAction	DESTROY	= new HitAction()
 								{
 									@Override
@@ -18,6 +21,9 @@ abstract class HitAction
 									};
 								};
 	
+	/**
+	 * Hurts the hitting entity if hit from the right direction.
+	 */
 	static HitAction	HURT	= new HitAction()
 								{
 									@Override
@@ -27,6 +33,9 @@ abstract class HitAction
 									};
 								};
 	
+	/**
+	 * Makes the entity run on ice if hit from the top.
+	 */
 	static HitAction	ICE		= new HitAction()
 								{
 									@Override
@@ -98,5 +107,23 @@ abstract class HitAction
 		}
 	}
 	
+	/**
+	 * Executes the given task.
+	 * 
+	 * @param aX
+	 *            The x position of this block.
+	 * @param aY
+	 *            The y position of this block.
+	 * @param aLevel
+	 *            The parent level.
+	 * @param aEntity
+	 *            The hitting entity.
+	 * @param aBlock
+	 *            The hit block.
+	 * @param aHitDirection
+	 *            The direction from where this block was hit.
+	 * @param aOtherBlocks
+	 *            All other blocks that where hit at this tick.
+	 */
 	abstract void execute(int aX, int aY, Level aLevel, Entity aEntity, Block aBlock, Direction aHitDirection, HashMap<Block, Direction> aOtherBlocks);
 }

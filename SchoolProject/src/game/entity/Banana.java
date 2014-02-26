@@ -8,6 +8,16 @@ public class Banana extends Entity
 {
 	private final boolean	mSuper;
 	
+	/**
+	 * Creates a banana that floats at the given position and can be collected to add score.
+	 * 
+	 * @param aX
+	 *            The x position.
+	 * @param aY
+	 *            The y position.
+	 * @param aSuper
+	 *            Whether this banana should add 5 bananas to the score or just one.
+	 */
 	public Banana(int aX, int aY, boolean aSuper)
 	{
 		super(aX, aY, 16, 16);
@@ -20,6 +30,9 @@ public class Banana extends Entity
 		aG.drawImage(DataManager.getSplitImage("entity", mSuper ? 2 : 1), (float) (mX - mLevel.getScreenX()), (float) (mY - mLevel.getScreenY()));
 	}
 	
+	/**
+	 * Collects this banana, removes it and adds the amount to the current banana statistics.
+	 */
 	public void collect()
 	{
 		if (isRemoved()) return;

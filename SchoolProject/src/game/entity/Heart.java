@@ -12,6 +12,18 @@ public class Heart extends Entity
 	private int				mLife;
 	private final boolean	mStatic;
 	
+	/**
+	 * Creates a new heart that is able to restore {@code aSize} of lives to the collecting entity. Decays after a random time if {@code aStatic} is {@code true}.
+	 * 
+	 * @param aX
+	 *            The x position.
+	 * @param aY
+	 *            The y position.
+	 * @param aSize
+	 *            The size of this heart.
+	 * @param aStatic
+	 *            Whether this heart is able to stay or going to decay.
+	 */
 	public Heart(int aX, int aY, int aSize, boolean aStatic)
 	{
 		super(aX, aY, 6 + aSize * 2, 6 + aSize * 2);
@@ -48,9 +60,12 @@ public class Heart extends Entity
 	@Override
 	public void render(Graphics aG)
 	{
-		aG.drawImage(DataManager.getSplitImage("entity", 3).getScaledCopy(mWidth, mHeight), (float) (mX - mLevel.getScreenX()), (float) (mY - mLevel.getScreenY()));
+		if (mLife > 40 || mLife % 8 < 4) aG.drawImage(DataManager.getSplitImage("entity", 3).getScaledCopy(mWidth, mHeight), (float) (mX - mLevel.getScreenX()), (float) (mY - mLevel.getScreenY()));
 	}
 	
+	/**
+	 * Collects and removes this entity and adds {@code mSize} lives to the players life.
+	 */
 	public void collect()
 	{
 		if (isRemoved()) return;

@@ -23,8 +23,8 @@ public class Block
 	public static final Block						STONE						= new Block(1, new int[] { 0xB89040, 0xC0C0C0, 0xB89040, 0x2A7CE0 });
 	public static final Block						BRICK						= new Block(2, new int[] { 0xB06000, 0x727272, 0xB06000, 0x014EB2 }).setDestroyable(AIR);
 	public static final Block						OPENED						= new Block(3, new int[] { 0xC03010, 0xC03011, 0xC03010, 0xC03012 });
-	public static final Block						QUESTION					= new Block(4, new int[] { 0xD8B018, 0xFFD800, 0xD8B018, 0x14466D }).setDestroyable(OPENED).setItem(255, Item.SUPER_BANANA)
-																						.setItem(254, Item.BANANA).setItem(253, Item.HEART);
+	public static final Block						QUESTION					= new Block(4, new int[] { 0xD8B018, 0xFFD800, 0xD8B018, 0x14466D }).setDestroyable(OPENED)
+																						.setItem(255, Item.SUPER_BANANA).setItem(254, Item.BANANA).setItem(253, Item.HEART);
 	public static final Block						GROUND_TOP_LEFT				= new Block(5, new int[] { 0x00E000, 0x93FFFF, 0xFFA359, 0x3D2C77 });
 	public static final Block						GROUND_TOP					= new Block(6, new int[] { 0x00BA00, 0x00FFFF, 0xFF7400, 0x291D4F });
 	public static final Block						GROUND_TOP_RIGHT			= new Block(7, new int[] { 0x009300, 0x00D3D3, 0xB75200, 0x1D1438 });
@@ -53,7 +53,7 @@ public class Block
 	public static final Block						ICE_LEFT					= new Block(30, 0x96C6AA);
 	public static final Block						ICE_MIDDLE					= new Block(31, 0x00FFA7);
 	public static final Block						ICE_RIGHT					= new Block(32, 0x00BEB1);
-	public static final Block						PLATFORM					= new Block(33, new int[] { 0x74FF8C, 0x74FF8C, 0x74FF8C, 0x88FFFF}).setSolidSide(Direction.TOP);
+	public static final Block						PLATFORM					= new Block(33, new int[] { 0x74FF8C, 0x74FF8C, 0x74FF8C, 0x88FFFF }).setSolidSide(Direction.TOP);
 	public static final Block						SMALL_ROCK_LEFT				= new Block(34, 0xD34300);
 	public static final Block						SMALL_ROCK_RIGHT			= new Block(35, 0xFF5200);
 	public static final Block						SMALL_ROCK_TOP				= new Block(36, 0xFF503D);
@@ -108,7 +108,7 @@ public class Block
 		TEXTURES.put(id, Texture.NORMAL);
 	}
 	
-	protected Block()
+	private Block()
 	{
 		short id = Short.MAX_VALUE;
 		for (Texture texture : Texture.values())
@@ -125,13 +125,13 @@ public class Block
 	 *            the x index of this block.
 	 * @param aY
 	 *            the y index of this block.
-	 * @param aWorld
-	 *            the parent world.
+	 * @param aLevel
+	 *            the parent level.
 	 */
-	public void update(int aX, int aY, Level aWorld)
+	public void update(int aX, int aY, Level aLevel)
 	{
 		for (UpdateAction action : mUpdateActions)
-			action.execute(aX, aY, aWorld);
+			action.execute(aX, aY, aLevel);
 	}
 	
 	/**
@@ -141,15 +141,19 @@ public class Block
 	 *            the x position.
 	 * @param aY
 	 *            the y position.
-	 * @param aWorld
-	 *            the parent world.
+	 * @param aLevel
+	 *            the parent level.
 	 * @param aEntity
 	 *            the hitting entity.
+	 * @param aDirection
+	 *            The direction where this block is hit from.
+	 * @param aOtherBlocks
+	 *            All other hit blocks by the given entity at this tick.
 	 */
-	public void hit(int aX, int aY, Level aWorld, Entity aEntity, Direction aDirection, HashMap<Block, Direction> aOtherBlocks)
+	public void hit(int aX, int aY, Level aLevel, Entity aEntity, Direction aDirection, HashMap<Block, Direction> aOtherBlocks)
 	{
 		for (HitAction action : mHitActions)
-			action.execute(aX, aY, aWorld, aEntity, this, aDirection, aOtherBlocks);
+			action.execute(aX, aY, aLevel, aEntity, this, aDirection, aOtherBlocks);
 	}
 	
 	private Block setUpdatable()
@@ -347,7 +351,7 @@ public class Block
 	 * Returns the id of the block with the given color code.
 	 * 
 	 * @param aRGB
-	 *            The color of any pixel inside a world map image.
+	 *            The color of any pixel inside a level map image.
 	 * @return the id of the searched block.
 	 */
 	public static short getIdFromCode(int aRGB)
@@ -371,16 +375,16 @@ public class Block
 	 *            The block id.
 	 * @param aG
 	 *            The graphics to draw into.
-	 * @param aWorld
-	 *            The parent world.
+	 * @param aLevel
+	 *            The parent level.
 	 */
-	public static void render(int aX, int aY, short aId, Graphics aG, Level aWorld)
+	public static void render(int aX, int aY, short aId, Graphics aG, Level aLevel)
 	{
 		final Block block = get(aId);
-		final Texture texture = getBlockTexture(aX, aY, aWorld);
-		if (block.mFlag) aG.drawImage(DataManager.getImage("flag"), aX * SIZE - aWorld.getScreenX(), (aY - 7) * SIZE - aWorld.getScreenY());
-		else aG.drawImage(DataManager.getTextureImage(DataManager.getTexturePack(), texture, block.getId(texture) / Texture.values().size()).getScaledCopy(SIZE, SIZE), aX * SIZE - aWorld.getScreenX(),
-				aY * SIZE - aWorld.getScreenY());
+		final Texture texture = getBlockTexture(aX, aY, aLevel);
+		if (block.mFlag) aG.drawImage(DataManager.getImage("flag"), aX * SIZE - aLevel.getScreenX(), (aY - 7) * SIZE - aLevel.getScreenY());
+		else aG.drawImage(DataManager.getTextureImage(DataManager.getTexturePack(), texture, block.getId(texture) / Texture.values().size()).getScaledCopy(SIZE, SIZE),
+				aX * SIZE - aLevel.getScreenX(), aY * SIZE - aLevel.getScreenY());
 	}
 	
 	/**
@@ -390,12 +394,12 @@ public class Block
 	 *            The x position.
 	 * @param aY
 	 *            The y position.
-	 * @param aWorld
-	 *            The parent world.
+	 * @param aLevel
+	 *            The parent level.
 	 * @return the texture of the given block.
 	 */
-	public static Texture getBlockTexture(int aX, int aY, Level aWorld)
+	public static Texture getBlockTexture(int aX, int aY, Level aLevel)
 	{
-		return TEXTURES.get(aWorld.getBlock(aX, aY));
+		return TEXTURES.get(aLevel.getBlock(aX, aY));
 	}
 }

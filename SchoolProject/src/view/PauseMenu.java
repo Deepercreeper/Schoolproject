@@ -12,6 +12,8 @@ public class PauseMenu extends Menu
 	/**
 	 * Creates a new menu that controls settings.
 	 * 
+	 * @param aGC
+	 *            The containing game container.
 	 * @param aGame
 	 *            The parent game.
 	 */
@@ -20,12 +22,6 @@ public class PauseMenu extends Menu
 		super(aGame, aGC.getWidth() / 2 - 300 / 2, aGC.getHeight() / 2 - 100 / 2, 300, 100);
 	}
 	
-	/**
-	 * Updates the menu.
-	 * 
-	 * @param aInput
-	 *            The input information.
-	 */
 	@Override
 	public void update(Input aInput)
 	{
@@ -37,12 +33,6 @@ public class PauseMenu extends Menu
 		if (aInput.isKeyPressed(Input.KEY_A)) DataManager.previousTitle();
 	}
 	
-	/**
-	 * Renders the menu into the middle of the screen.
-	 * 
-	 * @param aG
-	 *            The graphics to draw into.
-	 */
 	@Override
 	public void render(Graphics aG)
 	{

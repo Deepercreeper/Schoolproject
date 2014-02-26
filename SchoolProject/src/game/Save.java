@@ -6,64 +6,128 @@ public class Save
 {
 	private final String										mName;
 	
-	private int													mLastWorld, mLastLevelIndex;
+	private int													mLastWorld, mLastLevelId;
 	
 	private final HashMap<Integer, HashMap<Integer, Integer>>	mScores	= new HashMap<>();
 	
+	/**
+	 * Creates a new save with the given name.
+	 * 
+	 * @param aName
+	 *            The save name.
+	 */
 	public Save(String aName)
 	{
 		mName = aName;
 		openWorld(0);
 	}
 	
+	/**
+	 * Creates a save out of the given data. Used when loading out of a file.
+	 * 
+	 * @param aData
+	 *            The save data.
+	 */
 	public Save(String[] aData)
 	{
 		mName = readData(aData);
 	}
 	
-	public boolean isAvailable(int aWorld)
+	/**
+	 * Returns whether the given world is available to play already.
+	 * 
+	 * @param aWorldId
+	 *            the world id.
+	 * @return {@code true} if the world is available and {@code false} if not.
+	 */
+	public boolean isAvailable(int aWorldId)
 	{
-		return mScores.containsKey(aWorld);
+		return mScores.containsKey(aWorldId);
 	}
 	
-	public boolean isAvailable(int aWorld, int aLevelIndex)
+	/**
+	 * Returns whether the given level is available to play already.
+	 * 
+	 * @param aWorldId
+	 *            the world id.
+	 * @param aLevelId
+	 *            The level id.
+	 * @return {@code true} if the level is available and {@code false} if not.
+	 */
+	public boolean isAvailable(int aWorldId, int aLevelId)
 	{
-		return mScores.containsKey(aWorld) && mScores.get(aWorld).containsKey(aLevelIndex);
+		return mScores.containsKey(aWorldId) && mScores.get(aWorldId).containsKey(aLevelId);
 	}
 	
-	public void setScore(int aWorld, int aLevelIndex, int aScore)
+	/**
+	 * Sets the reached score of the given level.
+	 * 
+	 * @param aWorldId
+	 *            The world id.
+	 * @param aLevelId
+	 *            The level id.
+	 * @param aScore
+	 *            The reached score.
+	 */
+	public void setScore(int aWorldId, int aLevelId, int aScore)
 	{
-		if (mScores.get(aWorld).get(aLevelIndex) < aScore) mScores.get(aWorld).put(aLevelIndex, aScore);
+		if (mScores.get(aWorldId).get(aLevelId) < aScore) mScores.get(aWorldId).put(aLevelId, aScore);
 	}
 	
+	/**
+	 * Returns the sum of all scores together.
+	 * 
+	 * @return the score of all worlds.
+	 */
 	public int getScore()
 	{
 		int score = 0;
-		for (HashMap<Integer, Integer> levelScores : mScores.values())
-			for (int levelScore : levelScores.values())
-				if (levelScore != -1) score += levelScore;
+		for (int worldId : mScores.keySet())
+			score += getScore(worldId);
 		return score;
 	}
 	
-	public int getScore(int aWorld)
+	/**
+	 * Returns the reached score in the given world.
+	 * 
+	 * @param aWorldId
+	 *            The world id.
+	 * @return the reached score.
+	 */
+	
+	public int getScore(int aWorldId)
 	{
 		int score = 0;
-		if ( !mScores.containsKey(aWorld)) return 0;
-		for (int levelScore : mScores.get(aWorld).values())
+		if ( !mScores.containsKey(aWorldId)) return 0;
+		for (int levelScore : mScores.get(aWorldId).values())
 			if (levelScore != -1) score += levelScore;
 		return score;
 	}
 	
-	public int getScore(int aWorld, int aLevelIndex)
+	/**
+	 * Returns the reached score in the given level.
+	 * 
+	 * @param aWorldId
+	 *            The world id.
+	 * @param aLevelId
+	 *            The level id.
+	 * @return the reached score.
+	 */
+	public int getScore(int aWorldId, int aLevelId)
 	{
-		if (mScores.containsKey(aWorld) && mScores.get(aWorld).containsKey(aLevelIndex))
+		if (mScores.containsKey(aWorldId) && mScores.get(aWorldId).containsKey(aLevelId))
 		{
-			int score = mScores.get(aWorld).get(aLevelIndex);
+			int score = mScores.get(aWorldId).get(aLevelId);
 			if (score != -1) return score;
 		}
 		return 0;
 	}
 	
+	/**
+	 * Returns the name of this save.
+	 * 
+	 * @return the name.
+	 */
 	public String getName()
 	{
 		return mName;
@@ -73,7 +137,7 @@ public class Save
 	{
 		String name = aData[0];
 		mLastWorld = Integer.parseInt(aData[1]);
-		mLastLevelIndex = Integer.parseInt(aData[2]);
+		mLastLevelId = Integer.parseInt(aData[2]);
 		
 		String[] levelAndScore, worldAndLevel;
 		int world, level, score;
@@ -95,50 +159,93 @@ public class Save
 		return name;
 	}
 	
+	/**
+	 * Creates a string representing this save.
+	 * 
+	 * @return a string to create a save file.
+	 */
 	public String getSaveData()
 	{
 		StringBuilder data = new StringBuilder();
 		data.append(mName + "\n");
 		data.append(mLastWorld + "\n");
-		data.append(mLastLevelIndex);
+		data.append(mLastLevelId);
 		for (int world : mScores.keySet())
 			for (int level : mScores.get(world).keySet())
 				data.append("\n" + world + ":" + level + "=" + mScores.get(world).get(level));
 		return data.toString();
 	}
 	
-	public void setLastWorld(int aLastWorld)
+	/**
+	 * Sets the last played world.
+	 * 
+	 * @param aLastWorldId
+	 *            The world id.
+	 */
+	public void setLastWorld(int aLastWorldId)
 	{
-		mLastWorld = aLastWorld;
+		mLastWorld = aLastWorldId;
 	}
 	
-	public void setLastLevelIndex(int aLastLevelIndex)
+	/**
+	 * Sets the last played level.
+	 * 
+	 * @param aLastLevelId
+	 *            The level id.
+	 */
+	
+	public void setLastLevelId(int aLastLevelId)
 	{
-		mLastLevelIndex = aLastLevelIndex;
+		mLastLevelId = aLastLevelId;
 	}
 	
-	public int getLastWorld()
+	/**
+	 * Returns the last played world.
+	 * 
+	 * @return the world id.
+	 */
+	public int getLastWorldId()
 	{
 		return mLastWorld;
 	}
 	
-	public int getLastLevelIndex()
+	/**
+	 * Returns the last played level.
+	 * 
+	 * @return the level id.
+	 */
+	
+	public int getLastLevelId()
 	{
-		return mLastLevelIndex;
+		return mLastLevelId;
 	}
 	
-	public void openLevel(int aWorld, int aLevelIndex)
+	/**
+	 * Makes the given level available for the player.
+	 * 
+	 * @param aWorld
+	 *            The world id.
+	 * @param aLevelId
+	 *            The level id.
+	 */
+	public void openLevel(int aWorld, int aLevelId)
 	{
-		if (mScores.containsKey(aWorld) && !mScores.get(aWorld).containsKey(aLevelIndex)) mScores.get(aWorld).put(aLevelIndex, -1);
+		if (mScores.containsKey(aWorld) && !mScores.get(aWorld).containsKey(aLevelId)) mScores.get(aWorld).put(aLevelId, -1);
 	}
 	
-	public void openWorld(int aWorld)
+	/**
+	 * Makes the given world available for the player.
+	 * 
+	 * @param aWorldId
+	 *            The world id.
+	 */
+	public void openWorld(int aWorldId)
 	{
-		if ( !mScores.containsKey(aWorld))
+		if ( !mScores.containsKey(aWorldId))
 		{
 			HashMap<Integer, Integer> levelScore = new HashMap<>();
 			levelScore.put(0, -1);
-			mScores.put(aWorld, levelScore);
+			mScores.put(aWorldId, levelScore);
 		}
 	}
 }

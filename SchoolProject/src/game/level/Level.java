@@ -20,42 +20,50 @@ import data.DataManager;
 public class Level
 {
 	/**
-	 * Friction and gravity of the world.
+	 * Friction and gravity of the level.
 	 */
 	public static final double	FRICTION	= 0.99, GRAVITY = 0.3;
 	
 	private final byte			mLevelId, mWorldId;
-	
 	private final int			mWidth, mHeight;
-	
 	private int					mStartX, mStartY;
 	
 	private final Screen		mScreen;
 	
 	private short[][]			mBlocks;
-	
 	private short[][]			mAlphas;
 	
 	private final HashMap<Integer, Entity>	mEntities	= new HashMap<>(), mAddEntities = new HashMap<>();
-	
 	private final HashSet<Integer>			mUpdatableBlocks	= new HashSet<>(), mLiquidBlocks = new HashSet<>();
-	
 	private final Player					mPlayer;
-	
 	private boolean							mWon;
 	
+	/**
+	 * Creates a new level that has to create an own player.
+	 * 
+	 * @param aWorldId
+	 *            The world id.
+	 * @param aLevelId
+	 *            The level id.
+	 * @param aGC
+	 *            The containing game container.
+	 */
 	public Level(int aWorldId, int aLevelId, GameContainer aGC)
 	{
 		this(aWorldId, aLevelId, aGC, new Player());
 	}
 	
 	/**
-	 * Creates a world defined by the given id and the given game container.
+	 * Creates a new level.
 	 * 
+	 * @param aWorldId
+	 *            The world id.
 	 * @param aLevelId
-	 *            The id of this world.
+	 *            The level id.
 	 * @param aGC
-	 *            the containing game container.
+	 *            The containing game container.
+	 * @param aPlayer
+	 *            The player of this level.
 	 */
 	public Level(int aWorldId, int aLevelId, GameContainer aGC, Player aPlayer)
 	{
@@ -260,13 +268,22 @@ public class Level
 		return mBlocks[aX][aY];
 	}
 	
+	/**
+	 * Returns the alpha value of the given position.
+	 * 
+	 * @param aX
+	 *            The x position.
+	 * @param aY
+	 *            The y position.
+	 * @return an alpha value between 0 and 255.
+	 */
 	public short getAlpha(int aX, int aY)
 	{
 		return mAlphas[aX][aY];
 	}
 	
 	/**
-	 * Adds the given entity to this world.
+	 * Adds the given entity to this level.
 	 * 
 	 * @param aEntity
 	 *            The entity to add.
@@ -278,7 +295,7 @@ public class Level
 	}
 	
 	/**
-	 * Adds the given entity to this world at a specific position.
+	 * Adds the given entity to this level at a specific position.
 	 * 
 	 * @param aEntity
 	 *            The entity to add.
@@ -340,6 +357,12 @@ public class Level
 		mScreen.update(mPlayer);
 	}
 	
+	/**
+	 * Adds the player of this level.
+	 * 
+	 * @param aPlayer
+	 *            The player.
+	 */
 	public void addPlayer(Player aPlayer)
 	{
 		mPlayer.setX(mStartX * Block.SIZE);
@@ -347,6 +370,9 @@ public class Level
 		addEntity(mPlayer);
 	}
 	
+	/**
+	 * Resets entities, statistics and blocks.
+	 */
 	public void reload()
 	{
 		mEntities.clear();
@@ -355,7 +381,7 @@ public class Level
 	}
 	
 	/**
-	 * Returns the world id.
+	 * Returns the level id.
 	 * 
 	 * @return the id.
 	 */
@@ -364,6 +390,11 @@ public class Level
 		return mLevelId;
 	}
 	
+	/**
+	 * Returns the world id.
+	 * 
+	 * @return the id.
+	 */
 	public byte getWorldId()
 	{
 		return mWorldId;
@@ -380,7 +411,7 @@ public class Level
 	}
 	
 	/**
-	 * Makes this world be done so the next world can be loaded.
+	 * Makes this level be done so the next level or world can be loaded.
 	 */
 	public void win()
 	{
@@ -388,7 +419,7 @@ public class Level
 	}
 	
 	/**
-	 * The current player of this world.
+	 * The current player of this level.
 	 * 
 	 * @return the player.
 	 */

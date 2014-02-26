@@ -18,6 +18,7 @@ public class View extends BasicGame
 	 * Creates a new Minion bros. game.
 	 * 
 	 * @throws SlickException
+	 *             when a slick exception occurs.
 	 */
 	public View() throws SlickException
 	{

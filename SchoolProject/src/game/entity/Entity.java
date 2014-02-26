@@ -11,6 +11,8 @@ import util.Rectangle;
 public abstract class Entity
 {
 	private int									mId;
+	private boolean								mRemoved;
+	private final HashMap<Integer, Direction>	mTouchingBlocks	= new HashMap<>();
 	
 	/**
 	 * The position and velocity of this entity.
@@ -23,16 +25,12 @@ public abstract class Entity
 	protected int								mWidth, mHeight;
 	
 	/**
-	 * States that tell whether this entity is on the ground, on the wall, on which wall and whether it was hurt at the last update.
+	 * States that tell whether this entity is on the ground, on the wall, on which wall, whether it was hurt at the last update, is inside a liquid block, is standing on ice or dead.
 	 */
 	protected boolean							mOnGround, mOnWall, mLeftWall, mHurt, mInLiquid, mOnIce, mDead;
 	
-	private boolean								mRemoved;
-	
-	private final HashMap<Integer, Direction>	mTouchingBlocks	= new HashMap<>();
-	
 	/**
-	 * The parent world within this entity is living.
+	 * The parent level within this entity is living.
 	 */
 	protected Level								mLevel;
 	
@@ -368,24 +366,35 @@ public abstract class Entity
 	 */
 	public abstract boolean isSolid();
 	
+	/**
+	 * Makes this entity die and removes it by default.
+	 */
 	public void die()
 	{
 		mDead = true;
 		remove();
 	}
 	
+	/**
+	 * Resets all attributes to the state when this entity is created.
+	 */
 	public void respawn()
 	{
 		mDead = false;
 	}
 	
+	/**
+	 * Returns whether this entity has been killed or died itself.
+	 * 
+	 * @return {@code true} if this entity is dead and {@code false} if not.
+	 */
 	public boolean isDead()
 	{
 		return mDead;
 	}
 	
 	/**
-	 * Removes this entity. Maybe seen as killing.
+	 * Removes this entity from the parent level.
 	 */
 	protected final void remove()
 	{
@@ -393,7 +402,7 @@ public abstract class Entity
 	}
 	
 	/**
-	 * The id given by the id handler of the world.
+	 * The id given by the id handler of the level.
 	 * 
 	 * @return the id of this entity.
 	 */
@@ -403,10 +412,10 @@ public abstract class Entity
 	}
 	
 	/**
-	 * Binds this entity to the given world and sets the created id.
+	 * Binds this entity to the given level and sets the created id.
 	 * 
 	 * @param aLevel
-	 *            The parent world.
+	 *            The parent level.
 	 * @param aId
 	 *            The created id.
 	 */
@@ -449,11 +458,11 @@ public abstract class Entity
 	}
 	
 	@Override
-	public final boolean equals(Object o)
+	public final boolean equals(Object aO)
 	{
-		if (o instanceof Entity)
+		if (aO instanceof Entity)
 		{
-			Entity e = (Entity) o;
+			Entity e = (Entity) aO;
 			return e.mLevel == mLevel && e.mId == mId;
 		}
 		return false;

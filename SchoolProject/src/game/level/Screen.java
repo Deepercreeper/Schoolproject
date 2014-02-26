@@ -16,8 +16,6 @@ public class Screen
 	/**
 	 * Creates a screen that defines which area should be rendered.
 	 * 
-	 * @param aLevel
-	 *            The parent world.
 	 * @param aWidth
 	 *            The screen width.
 	 * @param aHeight
@@ -28,6 +26,12 @@ public class Screen
 		mRect = new Rectangle(0, 0, aWidth, aHeight);
 	}
 	
+	/**
+	 * Sets the parent level.
+	 * 
+	 * @param aLevel
+	 *            The parent level.
+	 */
 	public void init(Level aLevel)
 	{
 		mLevel = aLevel;
@@ -37,7 +41,7 @@ public class Screen
 	 * Makes the screen follow the player.
 	 * 
 	 * @param aPlayer
-	 *            the player of the parent world.
+	 *            the player of the parent level.
 	 */
 	public void update(Player aPlayer)
 	{

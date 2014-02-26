@@ -9,6 +9,9 @@ public abstract class Item
 {
 	private static final HashMap<Integer, Item>	ITEMS			= new HashMap<>();
 	
+	/**
+	 * Creates a new static heart.
+	 */
 	public static final Item					HEART_STATIC	= new Item(0xFF0000)
 																{
 																	@Override
@@ -30,6 +33,9 @@ public abstract class Item
 																	}
 																};
 	
+	/**
+	 * Creates a new non static heart.
+	 */
 	public static final Item					HEART			= new Item(0xFE0000)
 																{
 																	@Override
@@ -51,6 +57,9 @@ public abstract class Item
 																	}
 																};
 	
+	/**
+	 * Creates a new banana.
+	 */
 	public static final Item					BANANA			= new Item(0xFFFF00)
 																{
 																	@Override
@@ -72,6 +81,9 @@ public abstract class Item
 																	}
 																};
 	
+	/**
+	 * Creates anew super banana.
+	 */
 	public static final Item					SUPER_BANANA	= new Item(0xFF00FF)
 																{
 																	@Override
@@ -98,12 +110,38 @@ public abstract class Item
 		ITEMS.put(aRGB, this);
 	}
 	
+	/**
+	 * Creates the entity.
+	 * 
+	 * @param aX
+	 *            The x position to create at.
+	 * @param aY
+	 *            The y position to create at.
+	 * @return a new entity.
+	 */
 	public abstract Entity create(int aX, int aY);
 	
+	/**
+	 * Returns the width of the entity to create.
+	 * 
+	 * @return an integer representing the width.
+	 */
 	public abstract int getWidth();
 	
+	/**
+	 * Returns the height of the entity to create.
+	 * 
+	 * @return an integer representing the height.
+	 */
 	public abstract int getHeight();
 	
+	/**
+	 * Returns whether an items was defined with the given RGB code.
+	 * 
+	 * @param aRGB
+	 *            The color to check.
+	 * @return {@code true} if an item with color {@code aRGB} exists and {@code false} if not.
+	 */
 	public static boolean containsCode(int aRGB)
 	{
 		return ITEMS.containsKey(aRGB);
