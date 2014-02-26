@@ -20,24 +20,24 @@ public class Block
 	
 	// Blocks
 	public static final Block						AIR							= new Block(0, 0xffffff).setInvisible().setUnsolid();
-	public static final Block						STONE						= new Block(1, new int[] { 0xB89040, 0xC0C0C0, 0xB89040, 0x2A7CE0 });
-	public static final Block						BRICK						= new Block(2, new int[] { 0xB06000, 0x727272, 0xB06000, 0x014EB2 }).setDestroyable(AIR);
-	public static final Block						OPENED						= new Block(3, new int[] { 0xC03010, 0xC03011, 0xC03010, 0xC03012 });
-	public static final Block						QUESTION					= new Block(4, new int[] { 0xD8B018, 0xFFD800, 0xD8B018, 0x14466D }).setDestroyable(OPENED)
+	public static final Block						STONE						= new Block(1, new int[] { 0xB89040, 0xC0C0C0, 0xB89040, 0x2A7CE0, 0x5000DB });
+	public static final Block						BRICK						= new Block(2, new int[] { 0xB06000, 0x727272, 0xB06000, 0x014EB2, 0x014EB2 }).setDestroyable(AIR);
+	public static final Block						OPENED						= new Block(3, new int[] { 0xC03010, 0xC03011, 0xC03010, 0xC03012, 0xC03012 });
+	public static final Block						QUESTION					= new Block(4, new int[] { 0xD8B018, 0xFFD800, 0xD8B018, 0x14466D, 0x14466D }).setDestroyable(OPENED)
 																						.setItem(255, Item.SUPER_BANANA).setItem(254, Item.BANANA).setItem(253, Item.HEART);
-	public static final Block						GROUND_TOP_LEFT				= new Block(5, new int[] { 0x00E000, 0x93FFFF, 0xFFA359, 0x3D2C77 });
-	public static final Block						GROUND_TOP					= new Block(6, new int[] { 0x00BA00, 0x00FFFF, 0xFF7400, 0x291D4F });
-	public static final Block						GROUND_TOP_RIGHT			= new Block(7, new int[] { 0x009300, 0x00D3D3, 0xB75200, 0x1D1438 });
-	public static final Block						GROUND_STOP_LEFT			= new Block(8, new int[] { 0x8CB848, 0x8EF4D5, 0x87612D, 0x3D4677 });
-	public static final Block						GROUND_STOP_RIGHT			= new Block(9, new int[] { 0x73963C, 0x00DDD3, 0x704A00, 0x1D2338 });
-	public static final Block						GROUND_LEFT					= new Block(10, new int[] { 0xF0B848, 0xAD7854, 0x87512D, 0x1D0077 });
-	public static final Block						GROUND_MIDDLE				= new Block(11, new int[] { 0xD3A23F, 0xAF4600, 0x873600, 0x140050 });
-	public static final Block						GROUND_RIGHT				= new Block(12, new int[] { 0xAD8434, 0x993D00, 0x702C00, 0x0D0035 });
-	public static final Block						GROUND_BOTTOM_LEFT			= new Block(13, new int[] { 0xA07931, 0xAD9354, 0xBC5F3A, 0x25234C });
-	public static final Block						GROUND_BOTTOM				= new Block(14, new int[] { 0x99722F, 0xAF6D00, 0xBE3600, 0x06004F });
-	public static final Block						GROUND_BOTTOM_RIGHT			= new Block(15, new int[] { 0x936C2D, 0x995900, 0xA02D00, 0x04003D });
-	public static final Block						GROUND_BOTTOM_STOP_LEFT		= new Block(16, new int[] { 0xB6B848, 0x997F00, 0xA05500, 0x04273D });
-	public static final Block						GROUND_BOTTOM_STOP_RIGHT	= new Block(17, new int[] { 0xABAD45, 0x7F6A00, 0xBC803A, 0x253E4C });
+	public static final Block						GROUND_TOP_LEFT				= new Block(5, new int[] { 0x00E000, 0x93FFFF, 0xFFA359, 0x3D2C77, 0x564E75 });
+	public static final Block						GROUND_TOP					= new Block(6, new int[] { 0x00BA00, 0x00FFFF, 0xFF7400, 0x291D4F, 0x39334C });
+	public static final Block						GROUND_TOP_RIGHT			= new Block(7, new int[] { 0x009300, 0x00D3D3, 0xB75200, 0x1D1438, 0x272335 });
+	public static final Block						GROUND_STOP_LEFT			= new Block(8, new int[] { 0x8CB848, 0x8EF4D5, 0x87612D, 0x3D4677, 0x606375 });
+	public static final Block						GROUND_STOP_RIGHT			= new Block(9, new int[] { 0x73963C, 0x00DDD3, 0x704A00, 0x1D2338, 0x2B2E35 });
+	public static final Block						GROUND_LEFT					= new Block(10, new int[] { 0xF0B848, 0xAD7854, 0x87512D, 0x1D0077, 0x362375 });
+	public static final Block						GROUND_MIDDLE				= new Block(11, new int[] { 0xD3A23F, 0xAF4600, 0x873600, 0x140050, 0x25174F });
+	public static final Block						GROUND_RIGHT				= new Block(12, new int[] { 0xAD8434, 0x993D00, 0x702C00, 0x0D0035, 0x170F33 });
+	public static final Block						GROUND_BOTTOM_LEFT			= new Block(13, new int[] { 0xA07931, 0xAD9354, 0xBC5F3A, 0x25234C, 0x393849 });
+	public static final Block						GROUND_BOTTOM				= new Block(14, new int[] { 0x99722F, 0xAF6D00, 0xBE3600, 0x06004F, 0x1A164C });
+	public static final Block						GROUND_BOTTOM_RIGHT			= new Block(15, new int[] { 0x936C2D, 0x995900, 0xA02D00, 0x04003D, 0x04003D });
+	public static final Block						GROUND_BOTTOM_STOP_LEFT		= new Block(16, new int[] { 0xB6B848, 0x997F00, 0xA05500, 0x04273D, 0x152C3A });
+	public static final Block						GROUND_BOTTOM_STOP_RIGHT	= new Block(17, new int[] { 0xABAD45, 0x7F6A00, 0xBC803A, 0x253E4C, 0x3A4449 });
 	public static final Block						SPIKES_UP					= new Block(18, 0xBCBCBC).setHurtPlayer(Direction.TOP);
 	public static final Block						SPIKES_DOWN					= new Block(19, 0xB5B5B5).setHurtPlayer(Direction.BOTTOM);
 	public static final Block						SPIKES_RIGHT				= new Block(20, 0xADADAD).setHurtPlayer(Direction.RIGHT);
@@ -53,7 +53,7 @@ public class Block
 	public static final Block						ICE_LEFT					= new Block(30, 0x96C6AA);
 	public static final Block						ICE_MIDDLE					= new Block(31, 0x00FFA7);
 	public static final Block						ICE_RIGHT					= new Block(32, 0x00BEB1);
-	public static final Block						PLATFORM					= new Block(33, new int[] { 0x74FF8C, 0x74FF8C, 0x74FF8C, 0x88FFFF }).setSolidSide(Direction.TOP);
+	public static final Block						PLATFORM					= new Block(33, new int[] { 0x74FF8C, 0x74FF8C, 0x74FF8C, 0x88FFFF, 0x88A3FF }).setSolidSide(Direction.TOP);
 	public static final Block						SMALL_ROCK_LEFT				= new Block(34, 0xD34300);
 	public static final Block						SMALL_ROCK_RIGHT			= new Block(35, 0xFF5200);
 	public static final Block						SMALL_ROCK_TOP				= new Block(36, 0xFF503D);
