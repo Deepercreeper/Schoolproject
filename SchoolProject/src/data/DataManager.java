@@ -32,7 +32,7 @@ public class DataManager
 	
 	private static int								sTexturepack		= 0, sTitle = 0;
 	private static float							sVolume				= 1;
-	private static boolean							sInitiated			= false, sLoading = false;
+	private static boolean							sInitiated			= false, sLoading = false, sWasLoading = false;
 	
 	/**
 	 * Plays a sound with the given name. All sounds have to have the type wav and sounds can be played more times simultanely.
@@ -56,12 +56,24 @@ public class DataManager
 	 */
 	public static void playMusic(String aName)
 	{
-		float volume = 1;
-		Music lastMusic = MUSIC.get(aName);
-		if (lastMusic != null) volume = lastMusic.getVolume();
-		MUSIC.get(aName).loop();
-		for (Music music : MUSIC.values())
-			music.setVolume(volume);
+		Music music = MUSIC.get(aName);
+		music.setVolume(sVolume);
+		music.loop();
+	}
+	
+	/**
+	 * If any texture pack has been loaded this method returns {@code true}. After invoking this method it returns false again.
+	 * 
+	 * @return {@code true} the first time invoked after loading a texture pack and {@code false} otherwise.
+	 */
+	public static boolean wasloading()
+	{
+		if (sWasLoading)
+		{
+			sWasLoading = false;
+			return true;
+		}
+		return false;
 	}
 	
 	/**
@@ -75,29 +87,16 @@ public class DataManager
 	}
 	
 	/**
-	 * Increases the volume by {@code 0.1}.
+	 * Sets the volume of music titles and sounds.
+	 * 
+	 * @param aVolume
+	 *            The new volume.
 	 */
-	public static void volumeUp()
+	public static void setVolume(float aVolume)
 	{
-		if (sVolume < 1) sVolume += 0.1f;
+		sVolume = aVolume;
 		for (Music music : MUSIC.values())
-		{
-			if (music.getVolume() == 1) return;
-			music.setVolume(music.getVolume() + 0.1f);
-		}
-	}
-	
-	/**
-	 * Decreases the volume by {@code 0.1}.
-	 */
-	public static void volumeDown()
-	{
-		if (sVolume > 0) sVolume -= 0.1f;
-		for (Music music : MUSIC.values())
-		{
-			if (music.getVolume() == 0) return;
-			music.setVolume(music.getVolume() - 0.1f);
-		}
+			music.setVolume(sVolume);
 	}
 	
 	/**
@@ -448,7 +447,7 @@ public class DataManager
 	{
 		if ( !SPLIT_IMAGES.containsKey(aName + Texture.NORMAL.getSuffix()))
 		{
-			sLoading = true;
+			sLoading = sWasLoading = true;
 			for (Texture texture : Texture.values())
 			{
 				Image[] images = loadSplittedImages("texturepacks/blocks" + aName + texture.getSuffix(), new int[] { 16, 16 });

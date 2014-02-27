@@ -1,12 +1,15 @@
 package game;
 
 import java.util.HashMap;
+import data.DataManager;
 
 public class Save
 {
 	private final String										mName;
 	
-	private int													mLastWorld, mLastLevelId;
+	private int													mLastWorldId, mLastLevelId;
+	
+	private float												mVolume;
 	
 	private final HashMap<Integer, HashMap<Integer, Integer>>	mScores	= new HashMap<>();
 	
@@ -19,6 +22,7 @@ public class Save
 	public Save(String aName)
 	{
 		mName = aName;
+		mVolume = 1f;
 		openWorld(0);
 	}
 	
@@ -31,6 +35,25 @@ public class Save
 	public Save(String[] aData)
 	{
 		mName = readData(aData);
+		DataManager.setVolume(mVolume);
+	}
+	
+	/**
+	 * Increases the volume.
+	 */
+	public void volumeUp()
+	{
+		if (mVolume < 1) mVolume += 0.1f;
+		DataManager.setVolume(mVolume);
+	}
+	
+	/**
+	 * Decreases the volume.
+	 */
+	public void volumeDown()
+	{
+		if (mVolume > 0) mVolume -= 0.1f;
+		DataManager.setVolume(mVolume);
 	}
 	
 	/**
@@ -94,7 +117,6 @@ public class Save
 	 *            The world id.
 	 * @return the reached score.
 	 */
-	
 	public int getScore(int aWorldId)
 	{
 		int score = 0;
@@ -133,32 +155,6 @@ public class Save
 		return mName;
 	}
 	
-	private String readData(String[] aData)
-	{
-		String name = aData[0];
-		mLastWorld = Integer.parseInt(aData[1]);
-		mLastLevelId = Integer.parseInt(aData[2]);
-		
-		String[] levelAndScore, worldAndLevel;
-		int world, level, score;
-		for (int i = 3; i < aData.length; i++ )
-		{
-			levelAndScore = aData[i].split("=");
-			worldAndLevel = levelAndScore[0].split(":");
-			world = Integer.parseInt(worldAndLevel[0]);
-			level = Integer.parseInt(worldAndLevel[1]);
-			score = Integer.parseInt(levelAndScore[1]);
-			HashMap<Integer, Integer> worldScore = mScores.get(world);
-			if (worldScore == null)
-			{
-				worldScore = new HashMap<>();
-				mScores.put(world, worldScore);
-			}
-			worldScore.put(level, score);
-		}
-		return name;
-	}
-	
 	/**
 	 * Creates a string representing this save.
 	 * 
@@ -168,7 +164,8 @@ public class Save
 	{
 		StringBuilder data = new StringBuilder();
 		data.append(mName + "\n");
-		data.append(mLastWorld + "\n");
+		data.append(mVolume + "\n");
+		data.append(mLastWorldId + "\n");
 		data.append(mLastLevelId);
 		for (int world : mScores.keySet())
 			for (int level : mScores.get(world).keySet())
@@ -182,9 +179,9 @@ public class Save
 	 * @param aLastWorldId
 	 *            The world id.
 	 */
-	public void setLastWorld(int aLastWorldId)
+	public void setLastWorldId(int aLastWorldId)
 	{
-		mLastWorld = aLastWorldId;
+		mLastWorldId = aLastWorldId;
 	}
 	
 	/**
@@ -193,7 +190,6 @@ public class Save
 	 * @param aLastLevelId
 	 *            The level id.
 	 */
-	
 	public void setLastLevelId(int aLastLevelId)
 	{
 		mLastLevelId = aLastLevelId;
@@ -206,7 +202,7 @@ public class Save
 	 */
 	public int getLastWorldId()
 	{
-		return mLastWorld;
+		return mLastWorldId;
 	}
 	
 	/**
@@ -214,7 +210,6 @@ public class Save
 	 * 
 	 * @return the level id.
 	 */
-	
 	public int getLastLevelId()
 	{
 		return mLastLevelId;
@@ -247,5 +242,32 @@ public class Save
 			levelScore.put(0, -1);
 			mScores.put(aWorldId, levelScore);
 		}
+	}
+	
+	private String readData(String[] aData)
+	{
+		String name = aData[0];
+		mVolume = Float.parseFloat(aData[1]);
+		mLastWorldId = Integer.parseInt(aData[2]);
+		mLastLevelId = Integer.parseInt(aData[3]);
+		
+		String[] levelAndScore, worldAndLevel;
+		int world, level, score;
+		for (int i = 4; i < aData.length; i++ )
+		{
+			levelAndScore = aData[i].split("=");
+			worldAndLevel = levelAndScore[0].split(":");
+			world = Integer.parseInt(worldAndLevel[0]);
+			level = Integer.parseInt(worldAndLevel[1]);
+			score = Integer.parseInt(levelAndScore[1]);
+			HashMap<Integer, Integer> worldScore = mScores.get(world);
+			if (worldScore == null)
+			{
+				worldScore = new HashMap<>();
+				mScores.put(world, worldScore);
+			}
+			worldScore.put(level, score);
+		}
+		return name;
 	}
 }

@@ -87,6 +87,16 @@ public class MainMenu extends Menu
 				if (mState == State.NEW_INPUT) aInput.addKeyListener(new Listener(aInput));
 				break;
 			case GAME :
+				if (aInput.isKeyPressed(Input.KEY_ADD))
+				{
+					mSave.volumeUp();
+					mGame.showVolume();
+				}
+				if (aInput.isKeyPressed(Input.KEY_SUBTRACT))
+				{
+					mSave.volumeDown();
+					mGame.showVolume();
+				}
 				if (aInput.isKeyPressed(Input.KEY_SPACE)) mGame.start(mWorldId, mLevelId, mSave);
 				else if (aInput.isKeyPressed(Input.KEY_ESCAPE))
 				{
@@ -206,7 +216,7 @@ public class MainMenu extends Menu
 	
 	private void save()
 	{
-		mSave.setLastWorld(mWorldId);
+		mSave.setLastWorldId(mWorldId);
 		mSave.setLastLevelId(mLevelId);
 		DataManager.save(mSave);
 		mSave = null;

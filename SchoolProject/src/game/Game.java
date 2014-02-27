@@ -34,20 +34,19 @@ public class Game
 		if ( !DataManager.isInitiated() || DataManager.isLoading()) aG.drawImage(DataManager.getImage("splash"), 0, 0);
 		else
 		{
-			if (mMain)
+			if (mMain) mMainMenu.render(aG);
+			
+			if ( !mMain)
 			{
-				mMainMenu.render(aG);
-				return;
-			}
-			
-			mLevel.render(aG);
-			
-			Stats.instance().render(aG);
-			
-			if (mPause)
-			{
-				mPauseMenu.render(aG);
-				return;
+				mLevel.render(aG);
+				
+				Stats.instance().render(aG);
+				
+				if (mPause)
+				{
+					mPauseMenu.render(aG);
+					return;
+				}
 			}
 			
 			// Render volume
@@ -55,11 +54,11 @@ public class Game
 			{
 				float volume = DataManager.getVolume();
 				aG.setColor(Color.white);
-				aG.drawString("Volume", mGC.getWidth() / 2 - 25, mGC.getHeight() - 40);
+				aG.drawString("Volume", mGC.getWidth() / 2 - 25, mGC.getHeight() - 100);
 				aG.setColor(Color.darkGray);
-				aG.fillRect(mGC.getWidth() / 2 - 50, mGC.getHeight() - 20, 100, 10);
+				aG.fillRect(mGC.getWidth() / 2 - 50, mGC.getHeight() - 80, 100, 10);
 				aG.setColor(Color.lightGray);
-				aG.fillRect(mGC.getWidth() / 2 - 50, mGC.getHeight() - 20, 100 * volume, 10);
+				aG.fillRect(mGC.getWidth() / 2 - 50, mGC.getHeight() - 80, 100 * volume, 10);
 			}
 		}
 	}
@@ -77,6 +76,9 @@ public class Game
 			DataManager.init();
 			mainMenu();
 		}
+		
+		// Updates
+		if (mShowingVolume > 0) mShowingVolume-- ;
 		
 		if (mMain)
 		{
@@ -105,9 +107,6 @@ public class Game
 			return;
 		}
 		
-		// Updates
-		if (mShowingVolume > 0) mShowingVolume-- ;
-		
 		// Input
 		if (mInput.isKeyPressed(Input.KEY_ESCAPE))
 		{
@@ -116,19 +115,27 @@ public class Game
 		}
 		if (mInput.isKeyPressed(Input.KEY_ADD))
 		{
-			DataManager.volumeUp();
-			mShowingVolume = 30;
+			mSave.volumeUp();
+			showVolume();
 		}
 		if (mInput.isKeyPressed(Input.KEY_SUBTRACT))
 		{
-			DataManager.volumeDown();
-			mShowingVolume = 30;
+			mSave.volumeDown();
+			showVolume();
 		}
 		
-		Stats.instance().tick(aDelta);
+		if ( !DataManager.wasloading()) Stats.instance().tick(aDelta);
 		
 		// Updating level
 		mLevel.update(mInput);
+	}
+	
+	/**
+	 * Displays the volume bar for 3 seconds.
+	 */
+	public void showVolume()
+	{
+		mShowingVolume = 30;
 	}
 	
 	/**
@@ -142,18 +149,6 @@ public class Game
 		mGC = aGC;
 		mInput = mGC.getInput();
 		mMainMenu = new MainMenu(mGC, this);
-	}
-	
-	private void initWorld(int aWorld, int aLevelIndex)
-	{
-		if (mInput == null) mInput = mGC.getInput();
-		if (mPauseMenu == null) mPauseMenu = new PauseMenu(mGC, this);
-		if (mPlayer == null)
-		{
-			mLevel = new Level(aWorld, aLevelIndex, mGC);
-			mPlayer = mLevel.getPlayer();
-		}
-		else mLevel = new Level(aWorld, aLevelIndex, mGC, mPlayer);
 	}
 	
 	/**
@@ -209,5 +204,17 @@ public class Game
 	public void stop()
 	{
 		mRunning = false;
+	}
+	
+	private void initWorld(int aWorld, int aLevelIndex)
+	{
+		if (mInput == null) mInput = mGC.getInput();
+		if (mPauseMenu == null) mPauseMenu = new PauseMenu(mGC, this);
+		if (mPlayer == null)
+		{
+			mLevel = new Level(aWorld, aLevelIndex, mGC);
+			mPlayer = mLevel.getPlayer();
+		}
+		else mLevel = new Level(aWorld, aLevelIndex, mGC, mPlayer);
 	}
 }
