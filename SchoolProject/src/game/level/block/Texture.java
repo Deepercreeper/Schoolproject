@@ -12,6 +12,7 @@ public class Texture
 	public static final Texture					DESERT	= new Texture(2, "Desert");
 	public static final Texture					CASTLE	= new Texture(3, "Castle");
 	public static final Texture 			UNDERGROUND = new Texture(4, "Underground");
+	public static final Texture 				CLOUD 	= new Texture(5, "Cloud");
 	
 	private final byte							mId;
 	
