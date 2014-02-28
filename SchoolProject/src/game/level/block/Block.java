@@ -35,7 +35,7 @@ public class Block
 	public static final Block						GROUND_RIGHT				= new Block(12, new int[] { 0xAD8434, 0x993D00, 0x702C00, 0x0D0035, 0x170F33, 0xAD84CA });
 	public static final Block						GROUND_BOTTOM_LEFT			= new Block(13, new int[] { 0xA07931, 0xAD9354, 0xBC5F3A, 0x25234C, 0x393849, 0xA079C7 });
 	public static final Block						GROUND_BOTTOM				= new Block(14, new int[] { 0x99722F, 0xAF6D00, 0xBE3600, 0x06004F, 0x1A164C, 0x9972C5 });
-	public static final Block						GROUND_BOTTOM_RIGHT			= new Block(15, new int[] { 0x936C2D, 0x995900, 0xA02D00, 0x04003D, 0x04003D, 0x936CC3 });
+	public static final Block						GROUND_BOTTOM_RIGHT			= new Block(15, new int[] { 0x936C2D, 0x995900, 0xA02D00, 0x04003D, 0x13113A, 0x936CC3 });
 	public static final Block						GROUND_BOTTOM_STOP_LEFT		= new Block(16, new int[] { 0xB6B848, 0x997F00, 0xA05500, 0x04273D, 0x152C3A, 0xB6B8DE });
 	public static final Block						GROUND_BOTTOM_STOP_RIGHT	= new Block(17, new int[] { 0xABAD45, 0x7F6A00, 0xBC803A, 0x253E4C, 0x3A4449, 0xABADDB });
 	public static final Block						SPIKES_UP					= new Block(18, 0xBCBCBC).setHurtPlayer(Direction.TOP);
