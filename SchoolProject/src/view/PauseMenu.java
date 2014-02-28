@@ -29,8 +29,6 @@ public class PauseMenu extends Menu
 		if (aInput.isKeyPressed(Input.KEY_ESCAPE)) mGame.resume();
 		if (aInput.isKeyPressed(Input.KEY_RIGHT)) DataManager.nextTexturePack();
 		if (aInput.isKeyPressed(Input.KEY_LEFT)) DataManager.previousTexturePack();
-		// if (aInput.isKeyPressed(Input.KEY_D)) DataManager.nextTitle();
-		// if (aInput.isKeyPressed(Input.KEY_A)) DataManager.previousTitle();
 	}
 	
 	@Override
@@ -39,9 +37,8 @@ public class PauseMenu extends Menu
 		aG.setColor(Color.black);
 		aG.fillRect(mX, mY, mWidth, mHeight);
 		aG.setColor(Color.white);
-		aG.drawString("< > - TexturePack: " + DataManager.getTexturePack(), mX + 10, mY + 5);
-		aG.drawString("A D - Music title: " + DataManager.getTitle(), mX + 10, mY + 30);
-		aG.drawString("Space - Main menu", mX + 10, mY + 55);
-		aG.drawString("Esc - Weiter", mX + 10, mY + 80);
+		aG.drawString("< > - TexturePack: " + DataManager.getTexturePack(), mX + 10, mY + 10);
+		aG.drawString("Space - Main menu", mX + 10, mY + 35);
+		aG.drawString("Esc - Weiter", mX + 10, mY + 60);
 	}
 }

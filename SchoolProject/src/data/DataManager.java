@@ -45,7 +45,7 @@ public class DataManager
 		Sound sound = SOUNDS.get(aName);
 		if (sound == null) sound = loadSound(aName);
 		if (sound.playing()) sound.stop();
-		sound.play(1, sVolume);
+		if (sVolume > 0) sound.play(1, sVolume);
 	}
 	
 	/**

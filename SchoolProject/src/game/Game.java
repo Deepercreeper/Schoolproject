@@ -176,6 +176,7 @@ public class Game
 	{
 		mMain = false;
 		mSave = aSave;
+		mPlayer = mSave.getPlayer();
 		Stats.instance().reset();
 		initWorld(aWorldId, aLevelId);
 	}
@@ -206,15 +207,10 @@ public class Game
 		mRunning = false;
 	}
 	
-	private void initWorld(int aWorld, int aLevelIndex)
+	private void initWorld(int aWorldId, int aLevelId)
 	{
 		if (mInput == null) mInput = mGC.getInput();
 		if (mPauseMenu == null) mPauseMenu = new PauseMenu(mGC, this);
-		if (mPlayer == null)
-		{
-			mLevel = new Level(aWorld, aLevelIndex, mGC);
-			mPlayer = mLevel.getPlayer();
-		}
-		else mLevel = new Level(aWorld, aLevelIndex, mGC, mPlayer);
+		mLevel = new Level(aWorldId, aLevelId, mGC, mPlayer);
 	}
 }

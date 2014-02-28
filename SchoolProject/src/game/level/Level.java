@@ -39,21 +39,6 @@ public class Level
 	private boolean							mWon;
 	
 	/**
-	 * Creates a new level that has to create an own player.
-	 * 
-	 * @param aWorldId
-	 *            The world id.
-	 * @param aLevelId
-	 *            The level id.
-	 * @param aGC
-	 *            The containing game container.
-	 */
-	public Level(int aWorldId, int aLevelId, GameContainer aGC)
-	{
-		this(aWorldId, aLevelId, aGC, new Player());
-	}
-	
-	/**
 	 * Creates a new level.
 	 * 
 	 * @param aWorldId

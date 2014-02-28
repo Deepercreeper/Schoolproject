@@ -9,17 +9,19 @@ import data.DataManager;
 
 public class Player extends Entity
 {
-	private int			mTime		= 0;
+	private int	mTime	= 0;
 	
-	private final int	mMaxLife	= 10;
+	private final int	mMaxLife	= 10, mLifeStep = 2;
+	private final double	mSpeed	= 1, mSpeedStep = 0.01;
+	private int				mSpeedSkill	= 0, mLifeSkill = 0;
 	
-	private int			mLife		= mMaxLife;
+	private int				mLife;
 	
-	private int			mHurtDelay;
+	private int				mHurtDelay;
 	
-	private boolean		mCannon;
+	private boolean			mCannon;
 	
-	private int			mCannonTime;
+	private int				mCannonTime;
 	
 	/**
 	 * Creates a new player at {@code (0,0)}.
@@ -27,6 +29,19 @@ public class Player extends Entity
 	public Player()
 	{
 		super(0, 0, Block.SIZE - 2, Block.SIZE * 2 - 2);
+		mLife = mMaxLife + mLifeStep * mLifeSkill;
+	}
+	
+	/**
+	 * Creates a new player at {@code (0,0)}.
+	 */
+	public Player(String aData)
+	{
+		super(0, 0, Block.SIZE - 2, Block.SIZE * 2 - 2);
+		String[] data = aData.split(",");
+		mLifeSkill = Integer.parseInt(data[0]);
+		mSpeedSkill = Integer.parseInt(data[1]);
+		mLife = mMaxLife + mLifeStep * mLifeSkill;
 	}
 	
 	@Override
@@ -34,6 +49,11 @@ public class Player extends Entity
 	{
 		mTime++ ;
 		if (mHurtDelay > 0) mHurtDelay-- ;
+		
+		// TODO Temporary
+		if (aInput.isKeyPressed(Input.KEY_F)) skillLife();
+		if (aInput.isKeyPressed(Input.KEY_G)) skillSpeed();
+		
 		if ( !mHurt)
 		{
 			if (aInput.isKeyPressed(Input.KEY_S) && !mOnGround && mCannonTime <= 0)
@@ -51,11 +71,12 @@ public class Player extends Entity
 			if ( !mCannon)
 			{
 				mXA = 0;
-				if (aInput.isKeyDown(Input.KEY_D)) mXA += 1.5;
-				if (aInput.isKeyDown(Input.KEY_A)) mXA -= 1.5;
+				if (aInput.isKeyDown(Input.KEY_D)) mXA += 1.36;
+				if (aInput.isKeyDown(Input.KEY_A)) mXA -= 1.36;
 				if (aInput.isKeyDown(Input.KEY_LSHIFT)) mXA *= 1.5;
 				if ( !mOnGround) mXA *= 0.125;
 				if (mOnIce) mXA *= 0.08;
+				mXA *= mSpeed + mSpeedSkill * mSpeedStep;
 				
 				if (aInput.isKeyPressed(Input.KEY_SPACE) && (mOnGround || mOnWall))
 				{
@@ -108,6 +129,16 @@ public class Player extends Entity
 		mInLiquid = false;
 	}
 	
+	public void skillSpeed()
+	{
+		if (mSpeedSkill < 10) mSpeedSkill++ ;
+	}
+	
+	public void skillLife()
+	{
+		if (mLifeSkill < 10) mLifeSkill++ ;
+	}
+	
 	/**
 	 * Returns whether this player has started to do a cannon ball (ass bomb).
 	 * 
@@ -129,9 +160,14 @@ public class Player extends Entity
 		aG.setColor(Color.red);
 		aG.fillRect(10, mLevel.getScreenHeight() - 20, 100, 10);
 		aG.setColor(Color.green);
-		aG.fillRect(10, mLevel.getScreenHeight() - 20, 100 * mLife / mMaxLife, 10);
+		aG.fillRect(10, mLevel.getScreenHeight() - 20, 100 * mLife / (mMaxLife + mLifeStep * mLifeSkill), 10);
 		aG.setColor(Color.white);
-		aG.drawString(mLife + "/" + mMaxLife, 120, mLevel.getScreenHeight() - 25);
+		aG.drawString(mLife + "/" + (mMaxLife + mLifeStep * mLifeSkill), 120, mLevel.getScreenHeight() - 25);
+		
+		// Skills
+		aG.setColor(Color.white);
+		aG.drawString("Speed: " + mSpeedSkill, mLevel.getScreenWidth() - 200, 10);
+		aG.drawString("Life: " + mLifeSkill, mLevel.getScreenWidth() - 200, 25);
 	}
 	
 	@Override
@@ -165,9 +201,16 @@ public class Player extends Entity
 	public void respawn()
 	{
 		mDead = false;
-		mLife = mMaxLife;
+		mLife = mMaxLife + mLifeStep * mLifeSkill;
 		mHurtDelay = 0;
 		mXV = mYV = 0;
+	}
+	
+	public String getData()
+	{
+		StringBuilder data = new StringBuilder();
+		data.append(mLifeSkill).append("," + mSpeedSkill);
+		return data.toString();
 	}
 	
 	@Override
@@ -185,7 +228,7 @@ public class Player extends Entity
 	public void addLife(int aAmount)
 	{
 		mLife += aAmount;
-		if (mLife > mMaxLife) mLife = mMaxLife;
+		if (mLife > mMaxLife + mLifeStep * mLifeSkill) mLife = mMaxLife + mLifeStep * mLifeSkill;
 	}
 	
 	@Override
