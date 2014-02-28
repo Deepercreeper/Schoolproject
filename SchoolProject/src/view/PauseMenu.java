@@ -29,8 +29,8 @@ public class PauseMenu extends Menu
 		if (aInput.isKeyPressed(Input.KEY_ESCAPE)) mGame.resume();
 		if (aInput.isKeyPressed(Input.KEY_RIGHT)) DataManager.nextTexturePack();
 		if (aInput.isKeyPressed(Input.KEY_LEFT)) DataManager.previousTexturePack();
-		if (aInput.isKeyPressed(Input.KEY_D)) DataManager.nextTitle();
-		if (aInput.isKeyPressed(Input.KEY_A)) DataManager.previousTitle();
+		// if (aInput.isKeyPressed(Input.KEY_D)) DataManager.nextTitle();
+		// if (aInput.isKeyPressed(Input.KEY_A)) DataManager.previousTitle();
 	}
 	
 	@Override

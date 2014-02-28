@@ -158,7 +158,7 @@ public class Game
 	{
 		mPause = false;
 		mMain = true;
-		DataManager.playMusic("Menu");
+		DataManager.playMusic("menu");
 		mLevel = null;
 	}
 	

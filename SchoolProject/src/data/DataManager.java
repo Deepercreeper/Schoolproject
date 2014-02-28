@@ -24,7 +24,7 @@ public class DataManager
 	private static final HashMap<String, Music>		MUSIC				= new HashMap<>();
 	private static final ArrayList<String>			mSaves				= new ArrayList<>();
 	
-	private static final String[]					sMusicTitles		= new String[] { "Bossfight", "Overworld", "Mountain", "Desert", "Underground", "Menu" };
+	private static final String[]					sMusicTitles		= new String[] { "world4", "world0", "world3", "world1", "world2", "menu" };
 	private static final String[]					sSplitImages		= new String[] { "player", "entity" };
 	private static final int[][]					sSplitImageSizes	= new int[][] { { 14, 30 }, { 16, 16 } };
 	private static final String[]					sTexturepacks		= new String[] { "Mario", "Minecraft" };
@@ -57,8 +57,8 @@ public class DataManager
 	public static void playMusic(String aName)
 	{
 		Music music = MUSIC.get(aName);
-		music.setVolume(sVolume);
 		music.loop();
+		music.setVolume(sVolume);
 	}
 	
 	/**
@@ -97,24 +97,6 @@ public class DataManager
 		sVolume = aVolume;
 		for (Music music : MUSIC.values())
 			music.setVolume(sVolume);
-	}
-	
-	/**
-	 * Selects the next title and starts to play it.
-	 */
-	public static void nextTitle()
-	{
-		sTitle = (sTitle + 1) % sMusicTitles.length;
-		playMusic();
-	}
-	
-	/**
-	 * Selects the previous title and starts to play it.
-	 */
-	public static void previousTitle()
-	{
-		sTitle = (sTitle - 1 + sMusicTitles.length) % sMusicTitles.length;
-		playMusic();
 	}
 	
 	/**
@@ -476,15 +458,5 @@ public class DataManager
 			e.printStackTrace();
 		}
 		return images;
-	}
-	
-	private static void playMusic()
-	{
-		float volume = 1;
-		Music lastMusic = MUSIC.get(sMusicTitles[sTitle]);
-		if (lastMusic != null) volume = lastMusic.getVolume();
-		MUSIC.get(sMusicTitles[sTitle]).loop();
-		for (Music music : MUSIC.values())
-			music.setVolume(volume);
 	}
 }
