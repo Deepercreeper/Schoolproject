@@ -34,6 +34,9 @@ public class Player extends Entity
 	
 	/**
 	 * Creates a new player at {@code (0,0)}.
+	 * 
+	 * @param aData
+	 *            The load data to create out of.
 	 */
 	public Player(String aData)
 	{
@@ -129,11 +132,17 @@ public class Player extends Entity
 		mInLiquid = false;
 	}
 	
+	/**
+	 * Increases the speed slightly.
+	 */
 	public void skillSpeed()
 	{
 		if (mSpeedSkill < 10) mSpeedSkill++ ;
 	}
 	
+	/**
+	 * Increases the life.
+	 */
 	public void skillLife()
 	{
 		if (mLifeSkill < 10) mLifeSkill++ ;
@@ -206,6 +215,11 @@ public class Player extends Entity
 		mXV = mYV = 0;
 	}
 	
+	/**
+	 * Creates a string that contains all data needed to create a player out of save files.
+	 * 
+	 * @return a representative string.
+	 */
 	public String getData()
 	{
 		StringBuilder data = new StringBuilder();

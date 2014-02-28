@@ -250,6 +250,11 @@ public class Save
 		}
 	}
 	
+	/**
+	 * Returns the loaded or created player.
+	 * 
+	 * @return the player.
+	 */
 	public Player getPlayer()
 	{
 		return mPlayer;
