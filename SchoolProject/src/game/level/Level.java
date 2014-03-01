@@ -63,7 +63,7 @@ public class Level
 		if (mWidth > 0) mHeight = mBlocks[0].length;
 		else mHeight = 0;
 		addPlayer(mPlayer);
-		DataManager.playMusic("world" + mWorldId);
+		DataManager.playMusic("world" + (mWorldId%5));
 	}
 	
 	private void loadBlocks()
