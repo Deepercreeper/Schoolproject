@@ -97,6 +97,8 @@ public class MainMenu extends Menu
 					mSave.volumeDown();
 					mGame.showVolume();
 				}
+				if (aInput.isKeyPressed(Input.KEY_A)) DataManager.previousTexturePack();
+				if (aInput.isKeyPressed(Input.KEY_D)) DataManager.nextTexturePack();
 				if (aInput.isKeyPressed(Input.KEY_SPACE)) mGame.start(mWorldId, mLevelId, mSave);
 				else if (aInput.isKeyPressed(Input.KEY_ESCAPE))
 				{
@@ -164,13 +166,16 @@ public class MainMenu extends Menu
 	
 	private void renderLevelSelection(Graphics aG)
 	{
+		aG.drawImage(DataManager.getImage(DataManager.getTexturePack()), 0, 0);
+		
 		aG.drawString("World: " + mWorldId + " Level: " + mLevelId, mWidth / 2 - 100, 5);
 		
 		aG.drawString("Spiel: " + mSave.getName(), 10, mHeight - 50);
 		aG.drawString("Level score: " + mSave.getScore(mWorldId, mLevelId), 10, mHeight - 35);
 		aG.drawString("World score: " + mSave.getScore(mWorldId), 10, mHeight - 20);
 		
-		aG.drawString("< > - Level auswählen", mWidth / 2 - 100, mHeight - 50);
+		aG.drawString("< > - Level auswählen", mWidth / 2 - 100, mHeight - 65);
+		aG.drawString("A D - Texturepack: " + DataManager.getTexturePack(), mWidth / 2 - 100, mHeight - 50);
 		aG.drawString("Space - Start", mWidth / 2 - 100, mHeight - 35);
 		aG.drawString("Escape - Ende", mWidth / 2 - 100, mHeight - 20);
 		
