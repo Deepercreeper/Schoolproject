@@ -21,10 +21,12 @@ public class Block
 	// Blocks
 	public static final Block						AIR							= new Block(0, 0xffffff).setInvisible().setUnsolid();
 	public static final Block						STONE						= new Block(1, new int[] { 0xB89040, 0xC0C0C0, 0xB89040, 0x2A7CE0, 0x5000DB, 0xB89040, 0xB89040, 0x593797, 0xB89040 });
-	public static final Block						BRICK						= new Block(2, new int[] { 0xB06000, 0x727272, 0xB06000, 0x014EB2, 0x014EB2, 0xB06000, 0xB06000, 0x432A72, 0xB06000 }).setDestroyable(AIR);
+	public static final Block						BRICK						= new Block(2, new int[] { 0xB06000, 0x727272, 0xB06000, 0x014EB2, 0x014EB2, 0xB06000, 0xB06000, 0x432A72, 0xB06000 })
+																						.setDestroyable(AIR);
 	public static final Block						OPENED						= new Block(3, new int[] { 0xC03010, 0xC03011, 0xC03010, 0xC03012, 0xC03012, 0xC03010, 0xC03010, 0xC03013, 0xC03010 });
-	public static final Block						QUESTION					= new Block(4, new int[] { 0xD8B018, 0xFFD800, 0xD8B018, 0x14466D, 0x14466D, 0xD8B018, 0xD8B018, 0x9B00CD, 0xD8B018 }).setDestroyable(OPENED)
-																						.setItem(255, Item.SUPER_BANANA).setItem(254, Item.BANANA).setItem(253, Item.HEART);
+	public static final Block						QUESTION					= new Block(4, new int[] { 0xD8B018, 0xFFD800, 0xD8B018, 0x14466D, 0x14466D, 0xD8B018, 0xD8B018, 0x9B00CD, 0xD8B018 })
+																						.setDestroyable(OPENED).setItem(255, Item.SUPER_BANANA).setItem(254, Item.BANANA).setItem(253, Item.HEART)
+																						.addRenderBlock(OPENED);
 	public static final Block						GROUND_TOP_LEFT				= new Block(5, new int[] { 0x00E000, 0x93FFFF, 0xFFA359, 0x3D2C77, 0x564E75, 0x00E096, 0x00AA71, 0xD32C77, 0x005B3B });
 	public static final Block						GROUND_TOP					= new Block(6, new int[] { 0x00BA00, 0x00FFFF, 0xFF7400, 0x291D4F, 0x39334C, 0x00BA96, 0x00846A, 0xBF1D4F, 0x00352A });
 	public static final Block						GROUND_TOP_RIGHT			= new Block(7, new int[] { 0x009300, 0x00D3D3, 0xB75200, 0x1D1438, 0x272335, 0x009396, 0x005F60, 0xB31438, 0x001111 });
@@ -38,10 +40,10 @@ public class Block
 	public static final Block						GROUND_BOTTOM_RIGHT			= new Block(15, new int[] { 0x936C2D, 0x995900, 0xA02D00, 0x04003D, 0x13113A, 0x936CC3, 0x2F6CC3, 0x9A003D, 0x1D4175 });
 	public static final Block						GROUND_BOTTOM_STOP_LEFT		= new Block(16, new int[] { 0xB6B848, 0x997F00, 0xA05500, 0x04273D, 0x152C3A, 0xB6B8DE, 0x52B8DE, 0x9A273D, 0x357891 });
 	public static final Block						GROUND_BOTTOM_STOP_RIGHT	= new Block(17, new int[] { 0xABAD45, 0x7F6A00, 0xBC803A, 0x253E4C, 0x3A4449, 0xABADDB, 0x47ADDB, 0xBB3E4C, 0x2E708C });
-	public static final Block						SPIKES_UP					= new Block(18, new int[] { 0xBCBCBC, 0xBCBCBC, 0xBCBCBC, 0xBCBCBC, 0xBCBCBC, 0xBCBCBC, 0xBCBCBC, 0xBA5D5D, 0xBCBCBC }).setHurtPlayer(Direction.TOP);
-	public static final Block						SPIKES_DOWN					= new Block(19, new int[] { 0xB5B5B5, 0xB5B5B5, 0xB5B5B5, 0xB5B5B5, 0xB5B5B5, 0xB5B5B5, 0xB5B5B5, 0xB25959, 0xB5B5B5 }).setHurtPlayer(Direction.BOTTOM);
-	public static final Block						SPIKES_RIGHT				= new Block(20, new int[] { 0xADADAD, 0xADADAD, 0xADADAD, 0xADADAD, 0xADADAD, 0xADADAD, 0xADADAD, 0xAA5555, 0xADADAD }).setHurtPlayer(Direction.RIGHT);
-	public static final Block						SPIKES_LEFT					= new Block(21, new int[] { 0xA5A5A5, 0xA5A5A5, 0xA5A5A5, 0xA5A5A5, 0xA5A5A5, 0xA5A5A5, 0xA5A5A5, 0xA35151, 0xA5A5A5 }).setHurtPlayer(Direction.LEFT);
+	public static final Block						SPIKES_UP					= new Block(18, 0xBCBCBC).setHurtPlayer(Direction.TOP);
+	public static final Block						SPIKES_DOWN					= new Block(19, 0xB5B5B5).setHurtPlayer(Direction.BOTTOM);
+	public static final Block						SPIKES_RIGHT				= new Block(20, 0xADADAD).setHurtPlayer(Direction.RIGHT);
+	public static final Block						SPIKES_LEFT					= new Block(21, 0xA5A5A5).setHurtPlayer(Direction.LEFT);
 	public static final Block						WATER_TOP					= new Block(22, 0x5151FF).setLiquid();
 	public static final Block						WATER						= new Block(23, 0x0000C6).setLiquid();
 	public static final Block						ICE							= new Block(24, 0x00FF7C).setIce();
@@ -53,7 +55,8 @@ public class Block
 	public static final Block						ICE_LEFT					= new Block(30, 0x96C6AA);
 	public static final Block						ICE_MIDDLE					= new Block(31, 0x00FFA7);
 	public static final Block						ICE_RIGHT					= new Block(32, 0x00BEB1);
-	public static final Block						PLATFORM					= new Block(33, new int[] { 0x74FF8C, 0x74FF8C, 0x74FF8C, 0x88FFFF, 0x88A3FF, 0x74FF8C, 0x74FF8C, 0xFF1414, 0x74FF8C }).setSolidSide(Direction.TOP);
+	public static final Block						PLATFORM					= new Block(33, new int[] { 0x74FF8C, 0x74FF8C, 0x74FF8C, 0x88FFFF, 0x88A3FF, 0x74FF8C, 0x74FF8C, 0xFF1414, 0x74FF8C })
+																						.setSolidSide(Direction.TOP);
 	public static final Block						SMALL_ROCK_LEFT				= new Block(34, 0xD34300);
 	public static final Block						SMALL_ROCK_RIGHT			= new Block(35, 0xFF5200);
 	public static final Block						SMALL_ROCK_TOP				= new Block(36, 0xFF503D);
@@ -79,6 +82,7 @@ public class Block
 	private final HashSet<HitAction>				mHitActions					= new HashSet<>();
 	private final HashMap<Texture, Short>			mIds						= new HashMap<>();
 	private final HashMap<Short, Item>				mItems						= new HashMap<>();
+	private final HashSet<Block>					mRenderBlocks				= new HashSet<>();
 	private Direction								mHurtDirection				= Direction.NONE;
 	private Direction								mSolid						= Direction.NONE;
 	private Block									mDestination				= null;
@@ -96,6 +100,7 @@ public class Block
 			COLORS.put(aRGBs[i], mIds.get(Texture.get((byte) i)));
 		for (Texture texture : Texture.values())
 			TEXTURES.put(mIds.get(texture), texture);
+		mRenderBlocks.add(this);
 	}
 	
 	private Block(int aId, int aRGB)
@@ -106,6 +111,7 @@ public class Block
 		BLOCKS.put(id, this);
 		COLORS.put(aRGB, id);
 		TEXTURES.put(id, Texture.NORMAL);
+		mRenderBlocks.add(this);
 	}
 	
 	private Block()
@@ -116,6 +122,7 @@ public class Block
 		BLOCKS.put(id, this);
 		TEXTURES.put(id, Texture.NORMAL);
 		mItemBlock = true;
+		mRenderBlocks.add(this);
 	}
 	
 	/**
@@ -156,6 +163,12 @@ public class Block
 			action.execute(aX, aY, aLevel, aEntity, this, aDirection, aOtherBlocks);
 	}
 	
+	private Block addRenderBlock(Block aBlock)
+	{
+		mRenderBlocks.add(aBlock);
+		return this;
+	}
+	
 	private Block setUpdatable()
 	{
 		mUpdatable = true;
@@ -177,6 +190,7 @@ public class Block
 	private Block setInvisible()
 	{
 		mVisible = false;
+		mRenderBlocks.remove(this);
 		return this;
 	}
 	
@@ -185,6 +199,7 @@ public class Block
 		mFlag = true;
 		setUpdatable();
 		setUnsolid();
+		mRenderBlocks.remove(this);
 		mUpdateActions.add(UpdateAction.WIN);
 		return this;
 	}
@@ -333,6 +348,17 @@ public class Block
 	public boolean isLiquid()
 	{
 		return mLiquid;
+	}
+	
+	public void initImage(int aX, int aY, Level aLevel)
+	{
+		Texture texture = getBlockTexture(aX, aY, aLevel);
+		DataManager.loadTexture(DataManager.getTexturePack(), texture, getId(texture) / Texture.values().size());
+	}
+	
+	public HashSet<Block> getRenderBlocks()
+	{
+		return mRenderBlocks;
 	}
 	
 	/**

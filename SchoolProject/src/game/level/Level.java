@@ -63,45 +63,7 @@ public class Level
 		if (mWidth > 0) mHeight = mBlocks[0].length;
 		else mHeight = 0;
 		addPlayer(mPlayer);
-		DataManager.playMusic("world" + (mWorldId%5));
-	}
-	
-	private void loadBlocks()
-	{
-		Image image = DataManager.getLevelImage(mWorldId, mLevelId);
-		final int width = image.getWidth(), height = image.getHeight();
-		final int redInt = (int) Math.pow(2, 16), greenInt = (int) Math.pow(2, 8);
-		mBlocks = new short[width][height];
-		mAlphas = new short[width][height];
-		Color color;
-		int rgb;
-		for (int x = 0; x < width; x++ )
-			for (int y = 0; y < height; y++ )
-			{
-				color = image.getColor(x, y);
-				rgb = color.getRed() * redInt + color.getGreen() * greenInt + color.getBlue();
-				mAlphas[x][y] = (short) color.getAlpha();
-				short id = Block.getIdFromCode(rgb);
-				if (id == -1) mBlocks[x][y] = Block.AIR.getId();
-				else
-				{
-					final Block block = Block.get(id);
-					if (block.isUpdatable()) mUpdatableBlocks.add(x + y * width);
-					if (block.isLiquid()) mLiquidBlocks.add(x + y * width);
-					if (block.isItemBlock())
-					{
-						mBlocks[x][y] = Block.AIR.getId();
-						addEntity(Item.getItem(x * Block.SIZE, y * Block.SIZE, rgb));
-					}
-					else if (block == Block.START)
-					{
-						mStartX = x;
-						mStartY = y - 1;
-						mBlocks[x][y] = Block.AIR.getId();
-					}
-					else mBlocks[x][y] = id;
-				}
-			}
+		DataManager.playMusic("world" + (mWorldId % 5));
 	}
 	
 	/**
@@ -295,12 +257,6 @@ public class Level
 		mAddEntities.put(aEntity.getId(), aEntity);
 	}
 	
-	private int generateId()
-	{
-		for (int i = 0;; i++ )
-			if ( !mEntities.containsKey(i) && !mAddEntities.containsKey(i)) return i;
-	}
-	
 	/**
 	 * Updates all entities, blocks and the screen.
 	 * 
@@ -441,6 +397,52 @@ public class Level
 			final int x = tile % mWidth, y = tile / mWidth;
 			renderBlock(x, y, aG);
 		}
+	}
+	
+	private int generateId()
+	{
+		for (int i = 0;; i++ )
+			if ( !mEntities.containsKey(i) && !mAddEntities.containsKey(i)) return i;
+	}
+	
+	private void loadBlocks()
+	{
+		Image image = DataManager.getLevelImage(mWorldId, mLevelId);
+		final int width = image.getWidth(), height = image.getHeight();
+		final int redInt = (int) Math.pow(2, 16), greenInt = (int) Math.pow(2, 8);
+		mBlocks = new short[width][height];
+		mAlphas = new short[width][height];
+		Color color;
+		int rgb;
+		for (int x = 0; x < width; x++ )
+			for (int y = 0; y < height; y++ )
+			{
+				color = image.getColor(x, y);
+				rgb = color.getRed() * redInt + color.getGreen() * greenInt + color.getBlue();
+				mAlphas[x][y] = (short) color.getAlpha();
+				short id = Block.getIdFromCode(rgb);
+				if (id == -1) mBlocks[x][y] = Block.AIR.getId();
+				else
+				{
+					final Block block = Block.get(id);
+					if (block.isUpdatable()) mUpdatableBlocks.add(x + y * width);
+					if (block.isLiquid()) mLiquidBlocks.add(x + y * width);
+					if (block.isItemBlock())
+					{
+						mBlocks[x][y] = Block.AIR.getId();
+						addEntity(Item.getItem(x * Block.SIZE, y * Block.SIZE, rgb));
+					}
+					else if (block == Block.START)
+					{
+						mStartX = x;
+						mStartY = y - 1;
+						mBlocks[x][y] = Block.AIR.getId();
+					}
+					else mBlocks[x][y] = id;
+					for (Block renderBlock : block.getRenderBlocks())
+						renderBlock.initImage(x, y, this);
+				}
+			}
 	}
 	
 	private void renderBlock(int aX, int aY, Graphics aG)

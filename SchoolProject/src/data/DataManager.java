@@ -18,21 +18,21 @@ import org.newdawn.slick.util.Log;
 
 public class DataManager
 {
-	private static final HashMap<String, Image>		IMAGES				= new HashMap<>();
-	private static final HashMap<String, Image[]>	SPLIT_IMAGES		= new HashMap<>();
-	private static final HashMap<String, Sound>		SOUNDS				= new HashMap<>();
-	private static final HashMap<String, Music>		MUSIC				= new HashMap<>();
-	private static final ArrayList<String>			mSaves				= new ArrayList<>();
+	private static final HashMap<String, Image>						IMAGES				= new HashMap<>();
+	private static final HashMap<String, HashMap<Integer, Image>>	SPLIT_IMAGES		= new HashMap<>();
+	private static final HashMap<String, Sound>						SOUNDS				= new HashMap<>();
+	private static final HashMap<String, Music>						MUSIC				= new HashMap<>();
+	private static final ArrayList<String>							mSaves				= new ArrayList<>();
 	
-	private static final String[]					sMusicTitles		= new String[] { "world4", "world0", "world3", "world1", "world2", "menu" };
-	private static final String[]					sSplitImages		= new String[] { "player", "entity" };
-	private static final int[][]					sSplitImageSizes	= new int[][] { { 14, 30 }, { 16, 16 } };
-	private static final String[]					sTexturepacks		= new String[] { "Mario", "Minecraft" };
-	private static final int[]						sLevelsPerWorld		= new int[] { 3, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
+	private static final String[]									sMusicTitles		= new String[] { "world4", "world0", "world3", "world1", "world2", "menu" };
+	private static final String[]									sSplitImages		= new String[] { "player", "entity" };
+	private static final int[][]									sSplitImageSizes	= new int[][] { { 14, 30 }, { 16, 16 } };
+	private static final String[]									sTexturepacks		= new String[] { "Mario", "Minecraft" };
+	private static final int[]										sLevelsPerWorld		= new int[] { 3, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
 	
-	private static int								sTexturepack		= 0, sTitle = 0;
-	private static float							sVolume				= 1;
-	private static boolean							sInitiated			= false, sLoading = false, sWasLoading = false;
+	private static int												sTexturepack		= 0, sTitle = 0;
+	private static float											sVolume				= 1;
+	private static boolean											sInitiated			= false, sLoading = false, sWasLoading = false;
 	
 	/**
 	 * Plays a sound with the given name. All sounds have to have the type wav and sounds can be played more times simultanely.
@@ -180,7 +180,7 @@ public class DataManager
 	 */
 	public static Image getSplitImage(String aName, int aIndex)
 	{
-		return SPLIT_IMAGES.get(aName)[aIndex];
+		return SPLIT_IMAGES.get(aName).get(aIndex);
 	}
 	
 	/**
@@ -194,8 +194,27 @@ public class DataManager
 	 */
 	public static Image getTextureImage(String aName, Texture aTexture, int aIndex)
 	{
-		checkTexturePack(aName);
-		return SPLIT_IMAGES.get(aName + aTexture.getSuffix())[aIndex];
+		HashMap<Integer, Image> images = SPLIT_IMAGES.get(aName + aTexture.getSuffix());
+		Image image = images.get(aIndex);
+		return image;
+	}
+	
+	public static void loadTexture(String aName, Texture aTexture, int aIndex)
+	{
+		HashMap<Integer, Image> images = SPLIT_IMAGES.get(aName + aTexture.getSuffix());
+		if (images == null)
+		{
+			images = new HashMap<>();
+			SPLIT_IMAGES.put(aName + aTexture.getSuffix(), images);
+		}
+		Image image = images.get(aIndex);
+		if (image == null)
+		{
+			sLoading = sWasLoading = true;
+			image = loadSplittedImage("texturepacks/blocks" + aName + aTexture.getSuffix(), aIndex, new int[] { 16, 16 });
+			images.put(aIndex, image);
+			sLoading = false;
+		}
 	}
 	
 	/**
@@ -204,7 +223,6 @@ public class DataManager
 	public static void nextTexturePack()
 	{
 		sTexturepack = (sTexturepack + 1) % sTexturepacks.length;
-		checkTexturePack(sTexturepacks[sTexturepack]);
 	}
 	
 	/**
@@ -213,7 +231,6 @@ public class DataManager
 	public static void previousTexturePack()
 	{
 		sTexturepack = (sTexturepack - 1 + sTexturepacks.length) % sTexturepacks.length;
-		checkTexturePack(sTexturepacks[sTexturepack]);
 	}
 	
 	/**
@@ -244,7 +261,7 @@ public class DataManager
 		sLoading = true;
 		for (int tile = 0; tile < sSplitImages.length; tile++ )
 		{
-			Image[] images = loadSplittedImages(sSplitImages[tile], sSplitImageSizes[tile]);
+			HashMap<Integer, Image> images = loadSplittedImages(sSplitImages[tile], sSplitImageSizes[tile]);
 			SPLIT_IMAGES.put(sSplitImages[tile], images);
 		}
 		for (String name : sMusicTitles)
@@ -425,32 +442,35 @@ public class DataManager
 			mSaves.add(save);
 	}
 	
-	private static void checkTexturePack(String aName)
+	private static Image loadSplittedImage(String aName, int aIndex, int[] aSize)
 	{
-		if ( !SPLIT_IMAGES.containsKey(aName + Texture.NORMAL.getSuffix()))
+		Image image = loadImage(aName);
+		final int imageWidth = aSize[0], imageHeight = aSize[1], width = image.getWidth() / imageWidth;
+		try
 		{
-			sLoading = sWasLoading = true;
-			for (Texture texture : Texture.values())
-			{
-				Image[] images = loadSplittedImages("texturepacks/blocks" + aName + texture.getSuffix(), new int[] { 16, 16 });
-				SPLIT_IMAGES.put(aName + texture.getSuffix(), images);
-			}
-			sLoading = false;
+			Image tileImage = new Image(imageWidth, imageHeight);
+			tileImage.getGraphics().drawImage(image, -(aIndex % width) * imageWidth, -aIndex / width * imageHeight);
+			return tileImage;
 		}
+		catch (SlickException e)
+		{
+			e.printStackTrace();
+		}
+		return null;
 	}
 	
-	private static Image[] loadSplittedImages(String aName, int[] aSize)
+	private static HashMap<Integer, Image> loadSplittedImages(String aName, int[] aSize)
 	{
 		Image image = loadImage(aName);
 		final int imageWidth = aSize[0], imageHeight = aSize[1], width = image.getWidth() / imageWidth, height = image.getHeight() / imageHeight;
-		Image[] images = new Image[width * height];
+		HashMap<Integer, Image> images = new HashMap<>(width * height);
 		try
 		{
 			for (int tile = 0; tile < width * height; tile++ )
 			{
 				Image tileImage = new Image(imageWidth, imageHeight);
 				tileImage.getGraphics().drawImage(image, -(tile % width) * imageWidth, -tile / width * imageHeight);
-				images[tile] = tileImage;
+				images.put(tile, tileImage);
 			}
 		}
 		catch (SlickException e)
