@@ -190,7 +190,7 @@ public class DataManager
 	 *            The name of the split image.
 	 * @param aIndex
 	 *            The index of the image part.
-	 * @return the {@code aIndex}s part of {@code aName}.png.
+	 * @return the {@code aIndex}s part of {@code <aName><aTexture.getSuffix()>}.png.
 	 */
 	public static Image getTextureImage(String aName, Texture aTexture, int aIndex)
 	{
@@ -199,6 +199,16 @@ public class DataManager
 		return image;
 	}
 	
+	/**
+	 * Loads the given texture into the cache so for example all blocks in one level are loaded.
+	 * 
+	 * @param aName
+	 *            The image name.
+	 * @param aTexture
+	 *            The used texture.
+	 * @param aIndex
+	 *            The block id.
+	 */
 	public static void loadTexture(String aName, Texture aTexture, int aIndex)
 	{
 		HashMap<Integer, Image> images = SPLIT_IMAGES.get(aName + aTexture.getSuffix());
@@ -446,37 +456,16 @@ public class DataManager
 	{
 		Image image = loadImage(aName);
 		final int imageWidth = aSize[0], imageHeight = aSize[1], width = image.getWidth() / imageWidth;
-		try
-		{
-			Image tileImage = new Image(imageWidth, imageHeight);
-			tileImage.getGraphics().drawImage(image, -(aIndex % width) * imageWidth, -aIndex / width * imageHeight);
-			return tileImage;
-		}
-		catch (SlickException e)
-		{
-			e.printStackTrace();
-		}
-		return null;
+		return image.getSubImage((aIndex % width) * imageWidth, (aIndex / width) * imageHeight, imageWidth, imageHeight);
 	}
 	
 	private static HashMap<Integer, Image> loadSplittedImages(String aName, int[] aSize)
 	{
 		Image image = loadImage(aName);
 		final int imageWidth = aSize[0], imageHeight = aSize[1], width = image.getWidth() / imageWidth, height = image.getHeight() / imageHeight;
-		HashMap<Integer, Image> images = new HashMap<>(width * height);
-		try
-		{
-			for (int tile = 0; tile < width * height; tile++ )
-			{
-				Image tileImage = new Image(imageWidth, imageHeight);
-				tileImage.getGraphics().drawImage(image, -(tile % width) * imageWidth, -tile / width * imageHeight);
-				images.put(tile, tileImage);
-			}
-		}
-		catch (SlickException e)
-		{
-			e.printStackTrace();
-		}
+		HashMap<Integer, Image> images = new HashMap<>();
+		for (int tile = 0; tile < width * height; tile++ )
+			images.put(tile, image.getSubImage((tile % width) * imageWidth, (tile / width) * imageHeight, imageWidth, imageHeight));
 		return images;
 	}
 }

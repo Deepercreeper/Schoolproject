@@ -8,9 +8,9 @@ public class Save
 {
 	private final String										mName;
 	
-	private int													mLastWorldId, mLastLevelId;
+	private int													mLastWorldId, mLastLevelId, mVolume;
 	
-	private int													mVolume;
+	private String												mTexturePack;
 	
 	private Player												mPlayer;
 	
@@ -39,7 +39,27 @@ public class Save
 	public Save(String[] aData)
 	{
 		mName = readData(aData);
+		while ( !mTexturePack.equals(DataManager.getTexturePack()))
+			DataManager.nextTexturePack();
 		DataManager.setVolume(mVolume / 10f);
+	}
+	
+	/**
+	 * Selects the next texture pack.
+	 */
+	public void nextTexturePack()
+	{
+		DataManager.nextTexturePack();
+		mTexturePack = DataManager.getTexturePack();
+	}
+	
+	/**
+	 * Selects the previous texture pack.
+	 */
+	public void previousTexturePack()
+	{
+		DataManager.previousTexturePack();
+		mTexturePack = DataManager.getTexturePack();
 	}
 	
 	/**
@@ -171,7 +191,8 @@ public class Save
 		data.append(mVolume + "\n");
 		data.append(mLastWorldId + "\n");
 		data.append(mLastLevelId + "\n");
-		data.append(mPlayer.getData());
+		data.append(mPlayer.getData() + "\n");
+		data.append(mTexturePack);
 		
 		for (int world : mScores.keySet())
 			for (int level : mScores.get(world).keySet())
@@ -267,10 +288,11 @@ public class Save
 		mLastWorldId = Integer.parseInt(aData[2]);
 		mLastLevelId = Integer.parseInt(aData[3]);
 		mPlayer = new Player(aData[4]);
+		mTexturePack = aData[5];
 		
 		String[] levelAndScore, worldAndLevel;
 		int world, level, score;
-		for (int i = 5; i < aData.length; i++ )
+		for (int i = 6; i < aData.length; i++ )
 		{
 			levelAndScore = aData[i].split("=");
 			worldAndLevel = levelAndScore[0].split(":");

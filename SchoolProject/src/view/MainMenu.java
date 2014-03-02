@@ -97,8 +97,8 @@ public class MainMenu extends Menu
 					mSave.volumeDown();
 					mGame.showVolume();
 				}
-				if (aInput.isKeyPressed(Input.KEY_A)) DataManager.previousTexturePack();
-				if (aInput.isKeyPressed(Input.KEY_D)) DataManager.nextTexturePack();
+				if (aInput.isKeyPressed(Input.KEY_A)) mSave.previousTexturePack();
+				if (aInput.isKeyPressed(Input.KEY_D)) mSave.nextTexturePack();
 				if (aInput.isKeyPressed(Input.KEY_SPACE)) mGame.start(mWorldId, mLevelId, mSave);
 				else if (aInput.isKeyPressed(Input.KEY_ESCAPE))
 				{

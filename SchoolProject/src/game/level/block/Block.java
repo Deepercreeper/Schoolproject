@@ -20,11 +20,11 @@ public class Block
 	
 	// Blocks
 	public static final Block						AIR							= new Block(0, 0xffffff).setInvisible().setUnsolid();
-	public static final Block						STONE						= new Block(1, new int[] { 0xB89040, 0xC0C0C0, 0xB89040, 0x2A7CE0, 0x5000DB, 0xB89040, 0xB89040, 0x593797, 0xB89040 });
-	public static final Block						BRICK						= new Block(2, new int[] { 0xB06000, 0x727272, 0xB06000, 0x014EB2, 0x014EB2, 0xB06000, 0xB06000, 0x432A72, 0xB06000 })
+	public static final Block						STONE						= new Block(1, new int[] { 0xB89040, 0xC0C0C0, 0xB89041, 0x2A7CE0, 0x5000DB, 0xB89042, 0xB89043, 0x593797, 0xB89044 });
+	public static final Block						BRICK						= new Block(2, new int[] { 0xB06000, 0x727272, 0xB06001, 0x014EB2, 0x014EB3, 0xB06002, 0xB06003, 0x432A72, 0xB06004 })
 																						.setDestroyable(AIR);
-	public static final Block						OPENED						= new Block(3, new int[] { 0xC03010, 0xC03011, 0xC03010, 0xC03012, 0xC03012, 0xC03010, 0xC03010, 0xC03013, 0xC03010 });
-	public static final Block						QUESTION					= new Block(4, new int[] { 0xD8B018, 0xFFD800, 0xD8B018, 0x14466D, 0x14466D, 0xD8B018, 0xD8B018, 0x9B00CD, 0xD8B018 })
+	public static final Block						OPENED						= new Block(3, new int[] { 0xC03010, 0xC03011, 0xC03014, 0xC03012, 0xC03015, 0xC03016, 0xC03017, 0xC03013, 0xC03018 });
+	public static final Block						QUESTION					= new Block(4, new int[] { 0xD8B018, 0xFFD800, 0xD8B019, 0x14466D, 0x14466E, 0xD8B020, 0xD8B021, 0x9B00CD, 0xD8B022 })
 																						.setDestroyable(OPENED).setItem(255, Item.SUPER_BANANA).setItem(254, Item.BANANA).setItem(253, Item.HEART)
 																						.addRenderBlock(OPENED);
 	public static final Block						GROUND_TOP_LEFT				= new Block(5, new int[] { 0x00E000, 0x93FFFF, 0xFFA359, 0x3D2C77, 0x564E75, 0x00E096, 0x00AA71, 0xD32C77, 0x005B3B });
@@ -40,10 +40,14 @@ public class Block
 	public static final Block						GROUND_BOTTOM_RIGHT			= new Block(15, new int[] { 0x936C2D, 0x995900, 0xA02D00, 0x04003D, 0x13113A, 0x936CC3, 0x2F6CC3, 0x9A003D, 0x1D4175 });
 	public static final Block						GROUND_BOTTOM_STOP_LEFT		= new Block(16, new int[] { 0xB6B848, 0x997F00, 0xA05500, 0x04273D, 0x152C3A, 0xB6B8DE, 0x52B8DE, 0x9A273D, 0x357891 });
 	public static final Block						GROUND_BOTTOM_STOP_RIGHT	= new Block(17, new int[] { 0xABAD45, 0x7F6A00, 0xBC803A, 0x253E4C, 0x3A4449, 0xABADDB, 0x47ADDB, 0xBB3E4C, 0x2E708C });
-	public static final Block						SPIKES_UP					= new Block(18, 0xBCBCBC).setHurtPlayer(Direction.TOP);
-	public static final Block						SPIKES_DOWN					= new Block(19, 0xB5B5B5).setHurtPlayer(Direction.BOTTOM);
-	public static final Block						SPIKES_RIGHT				= new Block(20, 0xADADAD).setHurtPlayer(Direction.RIGHT);
-	public static final Block						SPIKES_LEFT					= new Block(21, 0xA5A5A5).setHurtPlayer(Direction.LEFT);
+	public static final Block						SPIKES_UP					= new Block(18, new int[] { 0xBCBCBC, 0xBCBCBD, 0xBCBCBE, 0xBCBCBF, 0xBCBCC0, 0xBCBCC1, 0xBCBCC2, 0xBA5D5D, 0xBCBCC3 })
+																						.setHurtPlayer(Direction.TOP);
+	public static final Block						SPIKES_DOWN					= new Block(19, new int[] { 0xB5B5B5, 0xB5B5B6, 0xB5B5B7, 0xB5B5B8, 0xB5B5B9, 0xB5B5C0, 0xB5B5C1, 0xB25959, 0xB5B5C2 })
+																						.setHurtPlayer(Direction.BOTTOM);
+	public static final Block						SPIKES_RIGHT				= new Block(20, new int[] { 0xADADAD, 0xADADAE, 0xADADAF, 0xADADB0, 0xADADB1, 0xADADB2, 0xADADB3, 0xAA5555, 0xADADB4 })
+																						.setHurtPlayer(Direction.RIGHT);
+	public static final Block						SPIKES_LEFT					= new Block(21, new int[] { 0xA5A5A5, 0xA5A5A6, 0xA5A5A7, 0xA5A5A8, 0xA5A5A9, 0xA5A5B0, 0xA5A5B1, 0xA35151, 0xA5A5B2 })
+																						.setHurtPlayer(Direction.LEFT);
 	public static final Block						WATER_TOP					= new Block(22, 0x5151FF).setLiquid();
 	public static final Block						WATER						= new Block(23, 0x0000C6).setLiquid();
 	public static final Block						ICE							= new Block(24, 0x00FF7C).setIce();
@@ -55,7 +59,7 @@ public class Block
 	public static final Block						ICE_LEFT					= new Block(30, 0x96C6AA);
 	public static final Block						ICE_MIDDLE					= new Block(31, 0x00FFA7);
 	public static final Block						ICE_RIGHT					= new Block(32, 0x00BEB1);
-	public static final Block						PLATFORM					= new Block(33, new int[] { 0x74FF8C, 0x74FF8C, 0x74FF8C, 0x88FFFF, 0x88A3FF, 0x74FF8C, 0x74FF8C, 0xFF1414, 0x74FF8C })
+	public static final Block						PLATFORM					= new Block(33, new int[] { 0x74FF8C, 0x74FF8D, 0x74FF8E, 0x88FFFF, 0x88A3FF, 0x74FF8F, 0x74FF90, 0xFF1414, 0x74FF91 })
 																						.setSolidSide(Direction.TOP);
 	public static final Block						SMALL_ROCK_LEFT				= new Block(34, 0xD34300);
 	public static final Block						SMALL_ROCK_RIGHT			= new Block(35, 0xFF5200);
@@ -123,44 +127,6 @@ public class Block
 		TEXTURES.put(id, Texture.NORMAL);
 		mItemBlock = true;
 		mRenderBlocks.add(this);
-	}
-	
-	/**
-	 * If this block is updatable this method is invoked each tick.
-	 * 
-	 * @param aX
-	 *            the x index of this block.
-	 * @param aY
-	 *            the y index of this block.
-	 * @param aLevel
-	 *            the parent level.
-	 */
-	public void update(int aX, int aY, Level aLevel)
-	{
-		for (UpdateAction action : mUpdateActions)
-			action.execute(aX, aY, aLevel);
-	}
-	
-	/**
-	 * Invoked, when any entity hits this block.
-	 * 
-	 * @param aX
-	 *            the x position.
-	 * @param aY
-	 *            the y position.
-	 * @param aLevel
-	 *            the parent level.
-	 * @param aEntity
-	 *            the hitting entity.
-	 * @param aDirection
-	 *            The direction where this block is hit from.
-	 * @param aOtherBlocks
-	 *            All other hit blocks by the given entity at this tick.
-	 */
-	public void hit(int aX, int aY, Level aLevel, Entity aEntity, Direction aDirection, HashMap<Block, Direction> aOtherBlocks)
-	{
-		for (HitAction action : mHitActions)
-			action.execute(aX, aY, aLevel, aEntity, this, aDirection, aOtherBlocks);
 	}
 	
 	private Block addRenderBlock(Block aBlock)
@@ -350,12 +316,27 @@ public class Block
 		return mLiquid;
 	}
 	
+	/**
+	 * Loads the used image into the cache.
+	 * 
+	 * @param aX
+	 *            The x position.
+	 * @param aY
+	 *            The y position.
+	 * @param aLevel
+	 *            The parent level.
+	 */
 	public void initImage(int aX, int aY, Level aLevel)
 	{
 		Texture texture = getBlockTexture(aX, aY, aLevel);
 		DataManager.loadTexture(DataManager.getTexturePack(), texture, getId(texture) / Texture.values().size());
 	}
 	
+	/**
+	 * All blocks that can be created by doing actions with this block so they should be loaded, too.
+	 * 
+	 * @return all blocks, able to build out of this.
+	 */
 	public HashSet<Block> getRenderBlocks()
 	{
 		return mRenderBlocks;
@@ -427,5 +408,60 @@ public class Block
 	public static Texture getBlockTexture(int aX, int aY, Level aLevel)
 	{
 		return TEXTURES.get(aLevel.getBlock(aX, aY));
+	}
+	
+	/**
+	 * If this block is updatable this method is invoked each tick.
+	 * 
+	 * @param aX
+	 *            the x index of this block.
+	 * @param aY
+	 *            the y index of this block.
+	 * @param aLevel
+	 *            the parent level.
+	 */
+	public void update(int aX, int aY, Level aLevel)
+	{
+		for (UpdateAction action : mUpdateActions)
+			action.execute(aX, aY, aLevel);
+	}
+	
+	/**
+	 * Invoked, when any entity hits this block.
+	 * 
+	 * @param aX
+	 *            the x position.
+	 * @param aY
+	 *            the y position.
+	 * @param aLevel
+	 *            the parent level.
+	 * @param aEntity
+	 *            the hitting entity.
+	 * @param aDirection
+	 *            The direction where this block is hit from.
+	 * @param aOtherBlocks
+	 *            All other hit blocks by the given entity at this tick.
+	 */
+	public void hit(int aX, int aY, Level aLevel, Entity aEntity, Direction aDirection, HashMap<Block, Direction> aOtherBlocks)
+	{
+		for (HitAction action : mHitActions)
+			action.execute(aX, aY, aLevel, aEntity, this, aDirection, aOtherBlocks);
+	}
+	
+	@Override
+	public int hashCode()
+	{
+		return getId();
+	}
+	
+	@Override
+	public boolean equals(Object aObj)
+	{
+		if (aObj instanceof Block)
+		{
+			Block b = (Block) aObj;
+			return b.getId() == getId();
+		}
+		return false;
 	}
 }
