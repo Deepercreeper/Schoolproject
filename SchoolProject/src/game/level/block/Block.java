@@ -267,6 +267,16 @@ public class Block
 	}
 	
 	/**
+	 * Whether this block represents a flag.
+	 * 
+	 * @return {@code true} if this block is a flag and {@code false} if not.
+	 */
+	public boolean isFlag()
+	{
+		return mFlag;
+	}
+	
+	/**
 	 * Returns whether entities flow over this block.
 	 * 
 	 * @return return {@code true} if this block is an ice block and {@code false} if not.

@@ -34,7 +34,7 @@ public class Level
 	private short[][]			mAlphas;
 	
 	private final HashMap<Integer, Entity>	mEntities	= new HashMap<>(), mAddEntities = new HashMap<>();
-	private final HashSet<Integer>			mUpdatableBlocks	= new HashSet<>(), mLiquidBlocks = new HashSet<>();
+	private final HashSet<Integer>			mUpdatableBlocks	= new HashSet<>(), mTransparentBlocks = new HashSet<>();
 	private final Player					mPlayer;
 	private boolean							mWon;
 	
@@ -391,11 +391,11 @@ public class Level
 		for (Entity entity : mEntities.values())
 			entity.render(aG);
 		
-		// Render liquid blocks
-		for (int tile : mLiquidBlocks)
+		// Render transparent blocks
+		for (int tile : mTransparentBlocks)
 		{
 			final int x = tile % mWidth, y = tile / mWidth;
-			renderBlock(x, y, aG);
+			Block.render(x, y, mBlocks[x][y], aG, this);
 		}
 	}
 	
@@ -426,7 +426,7 @@ public class Level
 				{
 					final Block block = Block.get(id);
 					if (block.isUpdatable()) mUpdatableBlocks.add(x + y * width);
-					if (block.isLiquid()) mLiquidBlocks.add(x + y * width);
+					if (block.isLiquid() || block.isFlag()) mTransparentBlocks.add(x + y * width);
 					if (block.isItemBlock())
 					{
 						mBlocks[x][y] = Block.AIR.getId();
@@ -448,7 +448,7 @@ public class Level
 	private void renderBlock(int aX, int aY, Graphics aG)
 	{
 		final Block block = Block.get(mBlocks[aX][aY]);
-		if ( !block.isVisible() && !block.isLiquid()) return;
+		if ( !block.isVisible() || block.isLiquid() || block.isFlag()) return;
 		Block.render(aX, aY, mBlocks[aX][aY], aG, this);
 	}
 }
