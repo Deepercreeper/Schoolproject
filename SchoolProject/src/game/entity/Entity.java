@@ -388,7 +388,7 @@ public abstract class Entity
 	 * 
 	 * @return {@code true} if this entity is dead and {@code false} if not.
 	 */
-	public boolean isDead()
+	public final boolean isDead()
 	{
 		return mDead;
 	}

@@ -7,7 +7,7 @@ public class Stats
 {
 	private static Stats	STATS;
 	
-	private int				mBananas	= 0, mDeaths = 0, mTime = 0, mBananasInLevel = 0;
+	private int				mBananas	= 0, mHits = 0, mTime = 0, mBananasInLevel = 0;
 	
 	private Stats()
 	{}
@@ -28,7 +28,7 @@ public class Stats
 	 */
 	public void reset()
 	{
-		mBananas = mDeaths = mTime = mBananasInLevel = 0;
+		mBananas = mHits = mTime = mBananasInLevel = 0;
 	}
 	
 	/**
@@ -41,7 +41,7 @@ public class Stats
 	{
 		aG.setColor(Color.white);
 		aG.drawString("Bananas: " + mBananas, 10, 20);
-		aG.drawString("Deaths: " + mDeaths, 10, 35);
+		aG.drawString("Hits: " + mHits, 10, 35);
 		aG.drawString("Time: " + mTime / 1000, 10, 50);
 		aG.drawString("Score: " + getScore(), 10, 80);
 	}
@@ -78,11 +78,19 @@ public class Stats
 	}
 	
 	/**
-	 * Increases the deaths by one.
+	 * Adds a hit to the statistics.
 	 */
-	public void addDeath()
+	public void addHit()
 	{
-		mDeaths++ ;
+		mHits++ ;
+	}
+	
+	/**
+	 * Resets the hits, bananas and bananas inside the level.
+	 */
+	public void die()
+	{
+		mHits = 0;
 		mBananas -= mBananasInLevel;
 		mBananasInLevel = 0;
 	}
@@ -94,6 +102,6 @@ public class Stats
 	 */
 	public int getScore()
 	{
-		return Math.max(mBananas * 100 + 500 - mTime / 100 - mDeaths * 1000, 0);
+		return Math.max(mBananas * 100 + 500 - mTime / 100 - mHits * 1000, 0);
 	}
 }

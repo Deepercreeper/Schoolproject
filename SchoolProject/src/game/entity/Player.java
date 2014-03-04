@@ -1,5 +1,6 @@
 package game.entity;
 
+import game.Stats;
 import game.level.Level;
 import game.level.block.Block;
 import org.newdawn.slick.Color;
@@ -162,8 +163,9 @@ public class Player extends Entity
 	public void render(Graphics aG)
 	{
 		// Player
-		if (mHurtDelay > 0 && mTime % 10 < 5) aG.drawImage(DataManager.getSplitImage("player", 0), (float) mX - mLevel.getScreenX(), (float) mY - mLevel.getScreenY(), new Color(1, 1, 1, 0.5f));
-		else aG.drawImage(DataManager.getSplitImage("player", 0).getScaledCopy(mWidth, mHeight), (float) mX - mLevel.getScreenX(), (float) mY - mLevel.getScreenY());
+		if (mHurtDelay > 0 && mTime % 10 < 5) aG.drawImage(DataManager.getSplitImage("player" + DataManager.getTexturePack(), 0), (float) mX - mLevel.getScreenX(), (float) mY - mLevel.getScreenY(),
+				new Color(1, 1, 1, 0.5f));
+		else aG.drawImage(DataManager.getSplitImage("player" + DataManager.getTexturePack(), 0).getScaledCopy(mWidth, mHeight), (float) mX - mLevel.getScreenX(), (float) mY - mLevel.getScreenY());
 		
 		// HUD
 		aG.setColor(Color.red);
@@ -198,6 +200,7 @@ public class Player extends Entity
 			mHurt = true;
 			mXV = aXV;
 			mYV = aYV;
+			Stats.instance().addHit();
 			for (int i = (int) (Math.random() * 100 + 50 + (mLife <= 0 ? 50 : 0)); i > 0; i-- )
 				mLevel.addEntity(new Blood((int) (mX + mWidth / 2), (int) (mY + mHeight / 2)));
 			for (int i = (int) (Math.random() * 3 + (mLife <= 0 ? 10 : 0)); i > 0; i-- )

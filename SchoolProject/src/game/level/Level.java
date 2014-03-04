@@ -267,7 +267,7 @@ public class Level
 	{
 		if (mPlayer.isDead())
 		{
-			Stats.instance().addDeath();
+			Stats.instance().die();
 			reload();
 			mPlayer.respawn();
 			addPlayer(mPlayer);

@@ -27,7 +27,7 @@ public class Banana extends Entity
 	@Override
 	public void render(Graphics aG)
 	{
-		aG.drawImage(DataManager.getSplitImage("entity", mSuper ? 2 : 1), (float) (mX - mLevel.getScreenX()), (float) (mY - mLevel.getScreenY()));
+		aG.drawImage(DataManager.getSplitImage("entity" + DataManager.getTexturePack(), mSuper ? 2 : 1), (float) (mX - mLevel.getScreenX()), (float) (mY - mLevel.getScreenY()));
 	}
 	
 	/**

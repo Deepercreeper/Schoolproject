@@ -271,8 +271,11 @@ public class DataManager
 		sLoading = true;
 		for (int tile = 0; tile < sSplitImages.length; tile++ )
 		{
-			HashMap<Integer, Image> images = loadSplittedImages(sSplitImages[tile], sSplitImageSizes[tile]);
-			SPLIT_IMAGES.put(sSplitImages[tile], images);
+			for (String texture : sTexturepacks)
+			{
+				HashMap<Integer, Image> images = loadSplittedImages(sSplitImages[tile] + texture, sSplitImageSizes[tile]);
+				SPLIT_IMAGES.put(sSplitImages[tile] + texture, images);
+			}
 		}
 		for (String name : sMusicTitles)
 			MUSIC.put(name, loadMusic(name));

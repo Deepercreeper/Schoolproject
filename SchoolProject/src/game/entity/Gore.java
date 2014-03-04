@@ -65,7 +65,7 @@ public class Gore extends Entity
 	@Override
 	public void render(Graphics aG)
 	{
-		aG.drawImage(DataManager.getSplitImage("entity", 0), (float) (mX - mLevel.getScreenX()), (float) (mY - mLevel.getScreenY()));
+		aG.drawImage(DataManager.getSplitImage("entity" + DataManager.getTexturePack(), 0), (float) (mX - mLevel.getScreenX()), (float) (mY - mLevel.getScreenY()));
 	}
 	
 	@Override
