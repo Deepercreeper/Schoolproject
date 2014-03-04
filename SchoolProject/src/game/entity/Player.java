@@ -104,12 +104,11 @@ public class Player extends Entity
 				else mYV = 10;
 			}
 		}
-		mHurt = false;
 		
 		mXV += mXA;
 		
 		// Reset attributes
-		mOnIce = false;
+		mHurt = mOnIce = false;
 		
 		move();
 		
