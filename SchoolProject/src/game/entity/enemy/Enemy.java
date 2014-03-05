@@ -3,6 +3,7 @@ package game.entity.enemy;
 import game.entity.Blood;
 import game.entity.Entity;
 import game.entity.Gore;
+import game.entity.Player;
 import game.level.Level;
 import org.newdawn.slick.Input;
 
@@ -46,11 +47,12 @@ public abstract class Enemy extends Entity
 	public void hitEntity(double aXV, double aYV, Entity aEntity)
 	{
 		if (aEntity instanceof Gore) ((Gore) aEntity).hit(this);
-		if (aEntity.isSolid()) hitWall(aXV, aYV);
+		if (aEntity instanceof Player) ((Player) aEntity).hurt(1, (float) (Math.signum(mXV) * 3), -5);
+		// if (aEntity.isSolid()) hitWall(aXV, aYV);
 	}
 	
 	@Override
-	public void hurt(int aAmount, float aXV, float aYV)
+	public void hurt(int aAmount, double aXV, double aYV)
 	{
 		if (mHurtDelay <= 0)
 		{

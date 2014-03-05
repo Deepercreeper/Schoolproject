@@ -203,7 +203,7 @@ public abstract class Entity
 	 */
 	protected void hitWall(double aXV, double aYV)
 	{
-		if (mHurt) return;
+		// if (mHurt) return;
 		if (aXV != 0)
 		{
 			mOnWall = true;
@@ -358,7 +358,7 @@ public abstract class Entity
 	 * @param aYV
 	 *            The y velocity at the hurt time.
 	 */
-	public void hurt(int aAmount, float aXV, float aYV)
+	public void hurt(int aAmount, double aXV, double aYV)
 	{}
 	
 	/**
@@ -432,7 +432,7 @@ public abstract class Entity
 	 * 
 	 * @return {@code true} if this entity destroys blocks and {@code false} if not.
 	 */
-	public boolean canDestroyBlocks(Direction aDirection)
+	public boolean canDestroyBlock(Direction aDirection)
 	{
 		return false;
 	}

@@ -3,6 +3,7 @@ package game.level.block;
 import game.entity.Banana;
 import game.entity.Entity;
 import game.entity.Heart;
+import game.entity.enemy.Roller;
 import java.util.HashMap;
 
 public abstract class Item
@@ -91,6 +92,27 @@ public abstract class Item
 																	{
 																		return new Banana(aX, aY, true);
 																	}
+																	
+																	@Override
+																	public int getWidth()
+																	{
+																		return 16;
+																	}
+																	
+																	@Override
+																	public int getHeight()
+																	{
+																		return 16;
+																	}
+																};
+	
+	public static final Item					ROLLER			= new Item(0x3D4C5E)
+																{
+																	@Override
+																	public Entity create(int aX, int aY)
+																	{
+																		return new Roller(aX, aY);
+																	};
 																	
 																	@Override
 																	public int getWidth()

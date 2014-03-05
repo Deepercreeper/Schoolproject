@@ -1,6 +1,7 @@
 package game.entity;
 
 import game.Stats;
+import game.entity.enemy.Enemy;
 import game.level.Level;
 import game.level.block.Block;
 import org.newdawn.slick.Color;
@@ -207,11 +208,12 @@ public class Player extends Entity
 		if (aEntity instanceof Gore) ((Gore) aEntity).hit(this);
 		if (aEntity instanceof Banana) ((Banana) aEntity).collect();
 		if (aEntity instanceof Heart) ((Heart) aEntity).collect();
-		// if (aEntity.isSolid()) hitWall(aXV, aYV);
+		if (aEntity instanceof Enemy) aEntity.hitEntity(aEntity.getXV(), aEntity.getYV(), this);
+		if (aEntity.isSolid()) hitWall(aXV, aYV);
 	}
 	
 	@Override
-	public void hurt(int aAmount, float aXV, float aYV)
+	public void hurt(int aAmount, double aXV, double aYV)
 	{
 		if (mHurtDelay <= 0)
 		{
@@ -269,7 +271,7 @@ public class Player extends Entity
 	}
 	
 	@Override
-	public boolean canDestroyBlocks(Direction aDirection)
+	public boolean canDestroyBlock(Direction aDirection)
 	{
 		return aDirection == Direction.BOTTOM || aDirection == Direction.TOP && isCannonBall();
 	}

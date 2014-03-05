@@ -81,7 +81,7 @@ abstract class HitAction
 		final Texture texture = Block.getBlockTexture(aX, aY, aLevel);
 		
 		for (Direction dir : Direction.values())
-			if (aEntity.canDestroyBlocks(dir) && aHitDirection == dir)
+			if (aEntity.canDestroyBlock(dir) && aHitDirection == dir)
 			{
 				aLevel.setBlock(aX, aY, aBlock.getDestination().getId(texture));
 				short alpha = aLevel.getAlpha(aX, aY);

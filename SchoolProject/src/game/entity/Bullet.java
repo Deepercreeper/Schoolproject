@@ -29,12 +29,8 @@ public class Bullet extends Entity
 	@Override
 	public void render(Graphics aG)
 	{
-		// aG.setColor(Color.white);
-		// aG.fillRect((float) (mX - mLevel.getScreenX()), (float) (mY - mLevel.getScreenY()), mWidth, mHeight);
-		aG.setColor(Color.yellow);
-		aG.drawLine((float) (mX - mLevel.getScreenX()), (float) (mY - mLevel.getScreenY()), (float) (mX - mXV / 2 - mLevel.getScreenX()), (float) (mY - mYV / 2 - mLevel.getScreenY()));
-		aG.setColor(Color.black);
-		aG.drawLine((float) (mX - mXV / 2 - mLevel.getScreenX()), (float) (mY - mYV / 2 - mLevel.getScreenY()), (float) (mX - mXV - mLevel.getScreenX()), (float) (mY - mYV - mLevel.getScreenY()));
+		aG.setColor(Color.white);
+		aG.drawLine((float) (mX - mLevel.getScreenX()), (float) (mY - mLevel.getScreenY()), (float) (mX - mXV - mLevel.getScreenX()), (float) (mY - mYV - mLevel.getScreenY()));
 	}
 	
 	@Override
@@ -58,7 +54,7 @@ public class Bullet extends Entity
 	}
 	
 	@Override
-	public boolean canDestroyBlocks(Direction aDirection)
+	public boolean canDestroyBlock(Direction aDirection)
 	{
 		return true;
 	}
