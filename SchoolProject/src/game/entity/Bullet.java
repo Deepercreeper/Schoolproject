@@ -1,5 +1,6 @@
 package game.entity;
 
+import game.entity.enemy.Enemy;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
@@ -39,6 +40,11 @@ public class Bullet extends Entity
 		if (aEntity == mSource) return;
 		if (aEntity instanceof Banana) ((Banana) aEntity).collect();
 		if (mSource instanceof Player && aEntity instanceof Heart) ((Heart) aEntity).collect();
+		if (aEntity instanceof Enemy)
+		{
+			((Enemy) aEntity).hurt(1, Math.signum(mXV) * 2, -2);
+			die();
+		}
 	}
 	
 	@Override
