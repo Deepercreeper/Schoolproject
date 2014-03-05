@@ -126,20 +126,22 @@ public abstract class Entity
 		final int width = mLevel.getWidth() * Block.SIZE, height = mLevel.getHeight() * Block.SIZE;
 		if (mX <= 0)
 		{
-			mXV = 0;
 			mX = 0;
+			hitWall(mXV, 0);
+			mOnWall = false;
 			mLeftWall = true;
 		}
 		if (mX + mWidth >= width)
 		{
-			mXV = 0;
 			mX = width - mWidth;
+			hitWall(mXV, 0);
+			mOnWall = false;
 			mLeftWall = false;
 		}
 		if (mY <= 0)
 		{
-			mYV = 0;
 			mY = 0;
+			hitWall(0, mYV);
 		}
 		if (mY >= height) die();
 	}
@@ -430,7 +432,7 @@ public abstract class Entity
 	 * 
 	 * @return {@code true} if this entity destroys blocks and {@code false} if not.
 	 */
-	public boolean canDestroyBlocks()
+	public boolean canDestroyBlocks(Direction aDirection)
 	{
 		return false;
 	}

@@ -4,7 +4,6 @@ import game.entity.Entity;
 import game.level.Level;
 import java.util.HashMap;
 import util.Direction;
-import util.Util;
 import data.DataManager;
 
 abstract class HitAction
@@ -79,32 +78,28 @@ abstract class HitAction
 	
 	private static void destroy(int aX, int aY, Level aLevel, Entity aEntity, Block aBlock, Direction aHitDirection)
 	{
-		if ( !aEntity.canDestroyBlocks()) return;
 		final Texture texture = Block.getBlockTexture(aX, aY, aLevel);
-		if (aHitDirection == Direction.BOTTOM)
-		{
-			aLevel.setBlock(aX, aY, aBlock.getDestination().getId(texture));
-			short alpha = aLevel.getAlpha(aX, aY);
-			Item item = aBlock.getItem(alpha);
-			if (item != null)
+		
+		for (Direction dir : Direction.values())
+			if (aEntity.canDestroyBlocks(dir) && aHitDirection == dir)
 			{
-				aLevel.addEntity(item.create(aX * Block.SIZE + Block.SIZE / 2 - aBlock.getItem(alpha).getWidth() / 2, aY * Block.SIZE - aBlock.getItem(alpha).getHeight()));
-				DataManager.playSound("item");
+				aLevel.setBlock(aX, aY, aBlock.getDestination().getId(texture));
+				short alpha = aLevel.getAlpha(aX, aY);
+				Item item = aBlock.getItem(alpha);
+				if (item != null)
+				{
+					final int width = item.getWidth(), height = item.getHeight();
+					int x = aX * Block.SIZE + Block.SIZE / 2, y = aY * Block.SIZE + Block.SIZE / 2;
+					
+					x -= dir.XD * (Block.SIZE / 2 + width / 2);
+					y -= dir.YD * (Block.SIZE / 2 + height / 2);
+					
+					Entity entity = item.create(x - width / 2, y - height / 2);
+					if ( !Block.get(aLevel.getBlock(aX - dir.XD, aY - dir.YD)).isSolid(aX - dir.XD, aY - dir.YD, entity)) aLevel.addEntity(entity);
+					DataManager.playSound("item");
+				}
+				else DataManager.playSound("destroyBlock");
 			}
-			else DataManager.playSound("destroyBlock");
-		}
-		else if (aHitDirection == Direction.TOP && Util.isCannonBall(aEntity, aLevel))
-		{
-			aLevel.setBlock(aX, aY, aBlock.getDestination().getId(texture));
-			short alpha = aLevel.getAlpha(aX, aY);
-			Item item = aBlock.getItem(alpha);
-			if (item != null)
-			{
-				aLevel.addEntity(item.create(aX * Block.SIZE + Block.SIZE / 2 - aBlock.getItem(alpha).getWidth() / 2, (aY + 1) * Block.SIZE));
-				DataManager.playSound("item");
-			}
-			else DataManager.playSound("destroyBlock");
-		}
 	}
 	
 	/**

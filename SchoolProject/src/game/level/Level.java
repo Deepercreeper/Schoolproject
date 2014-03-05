@@ -105,9 +105,9 @@ public class Level
 				}
 			}
 		for (Entity other : mEntities.values())
-			if (other != aEntity && mScreen.contains(other) && aEntity.isSolid() && other.getRect().intersects(entity))
+			if (other != aEntity && mScreen.contains(other) && other.getRect().intersects(entity))
 			{
-				if (other.isSolid())
+				if (aEntity.isSolid() && other.isSolid())
 				{
 					if (aXV != 0)
 					{

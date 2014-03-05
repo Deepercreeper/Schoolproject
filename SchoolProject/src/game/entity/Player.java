@@ -6,6 +6,7 @@ import game.level.block.Block;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
+import util.Direction;
 import data.DataManager;
 
 public class Player extends Entity
@@ -55,8 +56,28 @@ public class Player extends Entity
 		if (mHurtDelay > 0) mHurtDelay-- ;
 		
 		// TODO Temporary
-		if (aInput.isKeyPressed(Input.KEY_F)) skillLife();
-		if (aInput.isKeyPressed(Input.KEY_G)) skillSpeed();
+		{
+			if (aInput.isMousePressed(Input.MOUSE_LEFT_BUTTON))
+			{
+				final int speed = 10;
+				final int mouseX = aInput.getMouseX() + mLevel.getScreenX(), mouseY = aInput.getMouseY() + mLevel.getScreenY();
+				int startX, startY = (int) (mY + mHeight / 2);
+				if (mouseX > mX + mWidth) startX = (int) (mX + mWidth);
+				else if (mouseX < mX) startX = (int) mX;
+				else
+				{
+					startX = (int) (mX + mWidth / 2);
+					startY = (int) mY;
+				}
+				final double xd = mouseX - startX, yd = mouseY - startY;
+				final double a = Math.acos(Math.abs(xd) / Math.sqrt(xd * xd + yd * yd));
+				final double xv = Math.cos(a) * speed * Math.signum(xd), yv = Math.sin(a) * speed * Math.signum(yd);
+				mLevel.addEntity(new Bullet(startX, startY, xv, yv, 5, this));
+			}
+			
+			if (aInput.isKeyPressed(Input.KEY_F)) skillLife();
+			if (aInput.isKeyPressed(Input.KEY_G)) skillSpeed();
+		}
 		
 		if ( !mHurt)
 		{
@@ -186,7 +207,7 @@ public class Player extends Entity
 		if (aEntity instanceof Gore) ((Gore) aEntity).hit(this);
 		if (aEntity instanceof Banana) ((Banana) aEntity).collect();
 		if (aEntity instanceof Heart) ((Heart) aEntity).collect();
-		if (aEntity.isSolid()) hitWall(aXV, aYV);
+		// if (aEntity.isSolid()) hitWall(aXV, aYV);
 	}
 	
 	@Override
@@ -248,9 +269,9 @@ public class Player extends Entity
 	}
 	
 	@Override
-	public boolean canDestroyBlocks()
+	public boolean canDestroyBlocks(Direction aDirection)
 	{
-		return true;
+		return aDirection == Direction.BOTTOM || aDirection == Direction.TOP && isCannonBall();
 	}
 	
 	@Override
