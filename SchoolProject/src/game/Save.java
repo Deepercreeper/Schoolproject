@@ -27,6 +27,7 @@ public class Save
 		mName = aName;
 		mPlayer = new Player();
 		mVolume = 10;
+		mTexturePack = DataManager.getTexturePack();
 		openWorld(0);
 	}
 	
