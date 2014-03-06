@@ -50,6 +50,12 @@ public class Blood extends Entity
 	}
 	
 	@Override
+	public boolean isParticle()
+	{
+		return true;
+	}
+	
+	@Override
 	public void render(Graphics aG)
 	{
 		aG.setColor(Color.red);

@@ -189,9 +189,7 @@ public abstract class Entity
 	 *            The other entity.
 	 */
 	public void hitEntity(double aXV, double aYV, Entity aEntity)
-	{
-		if (aEntity.isSolid()) hitWall(aXV, aYV);
-	}
+	{}
 	
 	/**
 	 * Invoked when this entity hits a wall after moving. By default {@code mOnGround} and {@code mOnWall} are updated.
@@ -367,6 +365,16 @@ public abstract class Entity
 	 * @return {@code true} if solid and {@code false} if not.
 	 */
 	public abstract boolean isSolid();
+	
+	/**
+	 * Override this to prevent collision calculations for each other entity.
+	 * 
+	 * @return {@code true} if this entity is a particle and doesn't need other entity updates and {@code false} if it does.
+	 */
+	public boolean isParticle()
+	{
+		return false;
+	}
 	
 	/**
 	 * Makes this entity die and removes it by default.

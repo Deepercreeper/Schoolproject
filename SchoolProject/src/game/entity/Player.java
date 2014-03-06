@@ -209,7 +209,6 @@ public class Player extends Entity
 		if (aEntity instanceof Banana) ((Banana) aEntity).collect();
 		if (aEntity instanceof Heart) ((Heart) aEntity).collect();
 		if (aEntity instanceof Enemy) aEntity.hitEntity(aEntity.getXV(), aEntity.getYV(), this);
-		if (aEntity.isSolid()) hitWall(aXV, aYV);
 	}
 	
 	@Override
@@ -279,6 +278,6 @@ public class Player extends Entity
 	@Override
 	public boolean isSolid()
 	{
-		return true;
+		return mHurtDelay <= 0;
 	}
 }
