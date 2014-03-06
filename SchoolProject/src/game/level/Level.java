@@ -7,6 +7,8 @@ import game.level.block.Block;
 import game.level.block.Item;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map.Entry;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
@@ -22,20 +24,29 @@ public class Level
 	/**
 	 * Friction and gravity of the level.
 	 */
-	public static final double	FRICTION	= 0.99, GRAVITY = 0.3;
+	public static final double				FRICTION			= 0.99,
+			GRAVITY = 0.3;
 	
-	private final byte			mLevelId, mWorldId;
-	private final int			mWidth, mHeight;
-	private int					mStartX, mStartY;
+	private final byte						mLevelId, mWorldId;
 	
-	private final Screen		mScreen;
+	private final int						mWidth, mHeight;
 	
-	private short[][]			mBlocks;
-	private short[][]			mAlphas;
+	private int								mStartX, mStartY;
 	
-	private final HashMap<Integer, Entity>	mEntities	= new HashMap<>(), mAddEntities = new HashMap<>();
-	private final HashSet<Integer>			mUpdatableBlocks	= new HashSet<>(), mTransparentBlocks = new HashSet<>();
+	private final Screen					mScreen;
+	
+	private short[][]						mBlocks;
+	
+	private short[][]						mAlphas;
+	
+	private final HashMap<Integer, Entity>	mEntities			= new HashMap<>(),
+			mAddEntities = new HashMap<>();
+	
+	private final HashSet<Integer>			mUpdatableBlocks	= new HashSet<>(),
+			mTransparentBlocks = new HashSet<>();
+	
 	private final Player					mPlayer;
+	
 	private boolean							mWon;
 	
 	/**
@@ -67,7 +78,8 @@ public class Level
 	}
 	
 	/**
-	 * Tests whether the given entity hits any block or other entity when moving in the given direction.
+	 * Tests whether the given entity hits any block or other entity when moving
+	 * in the given direction.
 	 * 
 	 * @param aXV
 	 *            The x velocity of the given entity.
@@ -75,26 +87,40 @@ public class Level
 	 *            The y velocity of the given entity.
 	 * @param aEntity
 	 *            The entity that is moving.
-	 * @return {@code Double.NaN} if there is no wall or entity in the way or the distance between the wall or entity and the given entity left.
+	 * @return {@code Double.NaN} if there is no wall or entity in the way or
+	 *         the distance between the wall or entity and the given entity
+	 *         left.
 	 */
 	public double isFree(double aXV, double aYV, Entity aEntity)
 	{
 		double result = Double.NaN;
-		Rectangle entity = new Rectangle((aEntity.getX() + aXV), (aEntity.getY() + aYV), aEntity.getWidth(), aEntity.getHeight());
-		for (int x = (int) (entity.getX() / Block.SIZE); x <= (int) (entity.getX() + entity.getWidth() - 0.1) / Block.SIZE && x < mWidth; x++ )
-			for (int y = (int) (entity.getY() / Block.SIZE); y <= (int) (entity.getY() + entity.getHeight()) / Block.SIZE && y < mHeight; y++ )
+		Rectangle entity = new Rectangle((aEntity.getX() + aXV),
+				(aEntity.getY() + aYV), aEntity.getWidth(), aEntity.getHeight());
+		for (int x = (int) (entity.getX() / Block.SIZE); x <= (int) (entity
+				.getX() + entity.getWidth() - 0.1)
+				/ Block.SIZE
+				&& x < mWidth; x++)
+			for (int y = (int) (entity.getY() / Block.SIZE); y <= (int) (entity
+					.getY() + entity.getHeight()) / Block.SIZE
+					&& y < mHeight; y++)
 			{
-				if (Block.get(mBlocks[x][y]).isSolid(x, y, aEntity) && new Rectangle(x * Block.SIZE, y * Block.SIZE, Block.SIZE, Block.SIZE).intersects(entity))
+				if (Block.get(mBlocks[x][y]).isSolid(x, y, aEntity)
+						&& new Rectangle(x * Block.SIZE, y * Block.SIZE,
+								Block.SIZE, Block.SIZE).intersects(entity))
 				{
 					if (aXV != 0)
 					{
-						if (aXV > 0) result = Util.minAbs(result, aXV - (entity.getMaxX() % Block.SIZE));
-						else result = Util.minAbs(result, -(aEntity.getX() % Block.SIZE));
+						if (aXV > 0) result = Util.minAbs(result,
+								aXV - (entity.getMaxX() % Block.SIZE));
+						else result = Util.minAbs(result,
+								- (aEntity.getX() % Block.SIZE));
 					}
 					else
 					{
-						if (aYV > 0) result = Util.minAbs(result, aYV - (entity.getMaxY() % Block.SIZE));
-						else result = Util.minAbs(result, -(aEntity.getY() % Block.SIZE));
+						if (aYV > 0) result = Util.minAbs(result,
+								aYV - (entity.getMaxY() % Block.SIZE));
+						else result = Util.minAbs(result,
+								- (aEntity.getY() % Block.SIZE));
 					}
 					Direction dir = Direction.NONE;
 					if (aXV > 0) dir = Direction.LEFT;
@@ -105,19 +131,40 @@ public class Level
 				}
 			}
 		for (Entity other : mEntities.values())
-			if (other != aEntity && mScreen.contains(other) && other.getRect().intersects(entity))
+			if (other != aEntity && mScreen.contains(other)
+					&& other.getRect().intersects(entity))
 			{
 				if (aEntity.isSolid() && other.isSolid())
 				{
 					if (aXV != 0)
 					{
-						if (aXV > 0) result = Util.minAbs(result, aXV - (entity.getX() + entity.getWidth() - (other.getX())));
-						else result = Util.minAbs(result, aXV + (other.getX() + other.getWidth() - (entity.getX())));
+						if (aXV > 0) result = Util
+								.minAbs(result,
+										aXV
+												- (entity.getX()
+														+ entity.getWidth() - (other
+															.getX())));
+						else result = Util
+								.minAbs(result,
+										aXV
+												+ (other.getX()
+														+ other.getWidth() - (entity
+															.getX())));
 					}
 					else
 					{
-						if (aYV > 0) result = Util.minAbs(result, aYV - (entity.getY() + entity.getHeight() - (other.getY())));
-						else result = Util.minAbs(result, aYV + (other.getY() + other.getHeight() - (entity.getY())));
+						if (aYV > 0) result = Util
+								.minAbs(result,
+										aYV
+												- (entity.getY()
+														+ entity.getHeight() - (other
+															.getY())));
+						else result = Util
+								.minAbs(result,
+										aYV
+												+ (other.getY()
+														+ other.getHeight() - (entity
+															.getY())));
 					}
 				}
 				aEntity.hitEntity(aEntity.getXV(), aEntity.getYV(), other);
@@ -274,13 +321,14 @@ public class Level
 			return;
 		}
 		
-		final HashSet<Integer> remove = new HashSet<>();
-		for (Entity entity : mEntities.values())
-			if (entity.isRemoved()) remove.add(entity.getId());
-		for (int id : remove)
-			mEntities.remove(id);
+		for (Iterator<Entry<Integer, Entity>> iterator = mEntities.entrySet()
+				.iterator(); iterator.hasNext();)
+		{
+			Entity entity = iterator.next().getValue();
+			if (entity.isRemoved()) iterator.remove();
+		}
 		for (Entity entity : mAddEntities.values())
-			if ( !entity.isRemoved()) mEntities.put(entity.getId(), entity);
+			if (! entity.isRemoved()) mEntities.put(entity.getId(), entity);
 		mAddEntities.clear();
 		
 		// Update entities
@@ -379,12 +427,18 @@ public class Level
 	{
 		// Render background
 		Image background = DataManager.getBackgroundImage(0);
-		aG.drawImage(background, -(mScreen.getX() / 5 % background.getWidth()), 0);
-		aG.drawImage(background, background.getWidth() - (mScreen.getX() / 5 % background.getWidth()), 0);
+		aG.drawImage(background,
+				- (mScreen.getX() / 5 % background.getWidth()), 0);
+		aG.drawImage(background, background.getWidth()
+				- (mScreen.getX() / 5 % background.getWidth()), 0);
 		
 		// Render Blocks
-		for (int x = Math.max(mScreen.getX() / Block.SIZE, 0); x <= (mScreen.getX() + mScreen.getWidth()) / Block.SIZE && x < mWidth; x++ )
-			for (int y = Math.max(mScreen.getY() / Block.SIZE, 0); y <= (mScreen.getY() + mScreen.getHeight()) / Block.SIZE && y < mHeight; y++ )
+		for (int x = Math.max(mScreen.getX() / Block.SIZE, 0); x <= (mScreen
+				.getX() + mScreen.getWidth()) / Block.SIZE
+				&& x < mWidth; x++)
+			for (int y = Math.max(mScreen.getY() / Block.SIZE, 0); y <= (mScreen
+					.getY() + mScreen.getHeight()) / Block.SIZE
+					&& y < mHeight; y++)
 				renderBlock(x, y, aG);
 		
 		// Render entities
@@ -401,36 +455,42 @@ public class Level
 	
 	private int generateId()
 	{
-		for (int i = 0;; i++ )
-			if ( !mEntities.containsKey(i) && !mAddEntities.containsKey(i)) return i;
+		for (int i = 0;; i++)
+			if (! mEntities.containsKey(i) && ! mAddEntities.containsKey(i))
+				return i;
 	}
 	
 	private void loadBlocks()
 	{
 		Image image = DataManager.getLevelImage(mWorldId, mLevelId);
 		final int width = image.getWidth(), height = image.getHeight();
-		final int redInt = (int) Math.pow(2, 16), greenInt = (int) Math.pow(2, 8);
+		final int redInt = (int) Math.pow(2, 16), greenInt = (int) Math.pow(2,
+				8);
 		mBlocks = new short[width][height];
 		mAlphas = new short[width][height];
 		Color color;
 		int rgb;
-		for (int x = 0; x < width; x++ )
-			for (int y = 0; y < height; y++ )
+		for (int x = 0; x < width; x++)
+			for (int y = 0; y < height; y++)
 			{
 				color = image.getColor(x, y);
-				rgb = color.getRed() * redInt + color.getGreen() * greenInt + color.getBlue();
+				rgb = color.getRed() * redInt + color.getGreen() * greenInt
+						+ color.getBlue();
 				mAlphas[x][y] = (short) color.getAlpha();
 				short id = Block.getIdFromCode(rgb);
-				if (id == -1) mBlocks[x][y] = Block.AIR.getId();
+				if (id == - 1) mBlocks[x][y] = Block.AIR.getId();
 				else
 				{
 					final Block block = Block.get(id);
-					if (block.isUpdatable()) mUpdatableBlocks.add(x + y * width);
-					if (block.isLiquid() || block.isFlag()) mTransparentBlocks.add(x + y * width);
+					if (block.isUpdatable())
+						mUpdatableBlocks.add(x + y * width);
+					if (block.isLiquid() || block.isFlag())
+						mTransparentBlocks.add(x + y * width);
 					if (block.isItemBlock())
 					{
 						mBlocks[x][y] = Block.AIR.getId();
-						addEntity(Item.getItem(x * Block.SIZE, y * Block.SIZE, rgb));
+						addEntity(Item.getItem(x * Block.SIZE, y * Block.SIZE,
+								rgb));
 					}
 					else if (block == Block.START)
 					{
@@ -448,7 +508,7 @@ public class Level
 	private void renderBlock(int aX, int aY, Graphics aG)
 	{
 		final Block block = Block.get(mBlocks[aX][aY]);
-		if ( !block.isVisible() || block.isLiquid() || block.isFlag()) return;
+		if (! block.isVisible() || block.isLiquid() || block.isFlag()) return;
 		Block.render(aX, aY, mBlocks[aX][aY], aG, this);
 	}
 }
