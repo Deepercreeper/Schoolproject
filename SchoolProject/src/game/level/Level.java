@@ -297,7 +297,7 @@ public class Level
 		
 		// Update entities
 		for (Entity entity : mEntities.values())
-			if (mScreen.contains(entity)) entity.update(aInput);
+			entity.update(aInput);
 		
 		// Update blocks
 		for (int tile : mUpdatableBlocks)
