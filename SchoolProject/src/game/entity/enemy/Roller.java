@@ -1,11 +1,14 @@
 package game.entity.enemy;
 
-import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Image;
 import util.Direction;
+import data.DataManager;
 
 public class Roller extends Enemy
 {
+	private static final int START_ID = 40;
+	
 	private Direction	mDir	= Direction.NONE;
 	
 	public Roller(int aX, int aY)
@@ -35,7 +38,11 @@ public class Roller extends Enemy
 	@Override
 	public void render(Graphics aG)
 	{
-		aG.setColor(Color.red);
-		aG.fillOval((float) (mX - mLevel.getScreenX()), (float) (mY - mLevel.getScreenY()), mWidth, mHeight);
+		int id = 0;
+		final int delay = 6;
+		id = mTime % (delay*6) /delay ;
+		Image image = DataManager.getSplitImage("enemy" + DataManager.getTexturePack(), START_ID + id);
+		if(mDir == Direction.LEFT) image = image.getFlippedCopy(true, false);
+		aG.drawImage(image, (float)(mX - mLevel.getScreenX()),(float)(mY - mLevel.getScreenY()));
 	}
 }

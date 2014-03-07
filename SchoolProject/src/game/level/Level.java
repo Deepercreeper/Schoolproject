@@ -38,7 +38,7 @@ public class Level
 	
 	private short[][]			mAlphas;
 	
-	private final HashMap<Integer, Entity>	mEntities	= new HashMap<>(), mAddEntities = new HashMap<>();
+	private final HashMap<Integer, Entity>	mEntities	= new HashMap<>(),mParticles = new HashMap<>(), mAddEntities = new HashMap<>();
 	
 	private final HashSet<Integer>			mUpdatableBlocks	= new HashSet<>(), mTransparentBlocks = new HashSet<>();
 	
@@ -115,9 +115,8 @@ public class Level
 					aEntity.addTouchingBlock(x, y, dir);
 				}
 			}
-		if (aEntity.isParticle()) return result;
 		for (Entity other : mEntities.values())
-			if ( !other.isParticle() && other != aEntity && mScreen.contains(other) && other.getRect().intersects(entity))
+			if (other != aEntity && mScreen.contains(other) && other.getRect().intersects(entity))
 			{
 				if (aEntity.isSolid() && other.isSolid())
 				{
@@ -291,12 +290,22 @@ public class Level
 			Entity entity = iterator.next().getValue();
 			if (entity.isRemoved()) iterator.remove();
 		}
+		for (Iterator<Entry<Integer, Entity>> iterator = mParticles.entrySet().iterator(); iterator.hasNext();)
+		{
+			Entity entity = iterator.next().getValue();
+			if (entity.isRemoved()) iterator.remove();
+		}
 		for (Entity entity : mAddEntities.values())
-			if ( !entity.isRemoved()) mEntities.put(entity.getId(), entity);
+			if ( !entity.isRemoved()) {
+				if(entity.isParticle())mParticles.put(entity.getId(), entity);
+				else mEntities.put(entity.getId(), entity);
+			}
 		mAddEntities.clear();
 		
 		// Update entities
 		for (Entity entity : mEntities.values())
+			entity.update(aInput);
+		for (Entity entity : mParticles.values())
 			entity.update(aInput);
 		
 		// Update blocks
@@ -329,6 +338,7 @@ public class Level
 	public void reload()
 	{
 		mEntities.clear();
+		mParticles.clear();
 		Stats.instance().setBananaLevel();
 		loadBlocks();
 	}
@@ -402,6 +412,9 @@ public class Level
 		// Render entities
 		for (Entity entity : mEntities.values())
 			entity.render(aG);
+		for (Entity entity : mParticles.values())
+			entity.render(aG);
+		
 		
 		// Render transparent blocks
 		for (int tile : mTransparentBlocks)
@@ -414,7 +427,7 @@ public class Level
 	private int generateId()
 	{
 		for (int i = 0;; i++ )
-			if ( !mEntities.containsKey(i) && !mAddEntities.containsKey(i)) return i;
+			if ( !mEntities.containsKey(i) && !mAddEntities.containsKey(i) && !mParticles.containsKey(i)) return i;
 	}
 	
 	private void loadBlocks()

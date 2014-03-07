@@ -31,7 +31,7 @@ public class Game
 	 */
 	public void render(Graphics aG)
 	{
-		if ( !DataManager.isInitiated() || DataManager.isLoading()) aG.drawImage(DataManager.getImage("splash"), 0, 0);
+		if ( !DataManager.isInitiated() || DataManager.isLoading()) aG.drawImage(DataManager.getImage("splash").getScaledCopy(mGC.getWidth(), mGC.getHeight()), 0, 0);
 		else
 		{
 			if (mMain) mMainMenu.render(aG);

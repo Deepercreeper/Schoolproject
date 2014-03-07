@@ -25,8 +25,8 @@ public class DataManager
 	private static final ArrayList<String>							mSaves				= new ArrayList<>();
 	
 	private static final String[]									sMusicTitles		= new String[] { "world4", "world0", "world3", "world1", "world2", "world5", "menu" };
-	private static final String[]									sSplitImages		= new String[] { "player", "entity" };
-	private static final int[][]									sSplitImageSizes	= new int[][] { { 14, 30 }, { 16, 16 } };
+	private static final String[]									sSplitImages		= new String[] { "player", "entity" ,"enemy"};
+	private static final int[][]									sSplitImageSizes	= new int[][] { { 14, 30 }, { 16, 16 } ,{ 16 , 16 }};
 	private static final String[]									sTexturepacks		= new String[] { "Mario", "Minecraft" };
 	private static final int[]										sLevelsPerWorld		= new int[] { 3, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
 	
