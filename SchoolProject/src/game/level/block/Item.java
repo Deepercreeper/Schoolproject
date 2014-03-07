@@ -107,7 +107,7 @@ public abstract class Item
 																	}
 																};
 	
-	public static final Item					ROLLER			= new Item(0x3E4C5E)
+	public static final Item					ROLLER			= new Item(0xB6FF00)
 																{
 																	@Override
 																	public Entity create(int aX, int aY)
@@ -128,7 +128,7 @@ public abstract class Item
 																	}
 																};
 																
-	public static final Item					MINION = new Item(0x3D4C5E)
+	public static final Item					MINION = new Item(0x007F0E)
 																{
 																	@Override
 																	public Entity create(int aX, int aY)
