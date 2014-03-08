@@ -20,8 +20,8 @@ public abstract class Enemy extends Entity
 	@Override
 	public void update(Input aInput)
 	{
-		mTime++;
-		if (!mHurt) getInput();
+		mTime++ ;
+		if ( !mHurt) getInput();
 		
 		mXV += mXA;
 		
@@ -35,8 +35,6 @@ public abstract class Enemy extends Entity
 		final double gravity = Level.GRAVITY - (mInLiquid ? 0.1 : 0), friction = Level.FRICTION - (mInLiquid ? 0.1 : 0);
 		
 		mYV *= friction;
-		// if (mOnWall) mYV += gravity * 0.3;
-		// else
 		mYV += gravity;
 		
 		// Reset attributes
@@ -48,6 +46,32 @@ public abstract class Enemy extends Entity
 	{
 		if (aEntity instanceof Gore) ((Gore) aEntity).hit(this);
 		if (aEntity instanceof Player) ((Player) aEntity).hurt(1, (float) (Math.signum(mXV) * 3), -5);
+		if (aEntity instanceof Enemy) hitWall(aXV, aYV);
+	}
+	
+	/**
+	 * Calculates the distance between the player and this enemy.
+	 * 
+	 * @return a double that is {@code > 0} if this enemy is at the right side to the player and {@code < 0} if vice versa.
+	 */
+	protected double getXDistanceToPlayer()
+	{
+		return mX + mWidth / 2 - (mLevel.getPlayer().getX() + mLevel.getPlayer().getWidth() / 2);
+	}
+	
+	/**
+	 * Calculates the distance between the player and this enemy.
+	 * 
+	 * @return a double that is {@code > 0} if this enemy is under the player and {@code < 0} if vice versa.
+	 */
+	protected double getYDistanceToPlayer()
+	{
+		return mY + mHeight / 2 - (mLevel.getPlayer().getY() + mLevel.getPlayer().getHeight() / 2);
+	}
+	
+	public void hitTop(boolean mCannonBall, Entity aEntity)
+	{
+		hurt(mCannonBall ? 2 : 1, Math.signum(getXDistanceToPlayer()) * 2, 0);
 	}
 	
 	@Override
@@ -58,9 +82,9 @@ public abstract class Enemy extends Entity
 		mHurt = true;
 		mXV = aXV;
 		mYV = aYV;
-		for (int i = (int) (Math.random() * 100 + 50 + (mLife <= 0 ? 50 : 0)); i > 0; i--)
+		for (int i = (int) (Math.random() * 100 + 50 + (mLife <= 0 ? 50 : 0)); i > 0; i-- )
 			mLevel.addEntity(new Blood((int) (mX + mWidth / 2), (int) (mY + mHeight / 2)));
-		for (int i = (int) (Math.random() * 3 + (mLife <= 0 ? 10 : 0)); i > 0; i--)
+		for (int i = (int) (Math.random() * 3 + (mLife <= 0 ? 10 : 0)); i > 0; i-- )
 			mLevel.addEntity(new Gore((int) (mX + mWidth / 2), (int) (mY + mHeight / 2)));
 		if (mLife <= 0) die();
 	}

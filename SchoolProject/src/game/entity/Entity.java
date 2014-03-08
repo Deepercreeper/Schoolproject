@@ -201,7 +201,6 @@ public abstract class Entity
 	 */
 	protected void hitWall(double aXV, double aYV)
 	{
-		// if (mHurt) return;
 		if (aXV != 0)
 		{
 			mOnWall = true;

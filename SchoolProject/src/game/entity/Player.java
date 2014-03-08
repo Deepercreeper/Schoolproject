@@ -22,7 +22,7 @@ public class Player extends Entity
 	
 	private int				mHurtDelay;
 	
-	private boolean			mCannon;
+	private boolean			mCannon, mJumping;
 	
 	private int				mCannonTime;
 	
@@ -104,7 +104,7 @@ public class Player extends Entity
 				if (mOnIce) mXA *= 0.08;
 				mXA *= mSpeed + mSpeedSkill * mSpeedStep;
 				
-				if (aInput.isKeyPressed(Input.KEY_SPACE) && (mOnGround || mOnWall))
+				if ((aInput.isKeyPressed(Input.KEY_SPACE) || mJumping && !mOnWall) && (mOnGround || mOnWall))
 				{
 					if (mOnWall)
 					{
@@ -112,6 +112,7 @@ public class Player extends Entity
 						mYV = -5;
 					}
 					else mYV = -6;
+					mJumping = false;
 					DataManager.playSound("jump");
 				}
 			}
@@ -208,7 +209,15 @@ public class Player extends Entity
 		if (aEntity instanceof Gore) ((Gore) aEntity).hit(this);
 		if (aEntity instanceof Banana) ((Banana) aEntity).collect();
 		if (aEntity instanceof Heart) ((Heart) aEntity).collect();
-		if (aEntity instanceof Enemy) aEntity.hitEntity(aEntity.getXV(), aEntity.getYV(), this);
+		if (aEntity instanceof Enemy)
+		{
+			if (mHurtDelay <= 0 && mY + mHeight < aEntity.getY() + 5)
+			{
+				((Enemy) aEntity).hitTop(mCannon, this);
+				mJumping = true;
+			}
+			else aEntity.hitEntity(aEntity.getXV(), aEntity.getYV(), this);
+		}
 	}
 	
 	@Override

@@ -11,7 +11,7 @@ public class Minion extends Enemy
 	
 	private Direction			mDir		= Direction.NONE;
 	
-	private boolean mJumping = false;
+	private boolean				mJumping	= false;
 	
 	public Minion(int aX, int aY)
 	{
@@ -21,11 +21,12 @@ public class Minion extends Enemy
 	@Override
 	protected void getInput()
 	{
-		if(mJumping && mOnGround) {
+		if (mJumping && mOnGround)
+		{
 			mJumping = false;
 			mYV = -4;
 		}
-		mDir = mLevel.getPlayer().getX() + mLevel.getPlayer().getWidth() < mX ? Direction.LEFT : Direction.RIGHT;
+		mDir = getXDistanceToPlayer() > 0 ? Direction.LEFT : Direction.RIGHT;
 		mXA = mDir.XD;
 		if ( !mOnGround) mXA *= 0.125;
 	}
@@ -33,8 +34,7 @@ public class Minion extends Enemy
 	@Override
 	protected void hitWall(double aXV, double aYV)
 	{
-		if (aXV != 0)
-			mJumping = true;
+		if (aXV != 0) mJumping = true;
 		super.hitWall(aXV, aYV);
 	}
 	
@@ -46,9 +46,9 @@ public class Minion extends Enemy
 		id = mTime % (delay * 6) / delay;
 		Image image = DataManager.getSplitImage("enemy" + DataManager.getTexturePack(), id);
 		if (mDir == Direction.LEFT) image = image.getFlippedCopy(true, false);
-		aG.drawImage(image, (float) (mX - mLevel.getScreenX()), (float) (mY  - mLevel.getScreenY()));
+		aG.drawImage(image, (float) (mX - mLevel.getScreenX()), (float) (mY - mLevel.getScreenY()));
 		image = DataManager.getSplitImage("enemy" + DataManager.getTexturePack(), START_ID + id);
 		if (mDir == Direction.LEFT) image = image.getFlippedCopy(true, false);
-		aG.drawImage(image, (float) (mX - mLevel.getScreenX()), (float) (mY + mHeight/2- mLevel.getScreenY()));
+		aG.drawImage(image, (float) (mX - mLevel.getScreenX()), (float) (mY + mHeight / 2 - mLevel.getScreenY()));
 	}
 }
