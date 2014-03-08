@@ -3,6 +3,7 @@ package game.entity;
 import game.level.Level;
 import game.level.block.Block;
 import java.util.HashMap;
+import java.util.HashSet;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
 import util.Direction;
@@ -12,7 +13,8 @@ public abstract class Entity
 {
 	private int									mId;
 	private boolean								mRemoved;
-	private final HashMap<Integer, Direction>	mTouchingBlocks	= new HashMap<>();
+	private final HashMap<Integer, Direction>	mTouchingBlocks		= new HashMap<>();
+	private final HashSet<Integer>				mCollidedEntities	= new HashSet<>();
 	
 	/**
 	 * The position and velocity of this entity.
@@ -63,6 +65,7 @@ public abstract class Entity
 	protected final void move()
 	{
 		mOnGround = false;
+		mCollidedEntities.clear();
 		
 		// On Wall?
 		if (mLeftWall && mXV > 0 || !mLeftWall && mXV < 0 || Double.isNaN(mLevel.isFree(mLeftWall ? -0.1 : 0.1, 0, this))) mOnWall = false;
@@ -144,6 +147,16 @@ public abstract class Entity
 			hitWall(0, mYV);
 		}
 		if (mY >= height) die();
+	}
+	
+	public boolean hasCollidedWith(int aId)
+	{
+		return mCollidedEntities.contains(aId);
+	}
+	
+	public void addCollidedEntity(int aId)
+	{
+		mCollidedEntities.add(aId);
 	}
 	
 	private final void touchBlocks()

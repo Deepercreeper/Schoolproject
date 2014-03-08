@@ -216,7 +216,6 @@ public class Player extends Entity
 				((Enemy) aEntity).hitTop(mCannon, this);
 				mJumping = true;
 			}
-			else aEntity.hitEntity(aEntity.getXV(), aEntity.getYV(), this);
 		}
 	}
 	

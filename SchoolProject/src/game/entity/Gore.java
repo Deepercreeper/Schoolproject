@@ -25,10 +25,6 @@ public class Gore extends Entity
 		mLife = (int) (150 + Math.random() * 250);
 	}
 	
-	@Override
-	public void hitEntity(double aXV, double aYV, Entity aEntity)
-	{}
-	
 	/**
 	 * If this gore is kicked by another entity this method is invoked.
 	 * 
@@ -38,8 +34,8 @@ public class Gore extends Entity
 	public void hit(Entity aEntity)
 	{
 		if ( !mOnGround) return;
-		mXV += Math.signum(mX - aEntity.getX());
-		mYV -= 1;
+		mXV += Math.signum(mX - aEntity.getX()) * (Math.random() * 5 + 2);
+		mYV -= Math.random() * 5 + 2;
 	}
 	
 	@Override

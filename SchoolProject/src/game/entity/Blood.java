@@ -26,10 +26,6 @@ public class Blood extends Entity
 	}
 	
 	@Override
-	public void hitEntity(double aXV, double aYV, Entity aEntity)
-	{}
-	
-	@Override
 	public void update(Input aInput)
 	{
 		if (--mLife < 0) remove();

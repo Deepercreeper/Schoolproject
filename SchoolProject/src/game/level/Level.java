@@ -38,7 +38,7 @@ public class Level
 	
 	private short[][]			mAlphas;
 	
-	private final HashMap<Integer, Entity>	mEntities	= new HashMap<>(),mParticles = new HashMap<>(), mAddEntities = new HashMap<>();
+	private final HashMap<Integer, Entity>	mEntities	= new HashMap<>(), mParticles = new HashMap<>(), mAddEntities = new HashMap<>();
 	
 	private final HashSet<Integer>			mUpdatableBlocks	= new HashSet<>(), mTransparentBlocks = new HashSet<>();
 	
@@ -116,8 +116,10 @@ public class Level
 				}
 			}
 		for (Entity other : mEntities.values())
-			if (other != aEntity && mScreen.contains(other) && other.getRect().intersects(entity))
+			if (other != aEntity && mScreen.contains(other) && other.getRect().intersects(entity) && !aEntity.hasCollidedWith(other.getId()))
 			{
+				aEntity.addCollidedEntity(other.getId());
+				other.addCollidedEntity(aEntity.getId());
 				if (aEntity.isSolid() && other.isSolid())
 				{
 					if (aXV != 0)
@@ -296,8 +298,9 @@ public class Level
 			if (entity.isRemoved()) iterator.remove();
 		}
 		for (Entity entity : mAddEntities.values())
-			if ( !entity.isRemoved()) {
-				if(entity.isParticle())mParticles.put(entity.getId(), entity);
+			if ( !entity.isRemoved())
+			{
+				if (entity.isParticle()) mParticles.put(entity.getId(), entity);
 				else mEntities.put(entity.getId(), entity);
 			}
 		mAddEntities.clear();
@@ -414,7 +417,6 @@ public class Level
 			entity.render(aG);
 		for (Entity entity : mParticles.values())
 			entity.render(aG);
-		
 		
 		// Render transparent blocks
 		for (int tile : mTransparentBlocks)
