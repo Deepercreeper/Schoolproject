@@ -7,11 +7,11 @@ import data.DataManager;
 
 public class Roller extends Enemy
 {
-	private static final int START_ID = 40;
+	private static final int	START_ID	= 40;
 	
-	private Direction	mDir	= Direction.NONE;
+	private Direction			mDir		= Direction.NONE;
 	
-	public Roller(int aX, int aY)
+	public Roller(final int aX, final int aY)
 	{
 		super(aX, aY, 16, 16, 1);
 	}
@@ -25,7 +25,7 @@ public class Roller extends Enemy
 	}
 	
 	@Override
-	protected void hitWall(double aXV, double aYV)
+	protected void hitWall(final double aXV, final double aYV)
 	{
 		if (aXV != 0)
 		{
@@ -36,13 +36,13 @@ public class Roller extends Enemy
 	}
 	
 	@Override
-	public void render(Graphics aG)
+	public void render(final Graphics aG)
 	{
 		int id = 0;
 		final int delay = 6;
-		id = mTime % (delay*6) /delay ;
+		id = mTime % (delay * 6) / delay;
 		Image image = DataManager.getSplitImage("enemy" + DataManager.getTexturePack(), START_ID + id);
-		if(mDir == Direction.LEFT) image = image.getFlippedCopy(true, false);
-		aG.drawImage(image, (float)(mX - mLevel.getScreenX()),(float)(mY - mLevel.getScreenY()));
+		if (mDir == Direction.LEFT) image = image.getFlippedCopy(true, false);
+		aG.drawImage(image, (float) (mX - mLevel.getScreenX()), (float) (mY - mLevel.getScreenY()));
 	}
 }

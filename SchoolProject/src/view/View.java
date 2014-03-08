@@ -35,20 +35,20 @@ public class View extends BasicGame
 	}
 	
 	@Override
-	public void render(GameContainer aGC, Graphics aG)
+	public void render(final GameContainer aGC, final Graphics aG)
 	{
 		mGame.render(aG);
 	}
 	
 	@Override
-	public void update(GameContainer aGC, int aDelta)
+	public void update(final GameContainer aGC, final int aDelta)
 	{
 		if (mGame.isRunning()) mGame.update(aDelta);
 		else mGameContainer.exit();
 	}
 	
 	@Override
-	public void init(GameContainer aGC) throws SlickException
+	public void init(final GameContainer aGC) throws SlickException
 	{
 		mGame.init(aGC);
 	}

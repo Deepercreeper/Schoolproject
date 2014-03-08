@@ -41,17 +41,17 @@ public class Player extends Entity
 	 * @param aData
 	 *            The load data to create out of.
 	 */
-	public Player(String aData)
+	public Player(final String aData)
 	{
 		super(0, 0, Block.SIZE - 2, Block.SIZE * 2 - 2);
-		String[] data = aData.split(",");
+		final String[] data = aData.split(",");
 		mLifeSkill = Integer.parseInt(data[0]);
 		mSpeedSkill = Integer.parseInt(data[1]);
 		mLife = mMaxLife + mLifeStep * mLifeSkill;
 	}
 	
 	@Override
-	public void update(Input aInput)
+	public void update(final Input aInput)
 	{
 		mTime++ ;
 		if (mHurtDelay > 0) mHurtDelay-- ;
@@ -182,7 +182,7 @@ public class Player extends Entity
 	}
 	
 	@Override
-	public void render(Graphics aG)
+	public void render(final Graphics aG)
 	{
 		// Player
 		if (mHurtDelay > 0 && mTime % 10 < 5) aG.drawImage(DataManager.getSplitImage("player" + DataManager.getTexturePack(), 0), (float) mX - mLevel.getScreenX(), (float) mY - mLevel.getScreenY(),
@@ -204,7 +204,7 @@ public class Player extends Entity
 	}
 	
 	@Override
-	public void hitEntity(double aXV, double aYV, Entity aEntity)
+	public void hitEntity(final double aXV, final double aYV, final Entity aEntity)
 	{
 		if (aEntity instanceof Gore) ((Gore) aEntity).hit(this);
 		if (aEntity instanceof Banana) ((Banana) aEntity).collect();
@@ -220,7 +220,7 @@ public class Player extends Entity
 	}
 	
 	@Override
-	public void hurt(int aAmount, double aXV, double aYV)
+	public void hurt(final int aAmount, final double aXV, final double aYV)
 	{
 		if (mHurtDelay <= 0)
 		{
@@ -254,7 +254,7 @@ public class Player extends Entity
 	 */
 	public String getData()
 	{
-		StringBuilder data = new StringBuilder();
+		final StringBuilder data = new StringBuilder();
 		data.append(mLifeSkill).append("," + mSpeedSkill);
 		return data.toString();
 	}
@@ -271,14 +271,14 @@ public class Player extends Entity
 	 * @param aAmount
 	 *            The amount of life to add.
 	 */
-	public void addLife(int aAmount)
+	public void addLife(final int aAmount)
 	{
 		mLife += aAmount;
 		if (mLife > mMaxLife + mLifeStep * mLifeSkill) mLife = mMaxLife + mLifeStep * mLifeSkill;
 	}
 	
 	@Override
-	public boolean canDestroyBlock(Direction aDirection)
+	public boolean canDestroyBlock(final Direction aDirection)
 	{
 		return aDirection == Direction.BOTTOM || aDirection == Direction.TOP && isCannonBall();
 	}

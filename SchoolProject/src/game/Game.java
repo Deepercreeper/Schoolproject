@@ -29,7 +29,7 @@ public class Game
 	 * @param aG
 	 *            The graphics to draw into.
 	 */
-	public void render(Graphics aG)
+	public void render(final Graphics aG)
 	{
 		if ( !DataManager.isInitiated() || DataManager.isLoading()) aG.drawImage(DataManager.getImage("splash").getScaledCopy(mGC.getWidth(), mGC.getHeight()), 0, 0);
 		else
@@ -52,7 +52,7 @@ public class Game
 			// Render volume
 			if (mShowingVolume > 0)
 			{
-				float volume = DataManager.getVolume();
+				final float volume = DataManager.getVolume();
 				aG.setColor(Color.white);
 				aG.drawString("Volume", mGC.getWidth() / 2 - 25, mGC.getHeight() - 100);
 				aG.setColor(Color.darkGray);
@@ -69,7 +69,7 @@ public class Game
 	 * @param aDelta
 	 *            The done ticks after the last update.
 	 */
-	public void update(int aDelta)
+	public void update(final int aDelta)
 	{
 		if ( !DataManager.isInitiated())
 		{
@@ -94,7 +94,7 @@ public class Game
 		// Creating level
 		if (mLevel.hasWon())
 		{
-			int levelIndex = mLevel.getLevelId();
+			final int levelIndex = mLevel.getLevelId();
 			mSave.setScore(mLevel.getWorldId(), levelIndex, Stats.instance().getScore());
 			if (levelIndex < DataManager.getLevelsPerWorld()[mLevel.getWorldId()] - 1)
 			{
@@ -144,7 +144,7 @@ public class Game
 	 * @param aGC
 	 *            The containing game container.
 	 */
-	public void init(GameContainer aGC)
+	public void init(final GameContainer aGC)
 	{
 		mGC = aGC;
 		mInput = mGC.getInput();
@@ -172,7 +172,7 @@ public class Game
 	 * @param aSave
 	 *            The save to play with.
 	 */
-	public void start(int aWorldId, int aLevelId, Save aSave)
+	public void start(final int aWorldId, final int aLevelId, final Save aSave)
 	{
 		mMain = false;
 		mSave = aSave;
@@ -207,7 +207,7 @@ public class Game
 		mRunning = false;
 	}
 	
-	private void initWorld(int aWorldId, int aLevelId)
+	private void initWorld(final int aWorldId, final int aLevelId)
 	{
 		if (mInput == null) mInput = mGC.getInput();
 		if (mPauseMenu == null) mPauseMenu = new PauseMenu(mGC, this);

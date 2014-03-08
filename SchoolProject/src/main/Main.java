@@ -5,13 +5,13 @@ import view.View;
 
 public class Main
 {
-	public static void main(String[] args)
+	public static void main(final String[] args)
 	{
 		try
 		{
 			new View();
 		}
-		catch (SlickException e)
+		catch (final SlickException e)
 		{
 			e.printStackTrace();
 		}

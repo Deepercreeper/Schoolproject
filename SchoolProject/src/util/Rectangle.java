@@ -16,7 +16,7 @@ public class Rectangle
 	 * @param aHeight
 	 *            The height.
 	 */
-	public Rectangle(double aX, double aY, double aWidth, double aHeight)
+	public Rectangle(final double aX, final double aY, final double aWidth, final double aHeight)
 	{
 		mX = aX;
 		mY = aY;
@@ -31,7 +31,7 @@ public class Rectangle
 	 *            The intersecting rectangle.
 	 * @return {@code true} if this rectangle intersects and {@code false} if not.
 	 */
-	public boolean intersects(Rectangle aRect)
+	public boolean intersects(final Rectangle aRect)
 	{
 		return !(mX >= aRect.mX + aRect.mWidth || mX + mWidth <= aRect.mX || mY >= aRect.mY + aRect.mHeight || mY + mHeight <= aRect.mY);
 	}
@@ -122,7 +122,7 @@ public class Rectangle
 	 * @param aX
 	 *            The center x position.
 	 */
-	public void setCenterX(double aX)
+	public void setCenterX(final double aX)
 	{
 		mX = aX - mWidth / 2;
 	}
@@ -133,7 +133,7 @@ public class Rectangle
 	 * @param aY
 	 *            The center y position.
 	 */
-	public void setCenterY(double aY)
+	public void setCenterY(final double aY)
 	{
 		mY = aY - mHeight / 2;
 	}
@@ -144,7 +144,7 @@ public class Rectangle
 	 * @param aX
 	 *            The new x position.
 	 */
-	public void setX(double aX)
+	public void setX(final double aX)
 	{
 		mX = aX;
 	}
@@ -155,7 +155,7 @@ public class Rectangle
 	 * @param aY
 	 *            The new y position.
 	 */
-	public void setY(double aY)
+	public void setY(final double aY)
 	{
 		mY = aY;
 	}
@@ -166,7 +166,7 @@ public class Rectangle
 	 * @param aWidth
 	 *            The new width.
 	 */
-	public void setWidth(double aWidth)
+	public void setWidth(final double aWidth)
 	{
 		mWidth = aWidth;
 	}
@@ -177,17 +177,17 @@ public class Rectangle
 	 * @param aHeight
 	 *            The new height.
 	 */
-	public void setHeight(double aHeight)
+	public void setHeight(final double aHeight)
 	{
 		mHeight = aHeight;
 	}
 	
 	@Override
-	public boolean equals(Object aO)
+	public boolean equals(final Object aO)
 	{
 		if (aO instanceof Rectangle)
 		{
-			Rectangle r = (Rectangle) aO;
+			final Rectangle r = (Rectangle) aO;
 			return r.mX == mX && r.mY == mY && r.mWidth == mWidth && r.mHeight == mHeight;
 		}
 		return false;

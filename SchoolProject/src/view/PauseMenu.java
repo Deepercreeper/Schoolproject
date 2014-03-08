@@ -16,20 +16,20 @@ public class PauseMenu extends Menu
 	 * @param aGame
 	 *            The parent game.
 	 */
-	public PauseMenu(GameContainer aGC, Game aGame)
+	public PauseMenu(final GameContainer aGC, final Game aGame)
 	{
 		super(aGame, aGC.getWidth() / 2 - 300 / 2, aGC.getHeight() / 2 - 100 / 2, 300, 60);
 	}
 	
 	@Override
-	public void update(Input aInput)
+	public void update(final Input aInput)
 	{
 		if (aInput.isKeyPressed(Input.KEY_SPACE)) mGame.mainMenu();
 		if (aInput.isKeyPressed(Input.KEY_ESCAPE)) mGame.resume();
 	}
 	
 	@Override
-	public void render(Graphics aG)
+	public void render(final Graphics aG)
 	{
 		aG.setColor(Color.black);
 		aG.fillRect(mX, mY, mWidth, mHeight);

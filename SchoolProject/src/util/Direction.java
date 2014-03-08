@@ -6,7 +6,7 @@ public enum Direction
 	
 	public final int	XD, YD;
 	
-	private Direction(int aXD, int aYD)
+	private Direction(final int aXD, final int aYD)
 	{
 		XD = aXD;
 		YD = aYD;

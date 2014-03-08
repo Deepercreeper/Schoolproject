@@ -14,7 +14,8 @@ abstract class HitAction
 	static HitAction	DESTROY	= new HitAction()
 								{
 									@Override
-									void execute(int aX, int aY, Level aLevel, Entity aEntity, Block aBlock, Direction aHitDirection, HashMap<Block, Direction> aOtherBlocks)
+									void execute(final int aX, final int aY, final Level aLevel, final Entity aEntity, final Block aBlock, final Direction aHitDirection,
+											final HashMap<Block, Direction> aOtherBlocks)
 									{
 										destroy(aX, aY, aLevel, aEntity, aBlock, aHitDirection);
 									};
@@ -26,7 +27,8 @@ abstract class HitAction
 	static HitAction	HURT	= new HitAction()
 								{
 									@Override
-									void execute(int aX, int aY, Level aLevel, Entity aEntity, Block aBlock, Direction aHitDirection, HashMap<Block, Direction> aOtherBlocks)
+									void execute(final int aX, final int aY, final Level aLevel, final Entity aEntity, final Block aBlock, final Direction aHitDirection,
+											final HashMap<Block, Direction> aOtherBlocks)
 									{
 										hurt(aX, aY, aEntity, aBlock, aHitDirection, aOtherBlocks);
 									};
@@ -38,29 +40,30 @@ abstract class HitAction
 	static HitAction	ICE		= new HitAction()
 								{
 									@Override
-									void execute(int aX, int aY, Level aLevel, Entity aEntity, Block aBlock, Direction aHitDirection, HashMap<Block, Direction> aOtherBlocks)
+									void execute(final int aX, final int aY, final Level aLevel, final Entity aEntity, final Block aBlock, final Direction aHitDirection,
+											final HashMap<Block, Direction> aOtherBlocks)
 									{
 										ice(aEntity, aHitDirection, aOtherBlocks);
 									};
 								};
 	
-	private static void ice(Entity aEntity, Direction aDirection, HashMap<Block, Direction> aOtherBlocks)
+	private static void ice(final Entity aEntity, final Direction aDirection, final HashMap<Block, Direction> aOtherBlocks)
 	{
 		if (aDirection == Direction.TOP)
 		{
-			for (Block block : aOtherBlocks.keySet())
+			for (final Block block : aOtherBlocks.keySet())
 				if (aOtherBlocks.get(block) == Direction.TOP && !block.isIce()) return;
 			aEntity.setOnIce();
 		}
 	}
 	
-	private static void hurt(int aX, int aY, Entity aEntity, Block aBlock, Direction aHitDirection, HashMap<Block, Direction> aOtherBlocks)
+	private static void hurt(final int aX, final int aY, final Entity aEntity, final Block aBlock, final Direction aHitDirection, final HashMap<Block, Direction> aOtherBlocks)
 	{
 		if (aHitDirection != aBlock.getHurtDirection()) return;
 		switch (aBlock.getHurtDirection())
 		{
 			case TOP :
-				for (Block block : aOtherBlocks.keySet())
+				for (final Block block : aOtherBlocks.keySet())
 					if (aOtherBlocks.get(block) == Direction.TOP && block.getHurtDirection() != Direction.TOP) return;
 				aEntity.hurt(1, 0, -3);
 				break;
@@ -76,16 +79,16 @@ abstract class HitAction
 		}
 	}
 	
-	private static void destroy(int aX, int aY, Level aLevel, Entity aEntity, Block aBlock, Direction aHitDirection)
+	private static void destroy(final int aX, final int aY, final Level aLevel, final Entity aEntity, final Block aBlock, final Direction aHitDirection)
 	{
 		final Texture texture = Block.getBlockTexture(aX, aY, aLevel);
 		
-		for (Direction dir : Direction.values())
+		for (final Direction dir : Direction.values())
 			if (aEntity.canDestroyBlock(dir) && aHitDirection == dir)
 			{
 				aLevel.setBlock(aX, aY, aBlock.getDestination().getId(texture));
-				short alpha = aLevel.getAlpha(aX, aY);
-				Item item = aBlock.getItem(alpha);
+				final short alpha = aLevel.getAlpha(aX, aY);
+				final Item item = aBlock.getItem(alpha);
 				if (item != null)
 				{
 					final int width = item.getWidth(), height = item.getHeight();
@@ -94,7 +97,7 @@ abstract class HitAction
 					x -= dir.XD * (Block.SIZE / 2 + width / 2);
 					y -= dir.YD * (Block.SIZE / 2 + height / 2);
 					
-					Entity entity = item.create(x - width / 2, y - height / 2);
+					final Entity entity = item.create(x - width / 2, y - height / 2);
 					if ( !Block.get(aLevel.getBlock(aX - dir.XD, aY - dir.YD)).isSolid(aX - dir.XD, aY - dir.YD, entity)) aLevel.addEntity(entity);
 					DataManager.playSound("item");
 				}

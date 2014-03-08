@@ -12,7 +12,7 @@ public class Bullet extends Entity
 	
 	private int				mBouncing;
 	
-	public Bullet(int aX, int aY, double aXV, double aYV, int aBouncing, Entity aSource)
+	public Bullet(final int aX, final int aY, final double aXV, final double aYV, final int aBouncing, final Entity aSource)
 	{
 		super(aX, aY, 2, 2);
 		mXV = aXV;
@@ -22,20 +22,20 @@ public class Bullet extends Entity
 	}
 	
 	@Override
-	public void update(Input aInput)
+	public void update(final Input aInput)
 	{
 		move();
 	}
 	
 	@Override
-	public void render(Graphics aG)
+	public void render(final Graphics aG)
 	{
 		aG.setColor(Color.white);
 		aG.drawLine((float) (mX - mLevel.getScreenX()), (float) (mY - mLevel.getScreenY()), (float) (mX - mXV - mLevel.getScreenX()), (float) (mY - mYV - mLevel.getScreenY()));
 	}
 	
 	@Override
-	public void hitEntity(double aXV, double aYV, Entity aEntity)
+	public void hitEntity(final double aXV, final double aYV, final Entity aEntity)
 	{
 		if (aEntity == mSource) return;
 		if (aEntity instanceof Banana) ((Banana) aEntity).collect();
@@ -48,7 +48,7 @@ public class Bullet extends Entity
 	}
 	
 	@Override
-	protected void hitWall(double aXV, double aYV)
+	protected void hitWall(final double aXV, final double aYV)
 	{
 		if (mBouncing > 0)
 		{
@@ -60,7 +60,7 @@ public class Bullet extends Entity
 	}
 	
 	@Override
-	public boolean canDestroyBlock(Direction aDirection)
+	public boolean canDestroyBlock(final Direction aDirection)
 	{
 		return true;
 	}

@@ -21,7 +21,7 @@ public class Screen
 	 * @param aHeight
 	 *            The screen height.
 	 */
-	public Screen(int aWidth, int aHeight)
+	public Screen(final int aWidth, final int aHeight)
 	{
 		mRect = new Rectangle(0, 0, aWidth, aHeight);
 	}
@@ -32,7 +32,7 @@ public class Screen
 	 * @param aLevel
 	 *            The parent level.
 	 */
-	public void init(Level aLevel)
+	public void init(final Level aLevel)
 	{
 		mLevel = aLevel;
 	}
@@ -43,7 +43,7 @@ public class Screen
 	 * @param aPlayer
 	 *            the player of the parent level.
 	 */
-	public void update(Player aPlayer)
+	public void update(final Player aPlayer)
 	{
 		if (Math.abs(mRect.getCenterX() - aPlayer.getRect().getCenterX()) > Block.SIZE * MOVEMENT_SPACE)
 		{
@@ -63,7 +63,7 @@ public class Screen
 	 * @param aXD
 	 *            The length of moving.
 	 */
-	public void addX(int aXD)
+	public void addX(final int aXD)
 	{
 		if (mRect.getX() + aXD < 0) mRect.setX(0);
 		mRect.setX(mRect.getX() + aXD);
@@ -75,7 +75,7 @@ public class Screen
 	 * @param aYD
 	 *            The length of moving.
 	 */
-	public void addY(int aYD)
+	public void addY(final int aYD)
 	{
 		if (mRect.getY() + aYD < 0) mRect.setY(0);
 		mRect.setY(mRect.getY() + aYD);
@@ -128,7 +128,7 @@ public class Screen
 	 *            the entity to render.
 	 * @return {@code true} if this screen contains the entity and {@code false} if not.
 	 */
-	public boolean contains(Entity aEntity)
+	public boolean contains(final Entity aEntity)
 	{
 		return aEntity.getRect().intersects(mRect);
 	}

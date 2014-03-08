@@ -92,25 +92,25 @@ public class Block
 	private Block									mDestination				= null;
 	private boolean									mVisible					= true, mUpdatable = false, mLiquid = false, mFlag = false, mIce = false, mItemBlock = false;
 	
-	private Block(int aId, int[] aRGBs)
+	private Block(final int aId, final int[] aRGBs)
 	{
 		final int textures = Texture.values().size();
-		for (Texture texture : Texture.values())
+		for (final Texture texture : Texture.values())
 			mIds.put(texture, (short) (aId * textures + texture.getId()));
-		for (Texture texture : mIds.keySet())
+		for (final Texture texture : mIds.keySet())
 			BLOCKS.put(mIds.get(texture), this);
 		if (aRGBs.length != textures) throw new IllegalArgumentException("Not the right number of color codes");
 		for (int i = 0; i < textures; i++ )
 			COLORS.put(aRGBs[i], mIds.get(Texture.get((byte) i)));
-		for (Texture texture : Texture.values())
+		for (final Texture texture : Texture.values())
 			TEXTURES.put(mIds.get(texture), texture);
 		mRenderBlocks.add(this);
 	}
 	
-	private Block(int aId, int aRGB)
+	private Block(final int aId, final int aRGB)
 	{
-		short id = (short) (aId * Texture.values().size());
-		for (Texture texture : Texture.values())
+		final short id = (short) (aId * Texture.values().size());
+		for (final Texture texture : Texture.values())
 			mIds.put(texture, id);
 		BLOCKS.put(id, this);
 		COLORS.put(aRGB, id);
@@ -120,8 +120,8 @@ public class Block
 	
 	private Block()
 	{
-		short id = Short.MAX_VALUE;
-		for (Texture texture : Texture.values())
+		final short id = Short.MAX_VALUE;
+		for (final Texture texture : Texture.values())
 			mIds.put(texture, id);
 		BLOCKS.put(id, this);
 		TEXTURES.put(id, Texture.NORMAL);
@@ -129,7 +129,7 @@ public class Block
 		mRenderBlocks.add(this);
 	}
 	
-	private Block addRenderBlock(Block aBlock)
+	private Block addRenderBlock(final Block aBlock)
 	{
 		mRenderBlocks.add(aBlock);
 		return this;
@@ -147,7 +147,7 @@ public class Block
 		return this;
 	}
 	
-	private Block setSolidSide(Direction aDirection)
+	private Block setSolidSide(final Direction aDirection)
 	{
 		mSolid = aDirection;
 		return this;
@@ -186,20 +186,20 @@ public class Block
 		return this;
 	}
 	
-	private Block setItem(int aAlpha, Item aItem)
+	private Block setItem(final int aAlpha, final Item aItem)
 	{
 		mItems.put((short) aAlpha, aItem);
 		return this;
 	}
 	
-	private Block setDestroyable(Block aDestination)
+	private Block setDestroyable(final Block aDestination)
 	{
 		mDestination = aDestination;
 		mHitActions.add(HitAction.DESTROY);
 		return this;
 	}
 	
-	private Block setHurtPlayer(Direction aDirection)
+	private Block setHurtPlayer(final Direction aDirection)
 	{
 		mHurtDirection = aDirection;
 		mHitActions.add(HitAction.HURT);
@@ -216,7 +216,7 @@ public class Block
 		return mDestination;
 	}
 	
-	Item getItem(short aAlpha)
+	Item getItem(final short aAlpha)
 	{
 		return mItems.get(aAlpha);
 	}
@@ -226,7 +226,7 @@ public class Block
 	 * 
 	 * @return this blocks id.
 	 */
-	public short getId(Texture aTexture)
+	public short getId(final Texture aTexture)
 	{
 		return mIds.get(aTexture);
 	}
@@ -246,7 +246,7 @@ public class Block
 	 * 
 	 * @return {@code true} if this block is solid and {@code false} if not.
 	 */
-	public boolean isSolid(int aX, int aY, Entity aEntity)
+	public boolean isSolid(final int aX, final int aY, final Entity aEntity)
 	{
 		if (mSolid == null) return false;
 		switch (mSolid)
@@ -336,9 +336,9 @@ public class Block
 	 * @param aLevel
 	 *            The parent level.
 	 */
-	public void initImage(int aX, int aY, Level aLevel)
+	public void initImage(final int aX, final int aY, final Level aLevel)
 	{
-		Texture texture = getBlockTexture(aX, aY, aLevel);
+		final Texture texture = getBlockTexture(aX, aY, aLevel);
 		DataManager.loadTexture(DataManager.getTexturePack(), texture, getId(texture) / Texture.values().size());
 	}
 	
@@ -359,7 +359,7 @@ public class Block
 	 *            The id.
 	 * @return The block.
 	 */
-	public static Block get(short aId)
+	public static Block get(final short aId)
 	{
 		return BLOCKS.get(aId);
 	}
@@ -371,7 +371,7 @@ public class Block
 	 *            The color of any pixel inside a level map image.
 	 * @return the id of the searched block.
 	 */
-	public static short getIdFromCode(int aRGB)
+	public static short getIdFromCode(final int aRGB)
 	{
 		if ( !COLORS.containsKey(aRGB))
 		{
@@ -395,7 +395,7 @@ public class Block
 	 * @param aLevel
 	 *            The parent level.
 	 */
-	public static void render(int aX, int aY, short aId, Graphics aG, Level aLevel)
+	public static void render(final int aX, final int aY, final short aId, final Graphics aG, final Level aLevel)
 	{
 		final Block block = get(aId);
 		final Texture texture = getBlockTexture(aX, aY, aLevel);
@@ -415,7 +415,7 @@ public class Block
 	 *            The parent level.
 	 * @return the texture of the given block.
 	 */
-	public static Texture getBlockTexture(int aX, int aY, Level aLevel)
+	public static Texture getBlockTexture(final int aX, final int aY, final Level aLevel)
 	{
 		return TEXTURES.get(aLevel.getBlock(aX, aY));
 	}
@@ -430,9 +430,9 @@ public class Block
 	 * @param aLevel
 	 *            the parent level.
 	 */
-	public void update(int aX, int aY, Level aLevel)
+	public void update(final int aX, final int aY, final Level aLevel)
 	{
-		for (UpdateAction action : mUpdateActions)
+		for (final UpdateAction action : mUpdateActions)
 			action.execute(aX, aY, aLevel);
 	}
 	
@@ -452,9 +452,9 @@ public class Block
 	 * @param aOtherBlocks
 	 *            All other hit blocks by the given entity at this tick.
 	 */
-	public void hit(int aX, int aY, Level aLevel, Entity aEntity, Direction aDirection, HashMap<Block, Direction> aOtherBlocks)
+	public void hit(final int aX, final int aY, final Level aLevel, final Entity aEntity, final Direction aDirection, final HashMap<Block, Direction> aOtherBlocks)
 	{
-		for (HitAction action : mHitActions)
+		for (final HitAction action : mHitActions)
 			action.execute(aX, aY, aLevel, aEntity, this, aDirection, aOtherBlocks);
 	}
 	
@@ -465,11 +465,11 @@ public class Block
 	}
 	
 	@Override
-	public boolean equals(Object aObj)
+	public boolean equals(final Object aObj)
 	{
 		if (aObj instanceof Block)
 		{
-			Block b = (Block) aObj;
+			final Block b = (Block) aObj;
 			return b.getId() == getId();
 		}
 		return false;

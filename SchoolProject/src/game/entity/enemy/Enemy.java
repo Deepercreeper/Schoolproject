@@ -11,14 +11,14 @@ public abstract class Enemy extends Entity
 {
 	protected int	mLife, mTime;
 	
-	public Enemy(int aX, int aY, int aWidth, int aHeight, int aStartLife)
+	public Enemy(final int aX, final int aY, final int aWidth, final int aHeight, final int aStartLife)
 	{
 		super(aX, aY, aWidth, aHeight);
 		mLife = aStartLife;
 	}
 	
 	@Override
-	public void update(Input aInput)
+	public void update(final Input aInput)
 	{
 		mTime++ ;
 		if ( !mHurt) getInput();
@@ -42,7 +42,7 @@ public abstract class Enemy extends Entity
 	}
 	
 	@Override
-	public void hitEntity(double aXV, double aYV, Entity aEntity)
+	public void hitEntity(final double aXV, final double aYV, final Entity aEntity)
 	{
 		if (aEntity instanceof Gore) ((Gore) aEntity).hit(this);
 		if (aEntity instanceof Player) ((Player) aEntity).hurt(1, (float) (Math.signum(mXV) * 3), -5);
@@ -69,13 +69,13 @@ public abstract class Enemy extends Entity
 		return mY + mHeight / 2 - (mLevel.getPlayer().getY() + mLevel.getPlayer().getHeight() / 2);
 	}
 	
-	public void hitTop(boolean mCannonBall, Entity aEntity)
+	public void hitTop(final boolean mCannonBall, final Entity aEntity)
 	{
 		hurt(mCannonBall ? 2 : 1, Math.signum(getXDistanceToPlayer()) * 2, 0);
 	}
 	
 	@Override
-	public void hurt(int aAmount, double aXV, double aYV)
+	public void hurt(final int aAmount, final double aXV, final double aYV)
 	{
 		if (mHurt) return;
 		mLife -= aAmount;

@@ -17,7 +17,7 @@ public abstract class Item
 	public static final Item					HEART_STATIC	= new Item(0xFF0000)
 																{
 																	@Override
-																	public Entity create(int aX, int aY)
+																	public Entity create(final int aX, final int aY)
 																	{
 																		return new Heart(aX, aY, 2, true);
 																	}
@@ -41,7 +41,7 @@ public abstract class Item
 	public static final Item					HEART			= new Item(0xFE0000)
 																{
 																	@Override
-																	public Entity create(int aX, int aY)
+																	public Entity create(final int aX, final int aY)
 																	{
 																		return new Heart(aX, aY, 2, false);
 																	}
@@ -65,7 +65,7 @@ public abstract class Item
 	public static final Item					BANANA			= new Item(0xFFFF00)
 																{
 																	@Override
-																	public Entity create(int aX, int aY)
+																	public Entity create(final int aX, final int aY)
 																	{
 																		return new Banana(aX, aY, false);
 																	}
@@ -89,7 +89,7 @@ public abstract class Item
 	public static final Item					SUPER_BANANA	= new Item(0xFF00FF)
 																{
 																	@Override
-																	public Entity create(int aX, int aY)
+																	public Entity create(final int aX, final int aY)
 																	{
 																		return new Banana(aX, aY, true);
 																	}
@@ -110,7 +110,7 @@ public abstract class Item
 	public static final Item					ROLLER			= new Item(0xB6FF00)
 																{
 																	@Override
-																	public Entity create(int aX, int aY)
+																	public Entity create(final int aX, final int aY)
 																	{
 																		return new Roller(aX, aY);
 																	};
@@ -127,11 +127,11 @@ public abstract class Item
 																		return 16;
 																	}
 																};
-																
-	public static final Item					MINION = new Item(0x007F0E)
+	
+	public static final Item					MINION			= new Item(0x007F0E)
 																{
 																	@Override
-																	public Entity create(int aX, int aY)
+																	public Entity create(final int aX, final int aY)
 																	{
 																		return new Minion(aX, aY);
 																	};
@@ -149,7 +149,7 @@ public abstract class Item
 																	}
 																};
 	
-	private Item(int aRGB)
+	private Item(final int aRGB)
 	{
 		ITEMS.put(aRGB, this);
 	}
@@ -186,7 +186,7 @@ public abstract class Item
 	 *            The color to check.
 	 * @return {@code true} if an item with color {@code aRGB} exists and {@code false} if not.
 	 */
-	public static boolean containsCode(int aRGB)
+	public static boolean containsCode(final int aRGB)
 	{
 		return ITEMS.containsKey(aRGB);
 	}
@@ -202,7 +202,7 @@ public abstract class Item
 	 *            The color code.
 	 * @return a new item.
 	 */
-	public static Entity getItem(int aX, int aY, int aRGB)
+	public static Entity getItem(final int aX, final int aY, final int aRGB)
 	{
 		return ITEMS.get(aRGB).create(aX, aY);
 	}

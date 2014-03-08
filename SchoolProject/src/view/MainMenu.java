@@ -34,14 +34,14 @@ public class MainMenu extends Menu
 	 * @param aGame
 	 *            The parent game.
 	 */
-	public MainMenu(GameContainer aGC, Game aGame)
+	public MainMenu(final GameContainer aGC, final Game aGame)
 	{
 		super(aGame, 0, 0, aGC.getWidth(), aGC.getHeight());
 		mState = State.MAIN;
 	}
 	
 	@Override
-	public void render(Graphics aG)
+	public void render(final Graphics aG)
 	{
 		aG.setColor(Color.black);
 		aG.fillRect(mX, mY, mWidth, mHeight);
@@ -108,7 +108,7 @@ public class MainMenu extends Menu
 				}
 				else if (aInput.isKeyPressed(Input.KEY_RIGHT))
 				{
-					int[] worlds = DataManager.getLevelsPerWorld();
+					final int[] worlds = DataManager.getLevelsPerWorld();
 					if (mLevelId < worlds[mWorldId] - 1)
 					{
 						if (mSave.isAvailable(mWorldId, mLevelId + 1)) mLevelId++ ;
@@ -121,7 +121,7 @@ public class MainMenu extends Menu
 				}
 				else if (aInput.isKeyPressed(Input.KEY_LEFT))
 				{
-					int[] worlds = DataManager.getLevelsPerWorld();
+					final int[] worlds = DataManager.getLevelsPerWorld();
 					if (mLevelId > 0)
 					{
 						if (mSave.isAvailable(mWorldId, mLevelId - 1)) mLevelId-- ;
@@ -164,7 +164,7 @@ public class MainMenu extends Menu
 		}
 	}
 	
-	private void renderLevelSelection(Graphics aG)
+	private void renderLevelSelection(final Graphics aG)
 	{
 		aG.drawImage(DataManager.getImage(DataManager.getTexturePack()), 0, 0);
 		
@@ -179,7 +179,7 @@ public class MainMenu extends Menu
 		aG.drawString("Space - Start", mWidth / 2 - 100, mHeight - 35);
 		aG.drawString("Escape - Ende", mWidth / 2 - 100, mHeight - 20);
 		
-		int levels = DataManager.getLevelsPerWorld()[mWorldId];
+		final int levels = DataManager.getLevelsPerWorld()[mWorldId];
 		
 		for (int i = 0; i < levels; i++ )
 		{
@@ -205,14 +205,14 @@ public class MainMenu extends Menu
 		}
 	}
 	
-	private void newGame(String aName)
+	private void newGame(final String aName)
 	{
 		mSave = new Save(aName);
 		mWorldId = mSave.getLastWorldId();
 		mLevelId = mSave.getLastLevelId();
 	}
 	
-	private void loadGame(String aName)
+	private void loadGame(final String aName)
 	{
 		mSave = DataManager.loadSave(aName);
 		mWorldId = mSave.getLastWorldId();
@@ -231,7 +231,7 @@ public class MainMenu extends Menu
 	{
 		private final Input	mInput;
 		
-		public Listener(Input aInput)
+		public Listener(final Input aInput)
 		{
 			mInput = aInput;
 		}
@@ -251,11 +251,11 @@ public class MainMenu extends Menu
 		}
 		
 		@Override
-		public void setInput(Input aArg0)
+		public void setInput(final Input aArg0)
 		{}
 		
 		@Override
-		public void keyPressed(int aKey, char aChar)
+		public void keyPressed(final int aKey, final char aChar)
 		{
 			if (Character.isLetter(aChar) || Character.isDigit(aChar) || aChar == ' ') mText += aChar;
 			else if (aKey == Input.KEY_BACK && mText.length() > 0) mText = mText.substring(0, mText.length() - 1);
@@ -277,7 +277,7 @@ public class MainMenu extends Menu
 		}
 		
 		@Override
-		public void keyReleased(int aKey, char aChar)
+		public void keyReleased(final int aKey, final char aChar)
 		{}
 	}
 }

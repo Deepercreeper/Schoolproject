@@ -17,7 +17,7 @@ public class Gore extends Entity
 	 * @param aY
 	 *            The y position.
 	 */
-	public Gore(int aX, int aY)
+	public Gore(final int aX, final int aY)
 	{
 		super(aX, aY, 4, 3);
 		mXV = (Math.random() - Math.random()) * 5;
@@ -31,7 +31,7 @@ public class Gore extends Entity
 	 * @param aEntity
 	 *            The kicking entity.
 	 */
-	public void hit(Entity aEntity)
+	public void hit(final Entity aEntity)
 	{
 		if ( !mOnGround) return;
 		mXV += Math.signum(mX - aEntity.getX()) * (Math.random() * 5 + 2);
@@ -39,7 +39,7 @@ public class Gore extends Entity
 	}
 	
 	@Override
-	public void update(Input aInput)
+	public void update(final Input aInput)
 	{
 		if (--mLife < 0) remove();
 		
@@ -59,7 +59,7 @@ public class Gore extends Entity
 	}
 	
 	@Override
-	public void render(Graphics aG)
+	public void render(final Graphics aG)
 	{
 		aG.drawImage(DataManager.getSplitImage("entity" + DataManager.getTexturePack(), 0), (float) (mX - mLevel.getScreenX()), (float) (mY - mLevel.getScreenY()));
 	}

@@ -48,7 +48,7 @@ public abstract class Entity
 	 * @param aHeight
 	 *            The height.
 	 */
-	public Entity(int aX, int aY, int aWidth, int aHeight)
+	public Entity(final int aX, final int aY, final int aWidth, final int aHeight)
 	{
 		mX = aX;
 		mY = aY;
@@ -149,31 +149,27 @@ public abstract class Entity
 		if (mY >= height) die();
 	}
 	
-	public boolean hasCollidedWith(int aId)
+	/**
+	 * If another entity already has collided with this one at the last tick this returns {@code true}.
+	 * 
+	 * @param aId
+	 *            The entity id.
+	 * @return {@code true} if the other entity has hit this one and {@code false} if not.
+	 */
+	public boolean hasCollidedWith(final int aId)
 	{
 		return mCollidedEntities.contains(aId);
 	}
 	
-	public void addCollidedEntity(int aId)
+	/**
+	 * Adds an entity that already has collided with this entity so it doesn't need to anymore at the last tick.
+	 * 
+	 * @param aId
+	 *            The entity id.
+	 */
+	public void addCollidedEntity(final int aId)
 	{
 		mCollidedEntities.add(aId);
-	}
-	
-	private final void touchBlocks()
-	{
-		final HashMap<Block, Direction> blocks = new HashMap<>();
-		for (int tile : mTouchingBlocks.keySet())
-		{
-			final int x = tile % mLevel.getWidth(), y = tile / mLevel.getWidth();
-			blocks.put(Block.get(mLevel.getBlock(x, y)), mTouchingBlocks.get(tile));
-		}
-		for (int tile : mTouchingBlocks.keySet())
-		{
-			final int x = tile % mLevel.getWidth(), y = tile / mLevel.getWidth();
-			final Direction dir = mTouchingBlocks.get(tile);
-			Block.get(mLevel.getBlock(x, y)).hit(x, y, mLevel, this, dir, blocks);
-		}
-		mTouchingBlocks.clear();
 	}
 	
 	/**
@@ -186,7 +182,7 @@ public abstract class Entity
 	 * @param aDir
 	 *            The touching direction.
 	 */
-	public final void addTouchingBlock(int aX, int aY, Direction aDir)
+	public final void addTouchingBlock(final int aX, final int aY, final Direction aDir)
 	{
 		mTouchingBlocks.put(aX + aY * mLevel.getWidth(), aDir);
 	}
@@ -201,7 +197,7 @@ public abstract class Entity
 	 * @param aEntity
 	 *            The other entity.
 	 */
-	public void hitEntity(double aXV, double aYV, Entity aEntity)
+	public void hitEntity(final double aXV, final double aYV, final Entity aEntity)
 	{}
 	
 	/**
@@ -212,7 +208,7 @@ public abstract class Entity
 	 * @param aYV
 	 *            The y velocity.
 	 */
-	protected void hitWall(double aXV, double aYV)
+	protected void hitWall(final double aXV, final double aYV)
 	{
 		if (aXV != 0)
 		{
@@ -247,7 +243,7 @@ public abstract class Entity
 	 * @param aInput
 	 *            The input data containing whether keys and mouse buttons are pressed.
 	 */
-	public void update(Input aInput)
+	public void update(final Input aInput)
 	{}
 	
 	/**
@@ -257,7 +253,7 @@ public abstract class Entity
 	 * @param aG
 	 *            The graphics wherein this entity is rendered.
 	 */
-	public void render(Graphics aG)
+	public void render(final Graphics aG)
 	{}
 	
 	/**
@@ -266,7 +262,7 @@ public abstract class Entity
 	 * @param aX
 	 *            The new x position.
 	 */
-	public final void setX(double aX)
+	public final void setX(final double aX)
 	{
 		mX = aX;
 	}
@@ -277,7 +273,7 @@ public abstract class Entity
 	 * @param aY
 	 *            The new y position.
 	 */
-	public final void setY(double aY)
+	public final void setY(final double aY)
 	{
 		mY = aY;
 	}
@@ -368,7 +364,7 @@ public abstract class Entity
 	 * @param aYV
 	 *            The y velocity at the hurt time.
 	 */
-	public void hurt(int aAmount, double aXV, double aYV)
+	public void hurt(final int aAmount, final double aXV, final double aYV)
 	{}
 	
 	/**
@@ -441,7 +437,7 @@ public abstract class Entity
 	 * @param aId
 	 *            The created id.
 	 */
-	public final void init(Level aLevel, int aId)
+	public final void init(final Level aLevel, final int aId)
 	{
 		mLevel = aLevel;
 		mId = aId;
@@ -452,7 +448,7 @@ public abstract class Entity
 	 * 
 	 * @return {@code true} if this entity destroys blocks and {@code false} if not.
 	 */
-	public boolean canDestroyBlock(Direction aDirection)
+	public boolean canDestroyBlock(final Direction aDirection)
 	{
 		return false;
 	}
@@ -480,13 +476,30 @@ public abstract class Entity
 	}
 	
 	@Override
-	public final boolean equals(Object aO)
+	public final boolean equals(final Object aO)
 	{
 		if (aO instanceof Entity)
 		{
-			Entity e = (Entity) aO;
+			final Entity e = (Entity) aO;
 			return e.mLevel == mLevel && e.mId == mId;
 		}
 		return false;
+	}
+	
+	private final void touchBlocks()
+	{
+		final HashMap<Block, Direction> blocks = new HashMap<>();
+		for (final int tile : mTouchingBlocks.keySet())
+		{
+			final int x = tile % mLevel.getWidth(), y = tile / mLevel.getWidth();
+			blocks.put(Block.get(mLevel.getBlock(x, y)), mTouchingBlocks.get(tile));
+		}
+		for (final int tile : mTouchingBlocks.keySet())
+		{
+			final int x = tile % mLevel.getWidth(), y = tile / mLevel.getWidth();
+			final Direction dir = mTouchingBlocks.get(tile);
+			Block.get(mLevel.getBlock(x, y)).hit(x, y, mLevel, this, dir, blocks);
+		}
+		mTouchingBlocks.clear();
 	}
 }

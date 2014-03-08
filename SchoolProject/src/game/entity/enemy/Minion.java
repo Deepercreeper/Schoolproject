@@ -13,7 +13,7 @@ public class Minion extends Enemy
 	
 	private boolean				mJumping	= false;
 	
-	public Minion(int aX, int aY)
+	public Minion(final int aX, final int aY)
 	{
 		super(aX, aY, 16, 32, 2);
 	}
@@ -32,14 +32,14 @@ public class Minion extends Enemy
 	}
 	
 	@Override
-	protected void hitWall(double aXV, double aYV)
+	protected void hitWall(final double aXV, final double aYV)
 	{
 		if (aXV != 0) mJumping = true;
 		super.hitWall(aXV, aYV);
 	}
 	
 	@Override
-	public void render(Graphics aG)
+	public void render(final Graphics aG)
 	{
 		int id = 0;
 		final int delay = 6;

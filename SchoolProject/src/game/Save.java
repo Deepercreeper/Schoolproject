@@ -22,7 +22,7 @@ public class Save
 	 * @param aName
 	 *            The save name.
 	 */
-	public Save(String aName)
+	public Save(final String aName)
 	{
 		mName = aName;
 		mPlayer = new Player();
@@ -37,7 +37,7 @@ public class Save
 	 * @param aData
 	 *            The save data.
 	 */
-	public Save(String[] aData)
+	public Save(final String[] aData)
 	{
 		mName = readData(aData);
 		while ( !mTexturePack.equals(DataManager.getTexturePack()))
@@ -88,7 +88,7 @@ public class Save
 	 *            the world id.
 	 * @return {@code true} if the world is available and {@code false} if not.
 	 */
-	public boolean isAvailable(int aWorldId)
+	public boolean isAvailable(final int aWorldId)
 	{
 		return mScores.containsKey(aWorldId);
 	}
@@ -102,7 +102,7 @@ public class Save
 	 *            The level id.
 	 * @return {@code true} if the level is available and {@code false} if not.
 	 */
-	public boolean isAvailable(int aWorldId, int aLevelId)
+	public boolean isAvailable(final int aWorldId, final int aLevelId)
 	{
 		return mScores.containsKey(aWorldId) && mScores.get(aWorldId).containsKey(aLevelId);
 	}
@@ -117,7 +117,7 @@ public class Save
 	 * @param aScore
 	 *            The reached score.
 	 */
-	public void setScore(int aWorldId, int aLevelId, int aScore)
+	public void setScore(final int aWorldId, final int aLevelId, final int aScore)
 	{
 		if (mScores.get(aWorldId).get(aLevelId) < aScore) mScores.get(aWorldId).put(aLevelId, aScore);
 	}
@@ -130,7 +130,7 @@ public class Save
 	public int getScore()
 	{
 		int score = 0;
-		for (int worldId : mScores.keySet())
+		for (final int worldId : mScores.keySet())
 			score += getScore(worldId);
 		return score;
 	}
@@ -142,11 +142,11 @@ public class Save
 	 *            The world id.
 	 * @return the reached score.
 	 */
-	public int getScore(int aWorldId)
+	public int getScore(final int aWorldId)
 	{
 		int score = 0;
 		if ( !mScores.containsKey(aWorldId)) return 0;
-		for (int levelScore : mScores.get(aWorldId).values())
+		for (final int levelScore : mScores.get(aWorldId).values())
 			if (levelScore != -1) score += levelScore;
 		return score;
 	}
@@ -160,11 +160,11 @@ public class Save
 	 *            The level id.
 	 * @return the reached score.
 	 */
-	public int getScore(int aWorldId, int aLevelId)
+	public int getScore(final int aWorldId, final int aLevelId)
 	{
 		if (mScores.containsKey(aWorldId) && mScores.get(aWorldId).containsKey(aLevelId))
 		{
-			int score = mScores.get(aWorldId).get(aLevelId);
+			final int score = mScores.get(aWorldId).get(aLevelId);
 			if (score != -1) return score;
 		}
 		return 0;
@@ -187,7 +187,7 @@ public class Save
 	 */
 	public String getSaveData()
 	{
-		StringBuilder data = new StringBuilder();
+		final StringBuilder data = new StringBuilder();
 		data.append(mName + "\n");
 		data.append(mVolume + "\n");
 		data.append(mLastWorldId + "\n");
@@ -195,8 +195,8 @@ public class Save
 		data.append(mPlayer.getData() + "\n");
 		data.append(mTexturePack);
 		
-		for (int world : mScores.keySet())
-			for (int level : mScores.get(world).keySet())
+		for (final int world : mScores.keySet())
+			for (final int level : mScores.get(world).keySet())
 				data.append("\n" + world + ":" + level + "=" + mScores.get(world).get(level));
 		return data.toString();
 	}
@@ -207,7 +207,7 @@ public class Save
 	 * @param aLastWorldId
 	 *            The world id.
 	 */
-	public void setLastWorldId(int aLastWorldId)
+	public void setLastWorldId(final int aLastWorldId)
 	{
 		mLastWorldId = aLastWorldId;
 	}
@@ -218,7 +218,7 @@ public class Save
 	 * @param aLastLevelId
 	 *            The level id.
 	 */
-	public void setLastLevelId(int aLastLevelId)
+	public void setLastLevelId(final int aLastLevelId)
 	{
 		mLastLevelId = aLastLevelId;
 	}
@@ -251,7 +251,7 @@ public class Save
 	 * @param aLevelId
 	 *            The level id.
 	 */
-	public void openLevel(int aWorld, int aLevelId)
+	public void openLevel(final int aWorld, final int aLevelId)
 	{
 		if (mScores.containsKey(aWorld) && !mScores.get(aWorld).containsKey(aLevelId)) mScores.get(aWorld).put(aLevelId, -1);
 	}
@@ -262,11 +262,11 @@ public class Save
 	 * @param aWorldId
 	 *            The world id.
 	 */
-	public void openWorld(int aWorldId)
+	public void openWorld(final int aWorldId)
 	{
 		if ( !mScores.containsKey(aWorldId))
 		{
-			HashMap<Integer, Integer> levelScore = new HashMap<>();
+			final HashMap<Integer, Integer> levelScore = new HashMap<>();
 			levelScore.put(0, -1);
 			mScores.put(aWorldId, levelScore);
 		}
@@ -282,9 +282,9 @@ public class Save
 		return mPlayer;
 	}
 	
-	private String readData(String[] aData)
+	private String readData(final String[] aData)
 	{
-		String name = aData[0];
+		final String name = aData[0];
 		mVolume = Integer.parseInt(aData[1]);
 		mLastWorldId = Integer.parseInt(aData[2]);
 		mLastLevelId = Integer.parseInt(aData[3]);

@@ -12,7 +12,7 @@ public abstract class UpdateAction
 	static UpdateAction	LIQUID	= new UpdateAction()
 								{
 									@Override
-									void execute(int aX, int aY, Level aLevel)
+									void execute(final int aX, final int aY, final Level aLevel)
 									{
 										liquid(aX, aY, aLevel);
 									}
@@ -24,18 +24,18 @@ public abstract class UpdateAction
 	static UpdateAction	WIN		= new UpdateAction()
 								{
 									@Override
-									void execute(int aX, int aY, Level aLevel)
+									void execute(final int aX, final int aY, final Level aLevel)
 									{
 										win(aX, aY, aLevel);
 									}
 								};
 	
-	private static void liquid(int aX, int aY, Level aLevel)
+	private static void liquid(final int aX, final int aY, final Level aLevel)
 	{
 		if (Util.isPlayerInsideBlock(aX, aY, aLevel)) aLevel.getPlayer().setInLiquid();
 	}
 	
-	private static void win(int aX, int aY, Level aLevel)
+	private static void win(final int aX, final int aY, final Level aLevel)
 	{
 		if (aLevel.getPlayer().getRect().intersects(new Rectangle(aX * Block.SIZE, (aY - 7) * Block.SIZE, Block.SIZE * 2, Block.SIZE * 8))) aLevel.win();
 	}

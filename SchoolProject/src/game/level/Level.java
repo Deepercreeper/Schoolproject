@@ -58,7 +58,7 @@ public class Level
 	 * @param aPlayer
 	 *            The player of this level.
 	 */
-	public Level(int aWorldId, int aLevelId, GameContainer aGC, Player aPlayer)
+	public Level(final int aWorldId, final int aLevelId, final GameContainer aGC, final Player aPlayer)
 	{
 		mWorldId = (byte) aWorldId;
 		mLevelId = (byte) aLevelId;
@@ -88,10 +88,10 @@ public class Level
 	 *         the distance between the wall or entity and the given entity
 	 *         left.
 	 */
-	public double isFree(double aXV, double aYV, Entity aEntity)
+	public double isFree(final double aXV, final double aYV, final Entity aEntity)
 	{
 		double result = Double.NaN;
-		Rectangle entity = new Rectangle((aEntity.getX() + aXV), (aEntity.getY() + aYV), aEntity.getWidth(), aEntity.getHeight());
+		final Rectangle entity = new Rectangle((aEntity.getX() + aXV), (aEntity.getY() + aYV), aEntity.getWidth(), aEntity.getHeight());
 		for (int x = (int) (entity.getX() / Block.SIZE); x <= (int) (entity.getX() + entity.getWidth() - 0.1) / Block.SIZE && x < mWidth; x++ )
 			for (int y = (int) (entity.getY() / Block.SIZE); y <= (int) (entity.getY() + entity.getHeight()) / Block.SIZE && y < mHeight; y++ )
 			{
@@ -115,7 +115,7 @@ public class Level
 					aEntity.addTouchingBlock(x, y, dir);
 				}
 			}
-		for (Entity other : mEntities.values())
+		for (final Entity other : mEntities.values())
 			if (other != aEntity && mScreen.contains(other) && other.getRect().intersects(entity) && !aEntity.hasCollidedWith(other.getId()))
 			{
 				aEntity.addCollidedEntity(other.getId());
@@ -148,7 +148,7 @@ public class Level
 	 * @param aId
 	 *            The block id to set.
 	 */
-	public void setBlock(int aX, int aY, short aId)
+	public void setBlock(final int aX, final int aY, final short aId)
 	{
 		mBlocks[aX][aY] = aId;
 	}
@@ -223,7 +223,7 @@ public class Level
 	 *            The y position.
 	 * @return the block id.
 	 */
-	public short getBlock(int aX, int aY)
+	public short getBlock(final int aX, final int aY)
 	{
 		return mBlocks[aX][aY];
 	}
@@ -237,7 +237,7 @@ public class Level
 	 *            The y position.
 	 * @return an alpha value between 0 and 255.
 	 */
-	public short getAlpha(int aX, int aY)
+	public short getAlpha(final int aX, final int aY)
 	{
 		return mAlphas[aX][aY];
 	}
@@ -248,7 +248,7 @@ public class Level
 	 * @param aEntity
 	 *            The entity to add.
 	 */
-	public void addEntity(Entity aEntity)
+	public void addEntity(final Entity aEntity)
 	{
 		aEntity.init(this, generateId());
 		mAddEntities.put(aEntity.getId(), aEntity);
@@ -262,7 +262,7 @@ public class Level
 	 * @param aX
 	 *            The entity x position
 	 */
-	public void addEntity(Entity aEntity, int aX, int aY)
+	public void addEntity(final Entity aEntity, final int aX, final int aY)
 	{
 		aEntity.init(this, generateId());
 		aEntity.setX(aX);
@@ -276,7 +276,7 @@ public class Level
 	 * @param aInput
 	 *            The information about keyboard and mouse activity.
 	 */
-	public void update(Input aInput)
+	public void update(final Input aInput)
 	{
 		if (mPlayer.isDead())
 		{
@@ -287,17 +287,17 @@ public class Level
 			return;
 		}
 		
-		for (Iterator<Entry<Integer, Entity>> iterator = mEntities.entrySet().iterator(); iterator.hasNext();)
+		for (final Iterator<Entry<Integer, Entity>> iterator = mEntities.entrySet().iterator(); iterator.hasNext();)
 		{
-			Entity entity = iterator.next().getValue();
+			final Entity entity = iterator.next().getValue();
 			if (entity.isRemoved()) iterator.remove();
 		}
-		for (Iterator<Entry<Integer, Entity>> iterator = mParticles.entrySet().iterator(); iterator.hasNext();)
+		for (final Iterator<Entry<Integer, Entity>> iterator = mParticles.entrySet().iterator(); iterator.hasNext();)
 		{
-			Entity entity = iterator.next().getValue();
+			final Entity entity = iterator.next().getValue();
 			if (entity.isRemoved()) iterator.remove();
 		}
-		for (Entity entity : mAddEntities.values())
+		for (final Entity entity : mAddEntities.values())
 			if ( !entity.isRemoved())
 			{
 				if (entity.isParticle()) mParticles.put(entity.getId(), entity);
@@ -306,13 +306,13 @@ public class Level
 		mAddEntities.clear();
 		
 		// Update entities
-		for (Entity entity : mEntities.values())
+		for (final Entity entity : mEntities.values())
 			entity.update(aInput);
-		for (Entity entity : mParticles.values())
+		for (final Entity entity : mParticles.values())
 			entity.update(aInput);
 		
 		// Update blocks
-		for (int tile : mUpdatableBlocks)
+		for (final int tile : mUpdatableBlocks)
 		{
 			final int x = tile % mWidth, y = tile / mWidth;
 			Block.get(mBlocks[x][y]).update(x, y, this);
@@ -328,7 +328,7 @@ public class Level
 	 * @param aPlayer
 	 *            The player.
 	 */
-	public void addPlayer(Player aPlayer)
+	public void addPlayer(final Player aPlayer)
 	{
 		mPlayer.setX(mStartX * Block.SIZE);
 		mPlayer.setY(mStartY * Block.SIZE);
@@ -400,10 +400,10 @@ public class Level
 	 * @param aG
 	 *            the graphics to draw into.
 	 */
-	public void render(Graphics aG)
+	public void render(final Graphics aG)
 	{
 		// Render background
-		Image background = DataManager.getBackgroundImage(0);
+		final Image background = DataManager.getBackgroundImage(0);
 		aG.drawImage(background, -(mScreen.getX() / 5 % background.getWidth()), 0);
 		aG.drawImage(background, background.getWidth() - (mScreen.getX() / 5 % background.getWidth()), 0);
 		
@@ -413,13 +413,13 @@ public class Level
 				renderBlock(x, y, aG);
 		
 		// Render entities
-		for (Entity entity : mEntities.values())
+		for (final Entity entity : mEntities.values())
 			entity.render(aG);
-		for (Entity entity : mParticles.values())
+		for (final Entity entity : mParticles.values())
 			entity.render(aG);
 		
 		// Render transparent blocks
-		for (int tile : mTransparentBlocks)
+		for (final int tile : mTransparentBlocks)
 		{
 			final int x = tile % mWidth, y = tile / mWidth;
 			Block.render(x, y, mBlocks[x][y], aG, this);
@@ -434,7 +434,7 @@ public class Level
 	
 	private void loadBlocks()
 	{
-		Image image = DataManager.getLevelImage(mWorldId, mLevelId);
+		final Image image = DataManager.getLevelImage(mWorldId, mLevelId);
 		final int width = image.getWidth(), height = image.getHeight();
 		final int redInt = (int) Math.pow(2, 16), greenInt = (int) Math.pow(2, 8);
 		mBlocks = new short[width][height];
@@ -447,7 +447,7 @@ public class Level
 				color = image.getColor(x, y);
 				rgb = color.getRed() * redInt + color.getGreen() * greenInt + color.getBlue();
 				mAlphas[x][y] = (short) color.getAlpha();
-				short id = Block.getIdFromCode(rgb);
+				final short id = Block.getIdFromCode(rgb);
 				if (id == -1) mBlocks[x][y] = Block.AIR.getId();
 				else
 				{
@@ -466,13 +466,13 @@ public class Level
 						mBlocks[x][y] = Block.AIR.getId();
 					}
 					else mBlocks[x][y] = id;
-					for (Block renderBlock : block.getRenderBlocks())
+					for (final Block renderBlock : block.getRenderBlocks())
 						renderBlock.initImage(x, y, this);
 				}
 			}
 	}
 	
-	private void renderBlock(int aX, int aY, Graphics aG)
+	private void renderBlock(final int aX, final int aY, final Graphics aG)
 	{
 		final Block block = Block.get(mBlocks[aX][aY]);
 		if ( !block.isVisible() || block.isLiquid() || block.isFlag()) return;

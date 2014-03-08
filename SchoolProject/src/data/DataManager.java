@@ -25,8 +25,8 @@ public class DataManager
 	private static final ArrayList<String>							mSaves				= new ArrayList<>();
 	
 	private static final String[]									sMusicTitles		= new String[] { "world4", "world0", "world3", "world1", "world2", "world5", "menu" };
-	private static final String[]									sSplitImages		= new String[] { "player", "entity" ,"enemy"};
-	private static final int[][]									sSplitImageSizes	= new int[][] { { 14, 30 }, { 16, 16 } ,{ 16 , 16 }};
+	private static final String[]									sSplitImages		= new String[] { "player", "entity", "enemy" };
+	private static final int[][]									sSplitImageSizes	= new int[][] { { 14, 30 }, { 16, 16 }, { 16, 16 } };
 	private static final String[]									sTexturepacks		= new String[] { "Mario", "Minecraft" };
 	private static final int[]										sLevelsPerWorld		= new int[] { 3, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
 	
@@ -40,7 +40,7 @@ public class DataManager
 	 * @param aName
 	 *            The name of the sound to play.
 	 */
-	public static void playSound(String aName)
+	public static void playSound(final String aName)
 	{
 		Sound sound = SOUNDS.get(aName);
 		if (sound == null) sound = loadSound(aName);
@@ -54,9 +54,9 @@ public class DataManager
 	 * @param aName
 	 *            The name of the music title.
 	 */
-	public static void playMusic(String aName)
+	public static void playMusic(final String aName)
 	{
-		Music music = MUSIC.get(aName);
+		final Music music = MUSIC.get(aName);
 		music.loop();
 		music.setVolume(sVolume);
 	}
@@ -92,10 +92,10 @@ public class DataManager
 	 * @param aVolume
 	 *            The new volume.
 	 */
-	public static void setVolume(float aVolume)
+	public static void setVolume(final float aVolume)
 	{
 		sVolume = aVolume;
-		for (Music music : MUSIC.values())
+		for (final Music music : MUSIC.values())
 			music.setVolume(sVolume);
 	}
 	
@@ -136,7 +136,7 @@ public class DataManager
 	 *            the name of the image.
 	 * @return an image with name {@code aName} that is laying inside {@code data/images/}.
 	 */
-	public static Image getImage(String aName)
+	public static Image getImage(final String aName)
 	{
 		Image image = IMAGES.get(aName);
 		if (image == null) image = loadImage(aName);
@@ -152,7 +152,7 @@ public class DataManager
 	 *            The level id.
 	 * @return an image that contains level data.
 	 */
-	public static Image getLevelImage(int aWorldId, int aLevelId)
+	public static Image getLevelImage(final int aWorldId, final int aLevelId)
 	{
 		return getImage("worldData/level" + aWorldId + "-" + aLevelId);
 	}
@@ -164,7 +164,7 @@ public class DataManager
 	 *            The world id.
 	 * @return an image that contains a background.
 	 */
-	public static Image getBackgroundImage(int aWorldId)
+	public static Image getBackgroundImage(final int aWorldId)
 	{
 		return getImage("backgrounds/background" + aWorldId);
 	}
@@ -178,7 +178,7 @@ public class DataManager
 	 *            The index of the image part.
 	 * @return the {@code aIndex}s part of {@code aName}.png.
 	 */
-	public static Image getSplitImage(String aName, int aIndex)
+	public static Image getSplitImage(final String aName, final int aIndex)
 	{
 		return SPLIT_IMAGES.get(aName).get(aIndex);
 	}
@@ -192,10 +192,10 @@ public class DataManager
 	 *            The index of the image part.
 	 * @return the {@code aIndex}s part of {@code <aName><aTexture.getSuffix()>}.png.
 	 */
-	public static Image getTextureImage(String aName, Texture aTexture, int aIndex)
+	public static Image getTextureImage(final String aName, final Texture aTexture, final int aIndex)
 	{
-		HashMap<Integer, Image> images = SPLIT_IMAGES.get(aName + aTexture.getSuffix());
-		Image image = images.get(aIndex);
+		final HashMap<Integer, Image> images = SPLIT_IMAGES.get(aName + aTexture.getSuffix());
+		final Image image = images.get(aIndex);
 		return image;
 	}
 	
@@ -209,7 +209,7 @@ public class DataManager
 	 * @param aIndex
 	 *            The block id.
 	 */
-	public static void loadTexture(String aName, Texture aTexture, int aIndex)
+	public static void loadTexture(final String aName, final Texture aTexture, final int aIndex)
 	{
 		HashMap<Integer, Image> images = SPLIT_IMAGES.get(aName + aTexture.getSuffix());
 		if (images == null)
@@ -271,13 +271,13 @@ public class DataManager
 		sLoading = true;
 		for (int tile = 0; tile < sSplitImages.length; tile++ )
 		{
-			for (String texture : sTexturepacks)
+			for (final String texture : sTexturepacks)
 			{
-				HashMap<Integer, Image> images = loadSplittedImages(sSplitImages[tile] + texture, sSplitImageSizes[tile]);
+				final HashMap<Integer, Image> images = loadSplittedImages(sSplitImages[tile] + texture, sSplitImageSizes[tile]);
 				SPLIT_IMAGES.put(sSplitImages[tile] + texture, images);
 			}
 		}
-		for (String name : sMusicTitles)
+		for (final String name : sMusicTitles)
 			MUSIC.put(name, loadMusic(name));
 		loadSaves();
 		sLoading = false;
@@ -291,19 +291,19 @@ public class DataManager
 	 *            The name of the save.
 	 * @return a save with name {@code aName}.
 	 */
-	public static Save loadSave(String aName)
+	public static Save loadSave(final String aName)
 	{
-		File save = new File("data/saves/" + aName + ".txt");
-		StringBuilder data = new StringBuilder();
+		final File save = new File("data/saves/" + aName + ".txt");
+		final StringBuilder data = new StringBuilder();
 		if (save.exists()) try
 		{
-			BufferedReader reader = new BufferedReader(new FileReader(save));
+			final BufferedReader reader = new BufferedReader(new FileReader(save));
 			int c;
 			while ((c = reader.read()) != -1)
 				data.append((char) c);
 			reader.close();
 		}
-		catch (IOException e)
+		catch (final IOException e)
 		{
 			e.printStackTrace();
 			return null;
@@ -317,7 +317,7 @@ public class DataManager
 	 * @param aSave
 	 *            The save to create inside the saves folder.
 	 */
-	public static void save(Save aSave)
+	public static void save(final Save aSave)
 	{
 		File save = new File("data/saves/" + aSave.getName() + ".txt");
 		if (save.exists()) save.delete();
@@ -325,11 +325,11 @@ public class DataManager
 		{
 			new File(save.getParent()).mkdir();
 			save.createNewFile();
-			BufferedWriter writer = new BufferedWriter(new FileWriter(save));
+			final BufferedWriter writer = new BufferedWriter(new FileWriter(save));
 			writer.write(aSave.getSaveData());
 			writer.close();
 		}
-		catch (IOException e)
+		catch (final IOException e)
 		{
 			e.printStackTrace();
 		}
@@ -341,14 +341,14 @@ public class DataManager
 			{
 				new File(save.getParent()).mkdir();
 				save.createNewFile();
-				BufferedWriter writer = new BufferedWriter(new FileWriter(save));
-				for (String saveName : mSaves)
+				final BufferedWriter writer = new BufferedWriter(new FileWriter(save));
+				for (final String saveName : mSaves)
 					writer.write(saveName + "\n");
 				writer.write(aSave.getName());
 				mSaves.add(aSave.getName());
 				writer.close();
 			}
-			catch (IOException e)
+			catch (final IOException e)
 			{
 				e.printStackTrace();
 			}
@@ -361,7 +361,7 @@ public class DataManager
 	 * @param aIndex
 	 *            The save index to delete.
 	 */
-	public static void deleteSave(int aIndex)
+	public static void deleteSave(final int aIndex)
 	{
 		File save = new File("data/saves/" + mSaves.get(aIndex) + ".txt");
 		if (save.exists()) save.delete();
@@ -372,12 +372,12 @@ public class DataManager
 		{
 			new File(save.getParent()).mkdir();
 			save.createNewFile();
-			BufferedWriter writer = new BufferedWriter(new FileWriter(save));
+			final BufferedWriter writer = new BufferedWriter(new FileWriter(save));
 			for (int i = 0; i < mSaves.size(); i++ )
 				writer.write(mSaves.get(i) + (i < mSaves.size() - 1 ? "\n" : ""));
 			writer.close();
 		}
-		catch (IOException e)
+		catch (final IOException e)
 		{
 			e.printStackTrace();
 		}
@@ -393,42 +393,42 @@ public class DataManager
 		return mSaves;
 	}
 	
-	private static Image loadImage(String aName)
+	private static Image loadImage(final String aName)
 	{
 		try
 		{
-			Image image = new Image("data/images/" + aName + ".png");
+			final Image image = new Image("data/images/" + aName + ".png");
 			return image;
 		}
-		catch (SlickException e)
+		catch (final SlickException e)
 		{
 			Log.error("Could not read Image " + aName);
 		}
 		return null;
 	}
 	
-	private static Sound loadSound(String aName)
+	private static Sound loadSound(final String aName)
 	{
 		try
 		{
-			Sound sound = new Sound("data/sounds/" + aName + ".wav");
+			final Sound sound = new Sound("data/sounds/" + aName + ".wav");
 			return sound;
 		}
-		catch (SlickException e)
+		catch (final SlickException e)
 		{
 			Log.error("Could not read Sound " + aName);
 		}
 		return null;
 	}
 	
-	private static Music loadMusic(String aName)
+	private static Music loadMusic(final String aName)
 	{
 		try
 		{
-			Music music = new Music("data/sounds/" + aName + ".ogg");
+			final Music music = new Music("data/sounds/" + aName + ".ogg");
 			return music;
 		}
-		catch (SlickException e)
+		catch (final SlickException e)
 		{
 			Log.error("Could not read Music " + aName);
 		}
@@ -437,36 +437,36 @@ public class DataManager
 	
 	private static void loadSaves()
 	{
-		File saves = new File("data/saves/#Saves#.txt");
-		StringBuilder data = new StringBuilder();
+		final File saves = new File("data/saves/#Saves#.txt");
+		final StringBuilder data = new StringBuilder();
 		if (saves.exists()) try
 		{
-			BufferedReader reader = new BufferedReader(new FileReader(saves));
+			final BufferedReader reader = new BufferedReader(new FileReader(saves));
 			int c;
 			while ((c = reader.read()) != -1)
 				data.append((char) c);
 			reader.close();
 		}
-		catch (IOException e)
+		catch (final IOException e)
 		{
 			e.printStackTrace();
 		}
-		if ( !data.toString().isEmpty()) for (String save : data.toString().split("\n"))
+		if ( !data.toString().isEmpty()) for (final String save : data.toString().split("\n"))
 			mSaves.add(save);
 	}
 	
-	private static Image loadSplittedImage(String aName, int aIndex, int[] aSize)
+	private static Image loadSplittedImage(final String aName, final int aIndex, final int[] aSize)
 	{
-		Image image = loadImage(aName);
+		final Image image = loadImage(aName);
 		final int imageWidth = aSize[0], imageHeight = aSize[1], width = image.getWidth() / imageWidth;
 		return image.getSubImage((aIndex % width) * imageWidth, (aIndex / width) * imageHeight, imageWidth, imageHeight);
 	}
 	
-	private static HashMap<Integer, Image> loadSplittedImages(String aName, int[] aSize)
+	private static HashMap<Integer, Image> loadSplittedImages(final String aName, final int[] aSize)
 	{
-		Image image = loadImage(aName);
+		final Image image = loadImage(aName);
 		final int imageWidth = aSize[0], imageHeight = aSize[1], width = image.getWidth() / imageWidth, height = image.getHeight() / imageHeight;
-		HashMap<Integer, Image> images = new HashMap<>();
+		final HashMap<Integer, Image> images = new HashMap<>();
 		for (int tile = 0; tile < width * height; tile++ )
 			images.put(tile, image.getSubImage((tile % width) * imageWidth, (tile / width) * imageHeight, imageWidth, imageHeight));
 		return images;

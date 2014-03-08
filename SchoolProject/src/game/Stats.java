@@ -37,7 +37,7 @@ public class Stats
 	 * @param aG
 	 *            The graphics to draw into.
 	 */
-	public void render(Graphics aG)
+	public void render(final Graphics aG)
 	{
 		aG.setColor(Color.white);
 		aG.drawString("Bananas: " + mBananas, 10, 20);
@@ -60,7 +60,7 @@ public class Stats
 	 * @param aAmount
 	 *            The amount of bananas.
 	 */
-	public void addBanana(int aAmount)
+	public void addBanana(final int aAmount)
 	{
 		mBananas += aAmount;
 		mBananasInLevel += aAmount;
@@ -72,7 +72,7 @@ public class Stats
 	 * @param aAmount
 	 *            The amount of ticks done.
 	 */
-	public void tick(int aAmount)
+	public void tick(final int aAmount)
 	{
 		mTime += aAmount;
 	}

@@ -5,23 +5,23 @@ import java.util.HashMap;
 
 public class Texture
 {
-	private static final HashMap<Byte, Texture>	PARTS	= new HashMap<>();
+	private static final HashMap<Byte, Texture>	PARTS		= new HashMap<>();
 	
-	public static final Texture					NORMAL	= new Texture(0, "Normal");
-	public static final Texture					SNOW	= new Texture(1, "Snow");
-	public static final Texture					DESERT	= new Texture(2, "Desert");
-	public static final Texture					CASTLE	= new Texture(3, "Castle");
-	public static final Texture 			UNDERGROUND = new Texture(4, "Underground");
-	public static final Texture 				CLOUD 	= new Texture(5, "Cloud");
-	public static final Texture					JUNGLE	= new Texture(6, "Jungle");
-	public static final Texture					HORROR	= new Texture(7, "Horror");
-	public static final Texture					STONE 	= new Texture(8, "Stone");
+	public static final Texture					NORMAL		= new Texture(0, "Normal");
+	public static final Texture					SNOW		= new Texture(1, "Snow");
+	public static final Texture					DESERT		= new Texture(2, "Desert");
+	public static final Texture					CASTLE		= new Texture(3, "Castle");
+	public static final Texture					UNDERGROUND	= new Texture(4, "Underground");
+	public static final Texture					CLOUD		= new Texture(5, "Cloud");
+	public static final Texture					JUNGLE		= new Texture(6, "Jungle");
+	public static final Texture					HORROR		= new Texture(7, "Horror");
+	public static final Texture					STONE		= new Texture(8, "Stone");
 	
 	private final byte							mId;
 	
 	private final String						mSuffix;
 	
-	private Texture(int aId, String aSuffix)
+	private Texture(final int aId, final String aSuffix)
 	{
 		mId = (byte) aId;
 		mSuffix = aSuffix;
@@ -71,7 +71,7 @@ public class Texture
 	 *            The texture id.
 	 * @return the texture with the given id and {@code null} if no texture with the given id exists.
 	 */
-	public static Texture get(byte aId)
+	public static Texture get(final byte aId)
 	{
 		return PARTS.get(aId);
 	}

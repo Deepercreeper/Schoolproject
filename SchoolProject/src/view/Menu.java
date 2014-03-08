@@ -24,7 +24,7 @@ public abstract class Menu
 	 * @param aHeight
 	 *            The menu height.
 	 */
-	public Menu(Game aGame, int aX, int aY, int aWidth, int aHeight)
+	public Menu(final Game aGame, final int aX, final int aY, final int aWidth, final int aHeight)
 	{
 		mGame = aGame;
 		mX = aX;

@@ -17,7 +17,7 @@ public class Blood extends Entity
 	 * @param aY
 	 *            The y position.
 	 */
-	public Blood(int aX, int aY)
+	public Blood(final int aX, final int aY)
 	{
 		super(aX, aY, 2, 2);
 		mXV = (Math.random() - Math.random()) * 5;
@@ -26,7 +26,7 @@ public class Blood extends Entity
 	}
 	
 	@Override
-	public void update(Input aInput)
+	public void update(final Input aInput)
 	{
 		if (--mLife < 0) remove();
 		
@@ -52,7 +52,7 @@ public class Blood extends Entity
 	}
 	
 	@Override
-	public void render(Graphics aG)
+	public void render(final Graphics aG)
 	{
 		aG.setColor(Color.red);
 		aG.fillRect((float) (mX - mLevel.getScreenX()), (float) (mY - mLevel.getScreenY()), mWidth, mHeight);

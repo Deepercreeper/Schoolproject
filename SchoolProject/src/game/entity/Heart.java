@@ -24,7 +24,7 @@ public class Heart extends Entity
 	 * @param aStatic
 	 *            Whether this heart is able to stay or going to decay.
 	 */
-	public Heart(int aX, int aY, int aSize, boolean aStatic)
+	public Heart(final int aX, final int aY, final int aSize, final boolean aStatic)
 	{
 		super(aX, aY, 6 + aSize * 2, 6 + aSize * 2);
 		mSize = aSize;
@@ -33,7 +33,7 @@ public class Heart extends Entity
 	}
 	
 	@Override
-	public void update(Input aInput)
+	public void update(final Input aInput)
 	{
 		if ( !mStatic && --mLife < 0) remove();
 		
@@ -58,7 +58,7 @@ public class Heart extends Entity
 	}
 	
 	@Override
-	public void render(Graphics aG)
+	public void render(final Graphics aG)
 	{
 		if (mLife > 40 || mLife % 8 < 4) aG.drawImage(DataManager.getSplitImage("entity" + DataManager.getTexturePack(), 3).getScaledCopy(mWidth, mHeight), (float) (mX - mLevel.getScreenX()),
 				(float) (mY - mLevel.getScreenY()));
