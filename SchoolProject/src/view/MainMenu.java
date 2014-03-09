@@ -7,22 +7,24 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.KeyListener;
+import util.InputKeys;
+import util.Key;
 import data.DataManager;
 
 public class MainMenu extends Menu
 {
 	private enum State
 	{
-		MAIN, NEW_INPUT, LOAD_INPUT, GAME;
+		MAIN, NEW_INPUT, LOAD_INPUT, GAME, OPTIONS;
 	}
 	
-	private int		mWorldId	= 0, mLevelId = 0;
+	private int		mWorldId		= 0, mLevelId = 0;
 	
-	private int		mSaveIndex	= 0;
+	private int		mSaveIndex		= 0;
 	
-	private Save	mSave		= null;
+	private Key		mSelectedKey	= null;
 	
-	private String	mText		= "";
+	private String	mText			= "";
 	
 	private State	mState;
 	
@@ -69,9 +71,11 @@ public class MainMenu extends Menu
 			case GAME :
 				renderLevelSelection(aG);
 				break;
+			case OPTIONS :
+				renderOptions(aG);
+				break;
 			default :
 				break;
-		
 		}
 	}
 	
@@ -89,17 +93,17 @@ public class MainMenu extends Menu
 			case GAME :
 				if (aInput.isKeyPressed(Input.KEY_ADD))
 				{
-					mSave.volumeUp();
+					Save.instance().volumeUp();
 					mGame.showVolume();
 				}
 				if (aInput.isKeyPressed(Input.KEY_SUBTRACT))
 				{
-					mSave.volumeDown();
+					Save.instance().volumeDown();
 					mGame.showVolume();
 				}
-				if (aInput.isKeyPressed(Input.KEY_A)) mSave.previousTexturePack();
-				if (aInput.isKeyPressed(Input.KEY_D)) mSave.nextTexturePack();
-				if (aInput.isKeyPressed(Input.KEY_SPACE)) mGame.start(mWorldId, mLevelId, mSave);
+				if (aInput.isKeyPressed(Input.KEY_A)) Save.instance().previousTexturePack();
+				if (aInput.isKeyPressed(Input.KEY_D)) Save.instance().nextTexturePack();
+				if (aInput.isKeyPressed(Input.KEY_SPACE)) mGame.start(mWorldId, mLevelId);
 				else if (aInput.isKeyPressed(Input.KEY_ESCAPE))
 				{
 					save();
@@ -111,9 +115,9 @@ public class MainMenu extends Menu
 					final int[] worlds = DataManager.getLevelsPerWorld();
 					if (mLevelId < worlds[mWorldId] - 1)
 					{
-						if (mSave.isAvailable(mWorldId, mLevelId + 1)) mLevelId++ ;
+						if (Save.instance().isAvailable(mWorldId, mLevelId + 1)) mLevelId++ ;
 					}
-					else if (mWorldId < worlds.length - 1 && mSave.isAvailable(mWorldId + 1))
+					else if (mWorldId < worlds.length - 1 && Save.instance().isAvailable(mWorldId + 1))
 					{
 						mWorldId++ ;
 						mLevelId = 0;
@@ -124,13 +128,26 @@ public class MainMenu extends Menu
 					final int[] worlds = DataManager.getLevelsPerWorld();
 					if (mLevelId > 0)
 					{
-						if (mSave.isAvailable(mWorldId, mLevelId - 1)) mLevelId-- ;
+						if (Save.instance().isAvailable(mWorldId, mLevelId - 1)) mLevelId-- ;
 					}
-					else if (mWorldId > 0 && mSave.isAvailable(mWorldId - 1))
+					else if (mWorldId > 0 && Save.instance().isAvailable(mWorldId - 1))
 					{
 						mWorldId-- ;
 						mLevelId = worlds[mWorldId] - 1;
 					}
+				}
+				else if (aInput.isKeyPressed(Input.KEY_O)) mState = State.OPTIONS;
+				break;
+			case OPTIONS :
+				if (aInput.isKeyPressed(Input.KEY_ESCAPE)) mState = State.GAME;
+				if (mSelectedKey == null)
+				{
+					for (final Key key : Key.values())
+						if (aInput.isKeyPressed(key.getDefault()))
+						{
+							mSelectedKey = key;
+							aInput.addKeyListener(new InputKeyListener(aInput));
+						}
 				}
 				break;
 			case LOAD_INPUT :
@@ -164,30 +181,45 @@ public class MainMenu extends Menu
 		}
 	}
 	
+	private void renderOptions(final Graphics aG)
+	{
+		aG.setColor(Color.white);
+		aG.drawString("Optionen", mWidth / 2 - 40, 10);
+		
+		for (int i = 0; i < Key.values().length; i++ )
+		{
+			final Key key = Key.values()[i];
+			if (key == mSelectedKey) aG.setColor(Color.red);
+			else aG.setColor(Color.white);
+			aG.drawString(key + ": Standard: " + Input.getKeyName(key.getDefault()) + ", Aktiv: " + Input.getKeyName(InputKeys.instance().getKey(key)), mWidth / 2 - 100, 200 + i * 20);
+		}
+	}
+	
 	private void renderLevelSelection(final Graphics aG)
 	{
 		aG.drawImage(DataManager.getImage(DataManager.getTexturePack()), 0, 0);
 		
 		aG.drawString("World: " + mWorldId + " Level: " + mLevelId, mWidth / 2 - 100, 5);
 		
-		aG.drawString("Spiel: " + mSave.getName(), 10, mHeight - 50);
-		aG.drawString("Level score: " + mSave.getScore(mWorldId, mLevelId), 10, mHeight - 35);
-		aG.drawString("World score: " + mSave.getScore(mWorldId), 10, mHeight - 20);
+		aG.drawString("Spiel: " + Save.instance().getName(), 10, mHeight - 50);
+		aG.drawString("Level score: " + Save.instance().getScore(mWorldId, mLevelId), 10, mHeight - 35);
+		aG.drawString("World score: " + Save.instance().getScore(mWorldId), 10, mHeight - 20);
 		
-		aG.drawString("< > - Level auswählen", mWidth / 2 - 100, mHeight - 65);
-		aG.drawString("A D - Texturepack: " + DataManager.getTexturePack(), mWidth / 2 - 100, mHeight - 50);
-		aG.drawString("Space - Start", mWidth / 2 - 100, mHeight - 35);
+		aG.drawString("< > - Level auswählen", mWidth / 2 - 100, mHeight - 80);
+		aG.drawString("A D - Texturepack: " + DataManager.getTexturePack(), mWidth / 2 - 100, mHeight - 65);
+		aG.drawString("Space - Start", mWidth / 2 - 100, mHeight - 50);
+		aG.drawString("O - Optionen", mWidth / 2 - 100, mHeight - 35);
 		aG.drawString("Escape - Ende", mWidth / 2 - 100, mHeight - 20);
 		
 		final int levels = DataManager.getLevelsPerWorld()[mWorldId];
 		
 		for (int i = 0; i < levels; i++ )
 		{
-			if (mSave.isAvailable(mWorldId, i)) aG.setColor(Color.white);
+			if (Save.instance().isAvailable(mWorldId, i)) aG.setColor(Color.white);
 			else aG.setColor(Color.gray);
 			if (i == mLevelId) aG.setColor(Color.red);
 			aG.fillRect(mWidth / (levels + 1) * (i + 1) - 25, mHeight / 2 - 15, 50, 30);
-			if (i > 0 && mSave.isAvailable(mWorldId, i))
+			if (i > 0 && Save.instance().isAvailable(mWorldId, i))
 			{
 				aG.setColor(Color.white);
 				aG.drawLine(mWidth / (levels + 1) * i + 25, mHeight / 2, mWidth / (levels + 1) * (i + 1) - 25, mHeight / 2);
@@ -198,7 +230,7 @@ public class MainMenu extends Menu
 			aG.setColor(Color.white);
 			aG.drawLine(0, mHeight / 2, mWidth / (levels + 1) - 25, mHeight / 2);
 		}
-		if (mWorldId < DataManager.getLevelsPerWorld().length - 1 && mSave.isAvailable(mWorldId + 1))
+		if (mWorldId < DataManager.getLevelsPerWorld().length - 1 && Save.instance().isAvailable(mWorldId + 1))
 		{
 			aG.setColor(Color.white);
 			aG.drawLine(mWidth / (levels + 1) * levels + 25, mHeight / 2, mWidth, mHeight / 2);
@@ -207,31 +239,71 @@ public class MainMenu extends Menu
 	
 	private void newGame(final String aName)
 	{
-		mSave = new Save(aName);
-		mWorldId = mSave.getLastWorldId();
-		mLevelId = mSave.getLastLevelId();
+		Save.newInstance(aName);
+		mWorldId = Save.instance().getLastWorldId();
+		mLevelId = Save.instance().getLastLevelId();
 	}
 	
 	private void loadGame(final String aName)
 	{
-		mSave = DataManager.loadSave(aName);
-		mWorldId = mSave.getLastWorldId();
-		mLevelId = mSave.getLastLevelId();
+		DataManager.loadSave(aName);
+		mWorldId = Save.instance().getLastWorldId();
+		mLevelId = Save.instance().getLastLevelId();
 	}
 	
 	private void save()
 	{
-		mSave.setLastWorldId(mWorldId);
-		mSave.setLastLevelId(mLevelId);
-		DataManager.save(mSave);
-		mSave = null;
+		Save.instance().setLastWorldId(mWorldId);
+		Save.instance().setLastLevelId(mLevelId);
+		DataManager.save();
+	}
+	
+	private class InputKeyListener implements KeyListener
+	{
+		private final Input	mInput;
+		
+		private InputKeyListener(final Input aInput)
+		{
+			mInput = aInput;
+		}
+		
+		@Override
+		public void inputEnded()
+		{}
+		
+		@Override
+		public void inputStarted()
+		{}
+		
+		@Override
+		public boolean isAcceptingInput()
+		{
+			return true;
+		}
+		
+		@Override
+		public void setInput(final Input aArg0)
+		{}
+		
+		@Override
+		public void keyPressed(final int aKey, final char aChar)
+		{
+			if (aKey != Input.KEY_ESCAPE) InputKeys.instance().setKey(mSelectedKey, aKey);
+			mSelectedKey = null;
+			mInput.removeAllKeyListeners();
+			mInput.clearKeyPressedRecord();
+		}
+		
+		@Override
+		public void keyReleased(final int aKey, final char aChar)
+		{}
 	}
 	
 	private class Listener implements KeyListener
 	{
 		private final Input	mInput;
 		
-		public Listener(final Input aInput)
+		private Listener(final Input aInput)
 		{
 			mInput = aInput;
 		}

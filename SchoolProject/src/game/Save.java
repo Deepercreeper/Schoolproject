@@ -2,10 +2,13 @@ package game;
 
 import game.entity.Player;
 import java.util.HashMap;
+import util.InputKeys;
 import data.DataManager;
 
 public class Save
 {
+	private static Save											INSTANCE;
+	
 	private final String										mName;
 	
 	private int													mLastWorldId, mLastLevelId, mVolume;
@@ -17,12 +20,38 @@ public class Save
 	private final HashMap<Integer, HashMap<Integer, Integer>>	mScores	= new HashMap<>();
 	
 	/**
+	 * Returns the current save.
+	 * 
+	 * @return the last loaded or created save.
+	 */
+	public static Save instance()
+	{
+		return INSTANCE;
+	}
+	
+	/**
 	 * Creates a new save with the given name.
 	 * 
 	 * @param aName
-	 *            The save name.
+	 *            The name of the new save.
 	 */
-	public Save(final String aName)
+	public static void newInstance(final String aName)
+	{
+		INSTANCE = new Save(aName);
+	}
+	
+	/**
+	 * Loads a save out of the given data.
+	 * 
+	 * @param aData
+	 *            The save data.
+	 */
+	public static void loadInstance(final String[] aData)
+	{
+		INSTANCE = new Save(aData);
+	}
+	
+	private Save(final String aName)
 	{
 		mName = aName;
 		mPlayer = new Player();
@@ -31,13 +60,7 @@ public class Save
 		openWorld(0);
 	}
 	
-	/**
-	 * Creates a save out of the given data. Used when loading out of a file.
-	 * 
-	 * @param aData
-	 *            The save data.
-	 */
-	public Save(final String[] aData)
+	private Save(final String[] aData)
 	{
 		mName = readData(aData);
 		while ( !mTexturePack.equals(DataManager.getTexturePack()))
@@ -193,6 +216,7 @@ public class Save
 		data.append(mLastWorldId + "\n");
 		data.append(mLastLevelId + "\n");
 		data.append(mPlayer.getData() + "\n");
+		data.append(InputKeys.instance().getData() + "\n");
 		data.append(mTexturePack);
 		
 		for (final int world : mScores.keySet())
@@ -289,11 +313,12 @@ public class Save
 		mLastWorldId = Integer.parseInt(aData[2]);
 		mLastLevelId = Integer.parseInt(aData[3]);
 		mPlayer = new Player(aData[4]);
-		mTexturePack = aData[5];
+		InputKeys.loadInstance(aData[5]);
+		mTexturePack = aData[6];
 		
 		String[] levelAndScore, worldAndLevel;
 		int world, level, score;
-		for (int i = 6; i < aData.length; i++ )
+		for (int i = 7; i < aData.length; i++ )
 		{
 			levelAndScore = aData[i].split("=");
 			worldAndLevel = levelAndScore[0].split(":");

@@ -289,9 +289,8 @@ public class DataManager
 	 * 
 	 * @param aName
 	 *            The name of the save.
-	 * @return a save with name {@code aName}.
 	 */
-	public static Save loadSave(final String aName)
+	public static void loadSave(final String aName)
 	{
 		final File save = new File("data/saves/" + aName + ".txt");
 		final StringBuilder data = new StringBuilder();
@@ -302,38 +301,35 @@ public class DataManager
 			while ((c = reader.read()) != -1)
 				data.append((char) c);
 			reader.close();
+			Save.loadInstance(data.toString().split("\n"));
 		}
 		catch (final IOException e)
 		{
 			e.printStackTrace();
-			return null;
 		}
-		return new Save(data.toString().split("\n"));
 	}
 	
 	/**
-	 * Creates a save file out of the given save.
-	 * 
-	 * @param aSave
-	 *            The save to create inside the saves folder.
+	 * Creates a save file out of the current save.
 	 */
-	public static void save(final Save aSave)
+	public static void save()
 	{
-		File save = new File("data/saves/" + aSave.getName() + ".txt");
+		final String name = Save.instance().getName();
+		File save = new File("data/saves/" + name + ".txt");
 		if (save.exists()) save.delete();
 		try
 		{
 			new File(save.getParent()).mkdir();
 			save.createNewFile();
 			final BufferedWriter writer = new BufferedWriter(new FileWriter(save));
-			writer.write(aSave.getSaveData());
+			writer.write(Save.instance().getSaveData());
 			writer.close();
 		}
 		catch (final IOException e)
 		{
 			e.printStackTrace();
 		}
-		if ( !mSaves.contains(aSave.getName()))
+		if ( !mSaves.contains(name))
 		{
 			save = new File("data/saves/#Saves#.txt");
 			if (save.exists()) save.delete();
@@ -344,8 +340,8 @@ public class DataManager
 				final BufferedWriter writer = new BufferedWriter(new FileWriter(save));
 				for (final String saveName : mSaves)
 					writer.write(saveName + "\n");
-				writer.write(aSave.getName());
-				mSaves.add(aSave.getName());
+				writer.write(name);
+				mSaves.add(name);
 				writer.close();
 			}
 			catch (final IOException e)

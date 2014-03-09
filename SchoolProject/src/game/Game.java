@@ -20,7 +20,6 @@ public class Game
 	private Level			mLevel;
 	private Input			mInput;
 	private GameContainer	mGC;
-	private Save			mSave;
 	private Player			mPlayer;
 	
 	/**
@@ -95,14 +94,14 @@ public class Game
 		if (mLevel.hasWon())
 		{
 			final int levelIndex = mLevel.getLevelId();
-			mSave.setScore(mLevel.getWorldId(), levelIndex, Stats.instance().getScore());
+			Save.instance().setScore(mLevel.getWorldId(), levelIndex, Stats.instance().getScore());
 			if (levelIndex < DataManager.getLevelsPerWorld()[mLevel.getWorldId()] - 1)
 			{
-				mSave.openLevel(mLevel.getWorldId(), levelIndex + 1);
+				Save.instance().openLevel(mLevel.getWorldId(), levelIndex + 1);
 				mainMenu();
 				return;
 			}
-			if (mLevel.getWorldId() < DataManager.getLevelsPerWorld().length - 1) mSave.openWorld(mLevel.getWorldId() + 1);
+			if (mLevel.getWorldId() < DataManager.getLevelsPerWorld().length - 1) Save.instance().openWorld(mLevel.getWorldId() + 1);
 			mainMenu();
 			return;
 		}
@@ -115,12 +114,12 @@ public class Game
 		}
 		if (mInput.isKeyPressed(Input.KEY_ADD))
 		{
-			mSave.volumeUp();
+			Save.instance().volumeUp();
 			showVolume();
 		}
 		if (mInput.isKeyPressed(Input.KEY_SUBTRACT))
 		{
-			mSave.volumeDown();
+			Save.instance().volumeDown();
 			showVolume();
 		}
 		
@@ -172,11 +171,10 @@ public class Game
 	 * @param aSave
 	 *            The save to play with.
 	 */
-	public void start(final int aWorldId, final int aLevelId, final Save aSave)
+	public void start(final int aWorldId, final int aLevelId)
 	{
 		mMain = false;
-		mSave = aSave;
-		mPlayer = mSave.getPlayer();
+		mPlayer = Save.instance().getPlayer();
 		Stats.instance().reset();
 		initWorld(aWorldId, aLevelId);
 	}

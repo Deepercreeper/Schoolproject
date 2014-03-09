@@ -8,6 +8,8 @@ import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
 import util.Direction;
+import util.InputKeys;
+import util.Key;
 import data.DataManager;
 
 public class Player extends Entity
@@ -82,13 +84,13 @@ public class Player extends Entity
 		
 		if ( !mHurt)
 		{
-			if (aInput.isKeyPressed(Input.KEY_S) && !mOnGround && mCannonTime <= 0)
+			if (aInput.isKeyPressed(InputKeys.instance().getKey(Key.DOWN)) && !mOnGround && mCannonTime <= 0)
 			{
 				mCannon = true;
 				mCannonTime = 10;
 				DataManager.playSound("cannon");
 			}
-			if (aInput.isKeyPressed(Input.KEY_W) || mOnGround)
+			if (aInput.isKeyPressed(InputKeys.instance().getKey(Key.UP)) || mOnGround)
 			{
 				if (mCannon && mOnGround) DataManager.playSound("bomb");
 				mCannon = false;
@@ -97,14 +99,14 @@ public class Player extends Entity
 			if ( !mCannon)
 			{
 				mXA = 0;
-				if (aInput.isKeyDown(Input.KEY_D)) mXA += 1.36;
-				if (aInput.isKeyDown(Input.KEY_A)) mXA -= 1.36;
-				if (aInput.isKeyDown(Input.KEY_LSHIFT)) mXA *= 1.5;
+				if (aInput.isKeyDown(InputKeys.instance().getKey(Key.RIGHT))) mXA += 1.36;
+				if (aInput.isKeyDown(InputKeys.instance().getKey(Key.LEFT))) mXA -= 1.36;
+				if (aInput.isKeyDown(InputKeys.instance().getKey(Key.FAST))) mXA *= 1.5;
 				if ( !mOnGround) mXA *= 0.125;
 				if (mOnIce) mXA *= 0.08;
 				mXA *= mSpeed + mSpeedSkill * mSpeedStep;
 				
-				if ((aInput.isKeyPressed(Input.KEY_SPACE) || mJumping && !mOnWall) && (mOnGround || mOnWall))
+				if ((aInput.isKeyPressed(InputKeys.instance().getKey(Key.JUMP)) || mJumping && !mOnWall) && (mOnGround || mOnWall))
 				{
 					if (mOnWall)
 					{
@@ -139,7 +141,7 @@ public class Player extends Entity
 		
 		final double gravity = Level.GRAVITY - (mInLiquid ? 0.1 : 0), friction = Level.FRICTION - (mInLiquid ? 0.1 : 0);
 		
-		if (mYV < 0 && aInput.isKeyDown(Input.KEY_SPACE))
+		if (mYV < 0 && aInput.isKeyDown(InputKeys.instance().getKey(Key.JUMP)))
 		{
 			mYV *= friction + 0.002;
 			mYV += gravity * 0.5f;
