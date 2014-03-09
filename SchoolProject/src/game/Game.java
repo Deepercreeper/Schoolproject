@@ -159,6 +159,7 @@ public class Game
 		mMain = true;
 		DataManager.playMusic("menu");
 		mLevel = null;
+		mInput.clearKeyPressedRecord();
 	}
 	
 	/**
