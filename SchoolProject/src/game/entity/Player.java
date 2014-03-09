@@ -6,6 +6,7 @@ import game.level.Level;
 import game.level.block.Block;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import util.Direction;
 import util.InputKeys;
@@ -20,11 +21,13 @@ public class Player extends Entity
 	private final double	mSpeed	= 1, mSpeedStep = 0.01;
 	private int				mSpeedSkill	= 0, mLifeSkill = 0;
 	
+	private Direction		mDir		= Direction.NONE;
+	
 	private int				mLife;
 	
 	private int				mHurtDelay;
 	
-	private boolean			mCannon, mJumping;
+	private boolean			mCannon, mJumping, mRunning, mFast;
 	
 	private int				mCannonTime;
 	
@@ -82,8 +85,15 @@ public class Player extends Entity
 			if (aInput.isKeyPressed(Input.KEY_G)) skillSpeed();
 		}
 		
+		mDir = Direction.NONE;
+		mRunning = mFast = false;
+		
 		if ( !mHurt)
 		{
+			final int mouseX = aInput.getMouseX() + mLevel.getScreenX();
+			if (mouseX < mX) mDir = Direction.LEFT;
+			else if (mouseX > mX + mWidth) mDir = Direction.RIGHT;
+			
 			if (aInput.isKeyPressed(InputKeys.instance().getKey(Key.DOWN)) && !mOnGround && mCannonTime <= 0)
 			{
 				mCannon = true;
@@ -99,9 +109,21 @@ public class Player extends Entity
 			if ( !mCannon)
 			{
 				mXA = 0;
-				if (aInput.isKeyDown(InputKeys.instance().getKey(Key.RIGHT))) mXA += 1.36;
-				if (aInput.isKeyDown(InputKeys.instance().getKey(Key.LEFT))) mXA -= 1.36;
-				if (aInput.isKeyDown(InputKeys.instance().getKey(Key.FAST))) mXA *= 1.5;
+				if (aInput.isKeyDown(InputKeys.instance().getKey(Key.RIGHT)))
+				{
+					mXA += 1.36;
+					mRunning = true;
+				}
+				if (aInput.isKeyDown(InputKeys.instance().getKey(Key.LEFT)))
+				{
+					mXA -= 1.36;
+					mRunning = true;
+				}
+				if (aInput.isKeyDown(InputKeys.instance().getKey(Key.FAST)))
+				{
+					mXA *= 1.5;
+					mFast = true;
+				}
 				if ( !mOnGround) mXA *= 0.125;
 				if (mOnIce) mXA *= 0.08;
 				mXA *= mSpeed + mSpeedSkill * mSpeedStep;
@@ -187,9 +209,23 @@ public class Player extends Entity
 	public void render(final Graphics aG)
 	{
 		// Player
-		if (mHurtDelay > 0 && mTime % 10 < 5) aG.drawImage(DataManager.getSplitImage("player" + DataManager.getTexturePack(), 0), (float) mX - mLevel.getScreenX(), (float) mY - mLevel.getScreenY(),
-				new Color(1, 1, 1, 0.5f));
-		else aG.drawImage(DataManager.getSplitImage("player" + DataManager.getTexturePack(), 0).getScaledCopy(mWidth, mHeight), (float) mX - mLevel.getScreenX(), (float) mY - mLevel.getScreenY());
+		Image image;
+		if (mDir == Direction.NONE) image = DataManager.getSplitImage("player" + DataManager.getTexturePack(), 0).getScaledCopy(mWidth, mHeight);
+		else
+		{
+			int id = 0;
+			if (mRunning)
+			{
+				final int delay = 6 - (mFast ? 2 : 0);
+				id = mTime % (delay * 6) / delay;
+				if (Math.signum(mXV) != Math.signum(mDir.XD)) id = 5 - id;
+			}
+			else id = -4;
+			image = DataManager.getSplitImage("player" + DataManager.getTexturePack(), 5 + id).getScaledCopy(mWidth, mHeight);
+			if (mDir == Direction.LEFT) image = image.getFlippedCopy(true, false);
+		}
+		if (mHurtDelay > 0 && mTime % 10 < 5) aG.drawImage(image, (float) mX - mLevel.getScreenX(), (float) mY - mLevel.getScreenY(), new Color(1, 1, 1, 0.5f));
+		else aG.drawImage(image, (float) mX - mLevel.getScreenX(), (float) mY - mLevel.getScreenY());
 		
 		// HUD
 		aG.setColor(Color.red);
