@@ -2,6 +2,7 @@ package game.level.block;
 
 import game.entity.Entity;
 import game.level.Level;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import org.newdawn.slick.Graphics;
@@ -17,6 +18,7 @@ public class Block
 	private static final HashMap<Short, Block>		BLOCKS						= new HashMap<>();
 	private static final HashMap<Integer, Short>	COLORS						= new HashMap<>();
 	private static final HashMap<Short, Texture>	TEXTURES					= new HashMap<>();
+	private static ArrayList<Block>					BLOCK_LIST					= new ArrayList<>();
 	
 	// Blocks
 	public static final Block						AIR							= new Block(0, 0xffffff).setInvisible().setUnsolid();
@@ -105,6 +107,7 @@ public class Block
 		for (final Texture texture : Texture.values())
 			TEXTURES.put(mIds.get(texture), texture);
 		mRenderBlocks.add(this);
+		BLOCK_LIST.add(aId, this);
 	}
 	
 	private Block(final int aId, final int aRGB)
@@ -116,6 +119,7 @@ public class Block
 		COLORS.put(aRGB, id);
 		TEXTURES.put(id, Texture.NORMAL);
 		mRenderBlocks.add(this);
+		BLOCK_LIST.add(aId, this);
 	}
 	
 	private Block()
@@ -127,6 +131,7 @@ public class Block
 		TEXTURES.put(id, Texture.NORMAL);
 		mItemBlock = true;
 		mRenderBlocks.add(this);
+		BLOCK_LIST.add(this);
 	}
 	
 	private Block addRenderBlock(final Block aBlock)
@@ -402,6 +407,26 @@ public class Block
 		if (block.mFlag) aG.drawImage(DataManager.getImage("flag"), aX * SIZE - aLevel.getScreenX(), (aY - 7) * SIZE - aLevel.getScreenY());
 		else aG.drawImage(DataManager.getTextureImage(DataManager.getTexturePack(), texture, block.getId(texture) / Texture.values().size()).getScaledCopy(SIZE, SIZE),
 				aX * SIZE - aLevel.getScreenX(), aY * SIZE - aLevel.getScreenY());
+	}
+	
+	/**
+	 * Returns the total number of different blocks.
+	 * 
+	 * @return the blocks count.
+	 */
+	public static int size()
+	{
+		return BLOCKS.values().size();
+	}
+	
+	/**
+	 * Creates a ordered list of all blocks. Only used by the level editor.
+	 * 
+	 * @return a list of all blocks.
+	 */
+	public static ArrayList<Block> getBlockList()
+	{
+		return BLOCK_LIST;
 	}
 	
 	/**
