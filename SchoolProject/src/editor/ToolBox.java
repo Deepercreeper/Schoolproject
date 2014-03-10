@@ -8,6 +8,8 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
@@ -19,6 +21,9 @@ public class ToolBox extends JDialog
 	private static final int	WINDOW_WIDTH	= 10 * 16, WINDOW_HEIGHT = Block.getBlockList().size() / 10 * 16;
 	
 	private Texture				mActiveTexture	= Texture.NORMAL;
+	
+	private int					mId				= 0;
+	private Block				mBlock			= Block.AIR;
 	
 	public ToolBox(final Editor aParent)
 	{
@@ -51,6 +56,14 @@ public class ToolBox extends JDialog
 		};
 		cp.setPreferredSize(new Dimension(WINDOW_WIDTH, WINDOW_HEIGHT));
 		cp.setLocation(0, 0);
+		cp.addMouseListener(new MouseAdapter()
+		{
+			@Override
+			public void mousePressed(final MouseEvent aE)
+			{
+				click(aE.getX(), aE.getY());
+			}
+		});
 		
 		setResizable(false);
 		
@@ -75,5 +88,14 @@ public class ToolBox extends JDialog
 			if (blocks.get(i).getId(mActiveTexture) != blocks.get(i).getId()) texture = mActiveTexture;
 			aG.drawImage(EditorDataManager.getImage(i, texture), (i % 10) * 16, (i / 10) * 16, null);
 		}
+		aG.setColor(Color.red);
+		aG.drawRect((mId % 10) * 16, (mId / 10) * 16, 16, 16);
+	}
+	
+	private void click(final int aX, final int aY)
+	{
+		mId = aX / 16 + aY / 16 * 10;
+		mBlock = Block.getBlockList().get(mId);
+		repaint();
 	}
 }
