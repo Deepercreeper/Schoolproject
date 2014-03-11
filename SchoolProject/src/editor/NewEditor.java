@@ -196,7 +196,7 @@ public class NewEditor extends JFrame
 		if (mMouseX < 0 || mMouseX >= mWidth || mMouseY < 0 || mMouseY >= mHeight) return;
 		final Block block = Block.get(mToolBox.getBlockId());
 		mMap[mMouseX][mMouseY] = mToolBox.getBlockId();
-		if (block.isItemBlock()) mAlphas[mMouseX][mMouseY] = mItems.getItemAt(mItems.getSelectedIndex()).getAlpha();
+		if (block.isItemBlock() || block == Block.QUESTION) mAlphas[mMouseX][mMouseY] = mItems.getItemAt(mItems.getSelectedIndex()).getAlpha();
 		else mAlphas[mMouseX][mMouseY] = 255;
 	}
 	
