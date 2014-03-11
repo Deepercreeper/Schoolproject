@@ -438,6 +438,8 @@ public class Block
 	 *            The block id.
 	 * @param aG
 	 *            The graphics to draw into.
+	 * @param aToolBox
+	 *            Whether this block should be rendered inside the tool box or the editor.
 	 */
 	public static void render(final int aX, final int aY, final short aId, final java.awt.Graphics aG, final boolean aToolBox)
 	{

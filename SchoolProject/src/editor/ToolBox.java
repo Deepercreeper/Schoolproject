@@ -75,6 +75,20 @@ public class ToolBox extends JDialog
 		setVisible(true);
 	}
 	
+	public void nextBlock()
+	{
+		mId = (mId + 1) % Block.getBlockList().size();
+		mBlock = Block.getBlockList().get(mId);
+		repaint();
+	}
+	
+	public void previousBlock()
+	{
+		mId = (mId - 1 + Block.getBlockList().size()) % Block.getBlockList().size();
+		mBlock = Block.getBlockList().get(mId);
+		repaint();
+	}
+	
 	public short getBlockId()
 	{
 		return mBlock.getId(mActiveTexture);

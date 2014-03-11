@@ -287,7 +287,7 @@ public class NewEditor extends JFrame
 		{
 			final JMenu file = new JMenu("Datei");
 			{
-				final JMenuItem newFile = new JMenuItem("Neu", 0);
+				final JMenuItem newFile = new JMenuItem("Neu");
 				newFile.addActionListener(new ActionListener()
 				{
 					@Override
@@ -300,7 +300,7 @@ public class NewEditor extends JFrame
 				newFile.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, Event.CTRL_MASK));
 				file.add(newFile);
 				
-				final JMenuItem openFile = new JMenuItem("Öffnen", 1);
+				final JMenuItem openFile = new JMenuItem("Öffnen");
 				openFile.addActionListener(new ActionListener()
 				{
 					@Override
@@ -315,7 +315,7 @@ public class NewEditor extends JFrame
 				
 				file.addSeparator();
 				
-				final JMenuItem saveFile = new JMenuItem("Speichern", 0);
+				final JMenuItem saveFile = new JMenuItem("Speichern");
 				saveFile.addActionListener(new ActionListener()
 				{
 					@Override
@@ -330,7 +330,7 @@ public class NewEditor extends JFrame
 				
 				file.addSeparator();
 				
-				final JMenuItem close = new JMenuItem("Beenden", 0);
+				final JMenuItem close = new JMenuItem("Beenden");
 				close.addActionListener(new ActionListener()
 				{
 					@Override
@@ -345,6 +345,37 @@ public class NewEditor extends JFrame
 			}
 			file.setMnemonic('D');
 			menu.add(file);
+			
+			final JMenu edit = new JMenu("Bearbeiten");
+			{
+				final JMenuItem nextBlock = new JMenuItem("Nächster Block");
+				nextBlock.addActionListener(new ActionListener()
+				{
+					@Override
+					public void actionPerformed(final ActionEvent aE)
+					{
+						mToolBox.nextBlock();
+					}
+				});
+				nextBlock.setMnemonic('N');
+				nextBlock.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_UP, Event.CTRL_MASK));
+				edit.add(nextBlock);
+				
+				final JMenuItem previousBlock = new JMenuItem("Vorheriger Block");
+				previousBlock.addActionListener(new ActionListener()
+				{
+					@Override
+					public void actionPerformed(final ActionEvent aE)
+					{
+						mToolBox.previousBlock();
+					}
+				});
+				previousBlock.setMnemonic('V');
+				previousBlock.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, Event.CTRL_MASK));
+				edit.add(previousBlock);
+			}
+			edit.setMnemonic('B');
+			menu.add(edit);
 			
 			final JLabel size = new JLabel("Map größe:");
 			menu.add(size);
