@@ -9,8 +9,9 @@ import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionAdapter;
+import java.awt.event.MouseMotionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
@@ -79,7 +80,7 @@ public class NewEditor extends JFrame
 					render(aG);
 				}
 			};
-			mCP.addMouseMotionListener(new MouseMotionAdapter()
+			mCP.addMouseMotionListener(new MouseMotionListener()
 			{
 				@Override
 				public void mouseMoved(final MouseEvent aE)
@@ -87,6 +88,23 @@ public class NewEditor extends JFrame
 					mMouseX = aE.getX() / Block.SIZE;
 					mMouseY = aE.getY() / Block.SIZE;
 					repaint();
+				}
+				
+				@Override
+				public void mouseDragged(final MouseEvent aE)
+				{
+					mMouseX = aE.getX() / Block.SIZE;
+					mMouseY = aE.getY() / Block.SIZE;
+					repaint();
+					click();
+				}
+			});
+			mCP.addMouseListener(new MouseAdapter()
+			{
+				@Override
+				public void mousePressed(final MouseEvent aE)
+				{
+					click();
 				}
 			});
 			mScrollPane = new JScrollPane(mCP);
@@ -162,6 +180,12 @@ public class NewEditor extends JFrame
 		 * - load items
 		 * - ...
 		 */
+	}
+	
+	private void click()
+	{
+		if (mMouseX < 0 || mMouseX >= mWidth || mMouseY < 0 || mMouseY >= mHeight) return;
+		mMap[mMouseX][mMouseY] = mToolBox.getBlockId();
 	}
 	
 	private void saveMap()
