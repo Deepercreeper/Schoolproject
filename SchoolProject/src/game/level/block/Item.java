@@ -5,16 +5,18 @@ import game.entity.Entity;
 import game.entity.Heart;
 import game.entity.enemy.Minion;
 import game.entity.enemy.Roller;
+import java.util.Collection;
 import java.util.HashMap;
 
 public abstract class Item
 {
 	private static final HashMap<Integer, Item>	ITEMS			= new HashMap<>();
+	private static final HashMap<Short, Item>	ALPHAS			= new HashMap<>();
 	
 	/**
 	 * Creates a new static heart.
 	 */
-	public static final Item					HEART_STATIC	= new Item(0xFF0000)
+	public static final Item					HEART_STATIC	= new Item("Statisches Herz", 0xFF0000, 252)
 																{
 																	@Override
 																	public Entity create(final int aX, final int aY)
@@ -38,7 +40,7 @@ public abstract class Item
 	/**
 	 * Creates a new non static heart.
 	 */
-	public static final Item					HEART			= new Item(0xFE0000)
+	public static final Item					HEART			= new Item("Herz", 0xFE0000, 253)
 																{
 																	@Override
 																	public Entity create(final int aX, final int aY)
@@ -62,7 +64,7 @@ public abstract class Item
 	/**
 	 * Creates a new banana.
 	 */
-	public static final Item					BANANA			= new Item(0xFFFF00)
+	public static final Item					BANANA			= new Item("Banane", 0xFFFF00, 254)
 																{
 																	@Override
 																	public Entity create(final int aX, final int aY)
@@ -86,7 +88,7 @@ public abstract class Item
 	/**
 	 * Creates anew super banana.
 	 */
-	public static final Item					SUPER_BANANA	= new Item(0xFF00FF)
+	public static final Item					SUPER_BANANA	= new Item("Super Banane", 0xFF00FF, 255)
 																{
 																	@Override
 																	public Entity create(final int aX, final int aY)
@@ -107,7 +109,7 @@ public abstract class Item
 																	}
 																};
 	
-	public static final Item					ROLLER			= new Item(0xB6FF00)
+	public static final Item					ROLLER			= new Item("Rollender Minion", 0xB6FF00, 251)
 																{
 																	@Override
 																	public Entity create(final int aX, final int aY)
@@ -128,7 +130,7 @@ public abstract class Item
 																	}
 																};
 	
-	public static final Item					MINION			= new Item(0x007F0E)
+	public static final Item					MINION			= new Item("Minion", 0x007F0E, 250)
 																{
 																	@Override
 																	public Entity create(final int aX, final int aY)
@@ -149,9 +151,23 @@ public abstract class Item
 																	}
 																};
 	
-	private Item(final int aRGB)
+	private final String						mName;
+	
+	private final int							mRGB;
+	private final short							mAlpha;
+	
+	private Item(final String aName, final int aRGB, final int aAlpha)
 	{
-		ITEMS.put(aRGB, this);
+		mName = aName;
+		mRGB = aRGB;
+		mAlpha = (short) aAlpha;
+		ITEMS.put(mRGB, this);
+		ALPHAS.put(mAlpha, this);
+	}
+	
+	public static Collection<Item> values()
+	{
+		return ITEMS.values();
 	}
 	
 	/**
@@ -202,8 +218,34 @@ public abstract class Item
 	 *            The color code.
 	 * @return a new item.
 	 */
-	public static Entity getItem(final int aX, final int aY, final int aRGB)
+	public static Entity getEntity(final int aX, final int aY, final int aRGB)
 	{
 		return ITEMS.get(aRGB).create(aX, aY);
+	}
+	
+	public static Item getItem(final short aAlpha)
+	{
+		return ALPHAS.get(aAlpha);
+	}
+	
+	public static Item getItem(final int aRGB)
+	{
+		return ITEMS.get(aRGB);
+	}
+	
+	public short getAlpha()
+	{
+		return mAlpha;
+	}
+	
+	public int getRGB()
+	{
+		return mRGB;
+	}
+	
+	@Override
+	public String toString()
+	{
+		return mName;
 	}
 }

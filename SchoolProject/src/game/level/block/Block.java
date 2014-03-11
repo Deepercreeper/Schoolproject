@@ -89,7 +89,7 @@ public class Block
 	private final HashSet<UpdateAction>				mUpdateActions				= new HashSet<>();
 	private final HashSet<HitAction>				mHitActions					= new HashSet<>();
 	private final HashMap<Texture, Short>			mIds						= new HashMap<>();
-	private final HashMap<Short, Item>				mItems						= new HashMap<>();
+	private final HashMap<Byte, Item>				mItems						= new HashMap<>();
 	private final HashSet<Block>					mRenderBlocks				= new HashSet<>();
 	private Direction								mHurtDirection				= Direction.NONE;
 	private Direction								mSolid						= Direction.NONE;
@@ -199,7 +199,7 @@ public class Block
 	
 	private Block setItem(final int aAlpha, final Item aItem)
 	{
-		mItems.put((short) aAlpha, aItem);
+		mItems.put((byte) aAlpha, aItem);
 		return this;
 	}
 	
@@ -230,6 +230,11 @@ public class Block
 	Item getItem(final short aAlpha)
 	{
 		return mItems.get(aAlpha);
+	}
+	
+	public HashMap<Byte, Item> getItems()
+	{
+		return mItems;
 	}
 	
 	/**
@@ -450,7 +455,7 @@ public class Block
 			if (aToolBox) aG.drawImage(EditorDataManager.getImage("flagBlock"), aX * SIZE, aY * SIZE, null);
 			else aG.drawImage(EditorDataManager.getImage("flag"), aX * SIZE, (aY - 7) * SIZE, null);
 		}
-		else if (block.mItemBlock) ;// TODO render item block
+		else if (block.mItemBlock) aG.drawImage(EditorDataManager.getImage("item"), aX * SIZE, aY * SIZE, null);
 		else if (block == START) aG.drawImage(EditorDataManager.getImage("start"), aX * SIZE, aY * SIZE, null);
 		else aG.drawImage(EditorDataManager.getBlockImage(block.getId(texture) / Texture.values().size(), texture), aX * SIZE, aY * SIZE, null);
 	}

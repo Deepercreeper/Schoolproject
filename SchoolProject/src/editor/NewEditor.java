@@ -1,8 +1,8 @@
 package editor;
 
 import game.level.block.Block;
+import game.level.block.Item;
 import java.awt.Color;
-import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Event;
 import java.awt.Graphics;
@@ -23,6 +23,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.JSpinner.NumberEditor;
@@ -36,19 +37,21 @@ import javax.swing.event.ChangeListener;
 @SuppressWarnings("serial")
 public class NewEditor extends JFrame
 {
-	private boolean				mSaved, mChangesMade, mSizeModelChanged, mMouseLeft;
+	private boolean					mSaved, mChangesMade, mSizeModelChanged, mMouseLeft;
 	
-	private int					mWidth, mHeight, mWorld, mLevel, mMouseX, mMouseY;
+	private int						mWidth, mHeight, mWorld, mLevel, mMouseX, mMouseY;
 	
-	private final Container		mCP;
+	private final JPanel			mCP;
 	
-	private final JScrollPane	mScrollPane;
+	private final JScrollPane		mScrollPane;
 	
-	private final ToolBox		mToolBox;
+	private final ToolBox			mToolBox;
 	
-	private SpinnerModel		mWidthModel, mHeightModel;
+	private final JComboBox<Item>	mItems;
 	
-	private short[][]			mMap;
+	private SpinnerModel			mWidthModel, mHeightModel;
+	
+	private short[][]				mMap, mAlphas;
 	
 	public NewEditor()
 	{
@@ -72,7 +75,8 @@ public class NewEditor extends JFrame
 		
 		// Initiate fields
 		{
-			mCP = new Container()
+			mItems = new JComboBox<>();
+			mCP = new JPanel()
 			{
 				@Override
 				public void paint(final Graphics aG)
@@ -87,6 +91,7 @@ public class NewEditor extends JFrame
 				{
 					mMouseX = aE.getX() / Block.SIZE;
 					mMouseY = aE.getY() / Block.SIZE;
+					showItem();
 					repaint();
 				}
 				
@@ -133,6 +138,7 @@ public class NewEditor extends JFrame
 		mWidth = 100;
 		mHeight = 30;
 		mMap = new short[mWidth][mHeight];
+		mAlphas = new short[mWidth][mHeight];
 		resizeCP();
 		setTitle("Level: " + mWorld + "-" + mLevel);
 		/*
@@ -155,6 +161,7 @@ public class NewEditor extends JFrame
 		mHeight = data.getHeight();
 		
 		mMap = new short[mWidth][mHeight];
+		mAlphas = new short[mWidth][mHeight];
 		final int[] rgb = new int[mWidth * mHeight];
 		final int[] alphas = new int[mWidth * mHeight];
 		data.getRGB(0, 0, mWidth, mHeight, rgb, 0, mWidth);
@@ -169,11 +176,14 @@ public class NewEditor extends JFrame
 					final Block block = Block.get(id);
 					if (block.isItemBlock())
 					{
-						mMap[x][y] = Block.AIR.getId();
-						// TODO load items
-						// (Item.getItem(x * Block.SIZE, y * Block.SIZE, rgb[x + y*width]));
+						mMap[x][y] = Block.ITEM.getId();
+						mAlphas[x][y] = Item.getItem(0xffffff & rgb[x + y * mWidth]).getAlpha();
 					}
-					else mMap[x][y] = id;
+					else
+					{
+						mMap[x][y] = id;
+						mAlphas[x][y] = 255;
+					}
 				}
 			}
 		
@@ -190,13 +200,24 @@ public class NewEditor extends JFrame
 	private void leftClick()
 	{
 		if (mMouseX < 0 || mMouseX >= mWidth || mMouseY < 0 || mMouseY >= mHeight) return;
+		final Block block = Block.get(mToolBox.getBlockId());
 		mMap[mMouseX][mMouseY] = mToolBox.getBlockId();
+		if (block.isItemBlock()) mAlphas[mMouseX][mMouseY] = mItems.getItemAt(mItems.getSelectedIndex()).getAlpha();
+		else mAlphas[mMouseX][mMouseY] = 255;
 	}
 	
 	private void rightClick()
 	{
 		if (mMouseX < 0 || mMouseX >= mWidth || mMouseY < 0 || mMouseY >= mHeight) return;
 		mMap[mMouseX][mMouseY] = 0;
+		mAlphas[mMouseX][mMouseY] = 255;
+	}
+	
+	private void showItem()
+	{
+		if (mMouseX < 0 || mMouseX >= mWidth || mMouseY < 0 || mMouseY >= mHeight) return;
+		if (mMap[mMouseX][mMouseY] != Block.ITEM.getId()) mCP.setToolTipText("");
+		else mCP.setToolTipText(Item.getItem(mAlphas[mMouseX][mMouseY]).toString());
 	}
 	
 	private void saveMap()
@@ -224,11 +245,15 @@ public class NewEditor extends JFrame
 		final int oldWidth = mWidth, oldHeight = mHeight;
 		mWidth = (int) mWidthModel.getValue();
 		mHeight = (int) mHeightModel.getValue();
-		final short[][] oldMap = mMap;
+		final short[][] oldMap = mMap, oldAlphas = mAlphas;
 		mMap = new short[mWidth][mHeight];
+		mAlphas = new short[mWidth][mHeight];
 		for (int x = 0; x < oldWidth && x < mWidth; x++ )
 			for (int y = 0; y < oldHeight && y < mHeight; y++ )
+			{
 				mMap[x][y] = oldMap[x][y];
+				mAlphas[x][y] = oldAlphas[x][y];
+			}
 		resizeCP();
 		/*
 		 * TODO
@@ -422,6 +447,10 @@ public class NewEditor extends JFrame
 				}
 			});
 			menu.add(texturePacks);
+			
+			for (final Item item : Item.values())
+				mItems.addItem(item);
+			menu.add(mItems);
 		}
 		setJMenuBar(menu);
 	}

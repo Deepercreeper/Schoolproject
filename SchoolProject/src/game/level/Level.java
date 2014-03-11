@@ -34,9 +34,7 @@ public class Level
 	
 	private final Screen		mScreen;
 	
-	private short[][]			mBlocks;
-	
-	private short[][]			mAlphas;
+	private short[][]			mBlocks, mAlphas;
 	
 	private final HashMap<Integer, Entity>	mEntities	= new HashMap<>(), mParticles = new HashMap<>(), mAddEntities = new HashMap<>();
 	
@@ -457,7 +455,7 @@ public class Level
 					if (block.isItemBlock())
 					{
 						mBlocks[x][y] = Block.AIR.getId();
-						addEntity(Item.getItem(x * Block.SIZE, y * Block.SIZE, rgb));
+						addEntity(Item.getEntity(x * Block.SIZE, y * Block.SIZE, rgb));
 					}
 					else if (block == Block.START)
 					{
