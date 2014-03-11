@@ -72,7 +72,7 @@ public class Editor extends JFrame
 		mScrollPane = new JScrollPane(mCP);
 		getContentPane().add(mScrollPane, null);
 		
-		mToolBox = new ToolBox(this);
+		mToolBox = new ToolBox(new NewEditor());
 		mToolBox.setEnabled(false);
 		initMenu();
 		

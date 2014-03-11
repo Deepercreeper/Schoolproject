@@ -9,7 +9,6 @@ import org.newdawn.slick.Graphics;
 import util.Direction;
 import data.DataManager;
 import editor.EditorDataManager;
-import editor.NewEditor;
 
 public class Block
 {
@@ -439,14 +438,13 @@ public class Block
 	 *            The block id.
 	 * @param aG
 	 *            The graphics to draw into.
-	 * @param aEditor
-	 *            The parent editor.
 	 */
-	public static void render(final int aX, final int aY, final short aId, final java.awt.Graphics aG, final NewEditor aEditor)
+	public static void render(final int aX, final int aY, final short aId, final java.awt.Graphics aG)
 	{
 		final Block block = get(aId);
 		final Texture texture = getBlockTexture(aX, aY, aId);
 		if (block.mFlag) aG.drawImage(EditorDataManager.getImage("flag"), aX * SIZE, (aY - 7) * SIZE, null);
+		else if (block.mItemBlock) ;// TODO render item block
 		else if (block == START) aG.drawImage(EditorDataManager.getImage("start"), aX * SIZE, aY * SIZE, null);
 		else aG.drawImage(EditorDataManager.getBlockImage(block.getId(texture) / Texture.values().size(), texture), aX * SIZE, aY * SIZE, null);
 	}

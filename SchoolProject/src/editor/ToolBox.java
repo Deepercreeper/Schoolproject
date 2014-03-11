@@ -13,21 +13,20 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
-import javax.swing.JFrame;
 import javax.swing.JMenuBar;
 
 @SuppressWarnings("serial")
 public class ToolBox extends JDialog
 {
-	private static final int	WINDOW_WIDTH	= 10 * 16, WINDOW_HEIGHT = Block.getBlockList().size() / 10 * 16;
+	private static final int	WINDOW_WIDTH	= 10 * 16, WINDOW_HEIGHT = (int) (Math.ceil(Block.getBlockList().size() / 10.0) * 16);
 	
 	private Texture				mActiveTexture	= Texture.NORMAL;
 	private int					mId				= 0;
 	private Block				mBlock			= Block.AIR;
 	
-	public ToolBox(final JFrame aParent)
+	public ToolBox(final NewEditor aEditor)
 	{
-		super(aParent, false);
+		super(aEditor, false);
 		final JMenuBar toolBar = new JMenuBar();
 		{
 			final JComboBox<Texture> textures = new JComboBox<>();
@@ -89,9 +88,8 @@ public class ToolBox extends JDialog
 		for (int i = 0; i < blocks.size(); i++ )
 		{
 			aG.setColor(new Color(i, i, i));
-			Texture texture = Texture.NORMAL;
-			if (blocks.get(i).getId(mActiveTexture) != blocks.get(i).getId()) texture = mActiveTexture;
-			aG.drawImage(EditorDataManager.getBlockImage(i, texture), (i % 10) * 16, (i / 10) * 16, null);
+			final short id = blocks.get(i).getId(mActiveTexture);
+			Block.render((i % 10), (i / 10), id, aG);
 		}
 		aG.setColor(Color.red);
 		aG.drawRect((mId % 10) * 16, (mId / 10) * 16, 16, 16);
@@ -100,6 +98,7 @@ public class ToolBox extends JDialog
 	private void click(final int aX, final int aY)
 	{
 		mId = aX / 16 + aY / 16 * 10;
+		if (mId >= Block.getBlockList().size()) return;
 		mBlock = Block.getBlockList().get(mId);
 		repaint();
 	}

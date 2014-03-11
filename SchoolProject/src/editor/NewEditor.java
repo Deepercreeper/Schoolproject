@@ -243,7 +243,7 @@ public class NewEditor extends JFrame
 		
 		for (int x = 0; x < mWidth; x++ )
 			for (int y = 0; y < mHeight; y++ )
-				Block.render(x, y, mMap[x][y], aG, this);
+				Block.render(x, y, mMap[x][y], aG);
 		
 		aG.setColor(Color.red);
 		aG.drawRect(mMouseX * Block.SIZE, mMouseY * Block.SIZE, Block.SIZE, Block.SIZE);
