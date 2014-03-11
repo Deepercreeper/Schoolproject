@@ -11,7 +11,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionListener;
+import java.awt.event.MouseMotionAdapter;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
@@ -36,7 +36,7 @@ import javax.swing.event.ChangeListener;
 @SuppressWarnings("serial")
 public class NewEditor extends JFrame
 {
-	private boolean				mSaved, mChangesMade, mSizeModelChanged;
+	private boolean				mSaved, mChangesMade, mSizeModelChanged, mMouseLeft;
 	
 	private int					mWidth, mHeight, mWorld, mLevel, mMouseX, mMouseY;
 	
@@ -80,7 +80,7 @@ public class NewEditor extends JFrame
 					render(aG);
 				}
 			};
-			mCP.addMouseMotionListener(new MouseMotionListener()
+			mCP.addMouseMotionListener(new MouseMotionAdapter()
 			{
 				@Override
 				public void mouseMoved(final MouseEvent aE)
@@ -95,16 +95,21 @@ public class NewEditor extends JFrame
 				{
 					mMouseX = aE.getX() / Block.SIZE;
 					mMouseY = aE.getY() / Block.SIZE;
+					if (mMouseLeft) leftClick();
+					else rightClick();
 					repaint();
-					click();
 				}
+				
 			});
 			mCP.addMouseListener(new MouseAdapter()
 			{
 				@Override
 				public void mousePressed(final MouseEvent aE)
 				{
-					click();
+					mMouseLeft = aE.getButton() == MouseEvent.BUTTON1;
+					if (mMouseLeft) leftClick();
+					else rightClick();
+					repaint();
 				}
 			});
 			mScrollPane = new JScrollPane(mCP);
@@ -182,10 +187,16 @@ public class NewEditor extends JFrame
 		 */
 	}
 	
-	private void click()
+	private void leftClick()
 	{
 		if (mMouseX < 0 || mMouseX >= mWidth || mMouseY < 0 || mMouseY >= mHeight) return;
 		mMap[mMouseX][mMouseY] = mToolBox.getBlockId();
+	}
+	
+	private void rightClick()
+	{
+		if (mMouseX < 0 || mMouseX >= mWidth || mMouseY < 0 || mMouseY >= mHeight) return;
+		mMap[mMouseX][mMouseY] = 0;
 	}
 	
 	private void saveMap()
