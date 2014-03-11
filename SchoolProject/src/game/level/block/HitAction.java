@@ -81,7 +81,7 @@ abstract class HitAction
 	
 	private static void destroy(final int aX, final int aY, final Level aLevel, final Entity aEntity, final Block aBlock, final Direction aHitDirection)
 	{
-		final Texture texture = Block.getBlockTexture(aX, aY, aLevel);
+		final Texture texture = Block.getBlockTexture(aX, aY, aLevel.getBlock(aX, aY));
 		
 		for (final Direction dir : Direction.values())
 			if (aEntity.canDestroyBlock(dir) && aHitDirection == dir)

@@ -2,7 +2,7 @@ package main;
 
 import org.newdawn.slick.SlickException;
 import view.View;
-import editor.Editor;
+import editor.NewEditor;
 
 public class Main
 {
@@ -10,7 +10,7 @@ public class Main
 	{
 		if (args.length > 0)
 		{
-			if (args[0].equals("Editor")) new Editor();
+			if (args[0].equals("Editor")) new NewEditor();
 			else if (args[0].equals("Game")) try
 			{
 				new View();

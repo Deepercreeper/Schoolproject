@@ -8,6 +8,8 @@ import java.util.HashSet;
 import org.newdawn.slick.Graphics;
 import util.Direction;
 import data.DataManager;
+import editor.EditorDataManager;
+import editor.NewEditor;
 
 public class Block
 {
@@ -17,6 +19,7 @@ public class Block
 	public static final int							SIZE						= 16;
 	private static final HashMap<Short, Block>		BLOCKS						= new HashMap<>();
 	private static final HashMap<Integer, Short>	COLORS						= new HashMap<>();
+	private static final HashMap<Short, Integer>	BLOCK_COLORS				= new HashMap<>();
 	private static final HashMap<Short, Texture>	TEXTURES					= new HashMap<>();
 	private static ArrayList<Block>					BLOCK_LIST					= new ArrayList<>();
 	
@@ -103,7 +106,10 @@ public class Block
 			BLOCKS.put(mIds.get(texture), this);
 		if (aRGBs.length != textures) throw new IllegalArgumentException("Not the right number of color codes");
 		for (int i = 0; i < textures; i++ )
+		{
 			COLORS.put(aRGBs[i], mIds.get(Texture.get((byte) i)));
+			BLOCK_COLORS.put(mIds.get(Texture.get((byte) i)), aRGBs[i]);
+		}
 		for (final Texture texture : Texture.values())
 			TEXTURES.put(mIds.get(texture), texture);
 		mRenderBlocks.add(this);
@@ -117,6 +123,7 @@ public class Block
 			mIds.put(texture, id);
 		BLOCKS.put(id, this);
 		COLORS.put(aRGB, id);
+		BLOCK_COLORS.put(id, aRGB);
 		TEXTURES.put(id, Texture.NORMAL);
 		mRenderBlocks.add(this);
 		BLOCK_LIST.add(aId, this);
@@ -343,7 +350,7 @@ public class Block
 	 */
 	public void initImage(final int aX, final int aY, final Level aLevel)
 	{
-		final Texture texture = getBlockTexture(aX, aY, aLevel);
+		final Texture texture = getBlockTexture(aX, aY, aLevel.getBlock(aX, aY));
 		DataManager.loadTexture(DataManager.getTexturePack(), texture, getId(texture) / Texture.values().size());
 	}
 	
@@ -387,6 +394,18 @@ public class Block
 	}
 	
 	/**
+	 * Searches the corresponding color to the given id.
+	 * 
+	 * @param aId
+	 *            The block id.
+	 * @return the color code of the block.
+	 */
+	public static int getCodeFromId(final short aId)
+	{
+		return BLOCK_COLORS.get(aId);
+	}
+	
+	/**
 	 * Renders the specific block at the given position.
 	 * 
 	 * @param aX
@@ -403,10 +422,33 @@ public class Block
 	public static void render(final int aX, final int aY, final short aId, final Graphics aG, final Level aLevel)
 	{
 		final Block block = get(aId);
-		final Texture texture = getBlockTexture(aX, aY, aLevel);
+		final Texture texture = getBlockTexture(aX, aY, aId);
 		if (block.mFlag) aG.drawImage(DataManager.getImage("flag"), aX * SIZE - aLevel.getScreenX(), (aY - 7) * SIZE - aLevel.getScreenY());
 		else aG.drawImage(DataManager.getTextureImage(DataManager.getTexturePack(), texture, block.getId(texture) / Texture.values().size()).getScaledCopy(SIZE, SIZE),
 				aX * SIZE - aLevel.getScreenX(), aY * SIZE - aLevel.getScreenY());
+	}
+	
+	/**
+	 * Renders the specific block at the given position.
+	 * 
+	 * @param aX
+	 *            The x position.
+	 * @param aY
+	 *            The y position.
+	 * @param aId
+	 *            The block id.
+	 * @param aG
+	 *            The graphics to draw into.
+	 * @param aEditor
+	 *            The parent editor.
+	 */
+	public static void render(final int aX, final int aY, final short aId, final java.awt.Graphics aG, final NewEditor aEditor)
+	{
+		final Block block = get(aId);
+		final Texture texture = getBlockTexture(aX, aY, aId);
+		if (block.mFlag) aG.drawImage(EditorDataManager.getImage("flag"), aX * SIZE, (aY - 7) * SIZE, null);
+		else if (block == START) aG.drawImage(EditorDataManager.getImage("start"), aX * SIZE, aY * SIZE, null);
+		else aG.drawImage(EditorDataManager.getBlockImage(block.getId(texture) / Texture.values().size(), texture), aX * SIZE, aY * SIZE, null);
 	}
 	
 	/**
@@ -436,13 +478,13 @@ public class Block
 	 *            The x position.
 	 * @param aY
 	 *            The y position.
-	 * @param aLevel
-	 *            The parent level.
+	 * @param aId
+	 *            The block id.
 	 * @return the texture of the given block.
 	 */
-	public static Texture getBlockTexture(final int aX, final int aY, final Level aLevel)
+	public static Texture getBlockTexture(final int aX, final int aY, final short aId)
 	{
-		return TEXTURES.get(aLevel.getBlock(aX, aY));
+		return TEXTURES.get(aId);
 	}
 	
 	/**
