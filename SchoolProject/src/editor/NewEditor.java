@@ -174,16 +174,10 @@ public class NewEditor extends JFrame
 				else
 				{
 					final Block block = Block.get(id);
-					if (block.isItemBlock())
-					{
-						mMap[x][y] = Block.ITEM.getId();
-						mAlphas[x][y] = Item.getItem(0xffffff & rgb[x + y * mWidth]).getAlpha();
-					}
-					else
-					{
-						mMap[x][y] = id;
-						mAlphas[x][y] = 255;
-					}
+					mMap[x][y] = id;
+					if (block.isItemBlock()) mAlphas[x][y] = Item.getItem(0xffffff & rgb[x + y * mWidth]).getAlpha();
+					else if (block == Block.QUESTION) mAlphas[x][y] = (short) alphas[x + y * mWidth];
+					else mAlphas[x][y] = 255;
 				}
 			}
 		
@@ -216,7 +210,7 @@ public class NewEditor extends JFrame
 	private void showItem()
 	{
 		if (mMouseX < 0 || mMouseX >= mWidth || mMouseY < 0 || mMouseY >= mHeight) return;
-		if (mMap[mMouseX][mMouseY] != Block.ITEM.getId()) mCP.setToolTipText("");
+		if (mMap[mMouseX][mMouseY] != Block.ITEM.getId() && mMap[mMouseX][mMouseY] != Block.QUESTION.getId()) mCP.setToolTipText("");
 		else mCP.setToolTipText(Item.getItem(mAlphas[mMouseX][mMouseY]).toString());
 	}
 	
