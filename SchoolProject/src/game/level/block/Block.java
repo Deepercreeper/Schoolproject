@@ -439,11 +439,15 @@ public class Block
 	 * @param aG
 	 *            The graphics to draw into.
 	 */
-	public static void render(final int aX, final int aY, final short aId, final java.awt.Graphics aG)
+	public static void render(final int aX, final int aY, final short aId, final java.awt.Graphics aG, final boolean aToolBox)
 	{
 		final Block block = get(aId);
 		final Texture texture = getBlockTexture(aX, aY, aId);
-		if (block.mFlag) aG.drawImage(EditorDataManager.getImage("flag"), aX * SIZE, (aY - 7) * SIZE, null);
+		if (block.mFlag)
+		{
+			if (aToolBox) aG.drawImage(EditorDataManager.getImage("flagBlock"), aX * SIZE, aY * SIZE, null);
+			else aG.drawImage(EditorDataManager.getImage("flag"), aX * SIZE, (aY - 7) * SIZE, null);
+		}
 		else if (block.mItemBlock) ;// TODO render item block
 		else if (block == START) aG.drawImage(EditorDataManager.getImage("start"), aX * SIZE, aY * SIZE, null);
 		else aG.drawImage(EditorDataManager.getBlockImage(block.getId(texture) / Texture.values().size(), texture), aX * SIZE, aY * SIZE, null);

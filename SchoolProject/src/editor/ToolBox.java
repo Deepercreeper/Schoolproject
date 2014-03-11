@@ -89,7 +89,7 @@ public class ToolBox extends JDialog
 		{
 			aG.setColor(new Color(i, i, i));
 			final short id = blocks.get(i).getId(mActiveTexture);
-			Block.render((i % 10), (i / 10), id, aG);
+			Block.render((i % 10), (i / 10), id, aG, true);
 		}
 		aG.setColor(Color.red);
 		aG.drawRect((mId % 10) * 16, (mId / 10) * 16, 16, 16);
