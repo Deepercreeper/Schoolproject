@@ -87,10 +87,10 @@ abstract class HitAction
 			if (aEntity.canDestroyBlock(dir) && aHitDirection == dir)
 			{
 				aLevel.setBlock(aX, aY, aBlock.getDestination().getId(texture));
-				final short alpha = aLevel.getAlpha(aX, aY);
-				final Item item = aBlock.getItem(alpha);
-				if (item != null)
+				if (aBlock.containsItems())
 				{
+					final short alpha = aLevel.getAlpha(aX, aY);
+					final Item item = Item.getItem(alpha);
 					final int width = item.getWidth(), height = item.getHeight();
 					int x = aX * Block.SIZE + Block.SIZE / 2, y = aY * Block.SIZE + Block.SIZE / 2;
 					

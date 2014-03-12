@@ -6,8 +6,11 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Event;
 import java.awt.Graphics;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -37,9 +40,9 @@ import javax.swing.event.ChangeListener;
 @SuppressWarnings("serial")
 public class NewEditor extends JFrame
 {
-	private boolean					mSaved, mChangesMade, mSizeModelChanged, mMouseLeft;
+	private boolean					mSaved, mChangesMade, mSizeModelChanged, mMouseLeft, mSelectionMade;
 	
-	private int						mWidth, mHeight, mWorld, mLevel, mMouseX, mMouseY;
+	private int						mWidth, mHeight, mWorld, mLevel, mMouseX, mMouseY, mSelectionStartX, mSelectionStartY, mSelectionWidth, mSelectionHeight;
 	
 	private final JPanel			mCP;
 	
@@ -48,6 +51,8 @@ public class NewEditor extends JFrame
 	private final ToolBox			mToolBox;
 	
 	private final JComboBox<Item>	mItems;
+	
+	private final JComboBox<String>	mTools;
 	
 	private SpinnerModel			mWidthModel, mHeightModel;
 	
@@ -76,6 +81,7 @@ public class NewEditor extends JFrame
 		// Initiate fields
 		{
 			mItems = new JComboBox<>();
+			mTools = new JComboBox<>();
 			mCP = new JPanel()
 			{
 				@Override
@@ -100,8 +106,12 @@ public class NewEditor extends JFrame
 				{
 					mMouseX = aE.getX() / Block.SIZE;
 					mMouseY = aE.getY() / Block.SIZE;
-					if (mMouseLeft) leftClick();
-					else rightClick();
+					if (mTools.getSelectedItem().equals("Stift"))
+					{
+						if (mMouseLeft) setBlock(mMouseX, mMouseY);
+						else deleteBlock(mMouseX, mMouseY);
+					}
+					else setSelection();
 					repaint();
 				}
 				
@@ -109,12 +119,39 @@ public class NewEditor extends JFrame
 			mCP.addMouseListener(new MouseAdapter()
 			{
 				@Override
+				public void mouseClicked(final MouseEvent aE)
+				{
+					if (mTools.getSelectedItem().equals("Selektion")) mSelectionMade = false;
+				}
+				
+				@Override
 				public void mousePressed(final MouseEvent aE)
 				{
 					mMouseLeft = aE.getButton() == MouseEvent.BUTTON1;
-					if (mMouseLeft) leftClick();
-					else rightClick();
+					if (mTools.getSelectedItem().equals("Stift"))
+					{
+						if (mMouseLeft) setBlock(mMouseX, mMouseY);
+						else deleteBlock(mMouseX, mMouseY);
+					}
+					else
+					{
+						mSelectionMade = true;
+						mSelectionStartX = mMouseX;
+						mSelectionStartY = mMouseY;
+						mSelectionWidth = mSelectionHeight = 1;
+					}
 					repaint();
+				}
+				
+				@Override
+				public void mouseReleased(final MouseEvent aE)
+				{
+					if (mTools.getSelectedItem().equals("Selektion"))
+					{
+						setSelection();
+						if (mSelectionWidth == 1 && mSelectionHeight == 1) mSelectionMade = false;
+						repaint();
+					}
 				}
 			});
 			mScrollPane = new JScrollPane(mCP);
@@ -128,6 +165,11 @@ public class NewEditor extends JFrame
 		
 		newMap();
 		pack();
+		{
+			final Dimension size = Toolkit.getDefaultToolkit().getScreenSize();
+			setLocation(size.width / 2 - (getWidth() + mToolBox.getWidth()) / 2 + mToolBox.getWidth(), size.height / 2 - getHeight() / 2);
+			mToolBox.setLocation(getX() - mToolBox.getWidth(), size.height / 2 - mToolBox.getHeight() / 2);
+		}
 		setVisible(true);
 	}
 	
@@ -191,20 +233,20 @@ public class NewEditor extends JFrame
 		 */
 	}
 	
-	private void leftClick()
+	private void setBlock(final int aX, final int aY)
 	{
-		if (mMouseX < 0 || mMouseX >= mWidth || mMouseY < 0 || mMouseY >= mHeight) return;
+		if (aX < 0 || aX >= mWidth || aY < 0 || aY >= mHeight) return;
 		final Block block = Block.get(mToolBox.getBlockId());
-		mMap[mMouseX][mMouseY] = mToolBox.getBlockId();
-		if (block.isItemBlock() || block == Block.QUESTION) mAlphas[mMouseX][mMouseY] = mItems.getItemAt(mItems.getSelectedIndex()).getAlpha();
-		else mAlphas[mMouseX][mMouseY] = 255;
+		mMap[aX][aY] = mToolBox.getBlockId();
+		if (block.isItemBlock() || block == Block.QUESTION) mAlphas[aX][aY] = mItems.getItemAt(mItems.getSelectedIndex()).getAlpha();
+		else mAlphas[aX][aY] = 255;
 	}
 	
-	private void rightClick()
+	private void deleteBlock(final int aX, final int aY)
 	{
-		if (mMouseX < 0 || mMouseX >= mWidth || mMouseY < 0 || mMouseY >= mHeight) return;
-		mMap[mMouseX][mMouseY] = 0;
-		mAlphas[mMouseX][mMouseY] = 255;
+		if (aX < 0 || aX >= mWidth || aY < 0 || aY >= mHeight) return;
+		mMap[aX][aY] = 0;
+		mAlphas[aX][aY] = 255;
 	}
 	
 	private void showItem()
@@ -266,10 +308,13 @@ public class NewEditor extends JFrame
 		
 		aG.setColor(Color.red);
 		aG.drawRect(mMouseX * Block.SIZE, mMouseY * Block.SIZE, Block.SIZE, Block.SIZE);
-		/*
-		 * TODO
-		 * - render selection (selection tool)
-		 */
+		
+		if (mSelectionMade)
+		{
+			aG.setColor(new Color(0f, 0f, 1f, 0.5f));
+			aG.fillRect(mSelectionStartX * Block.SIZE + (mSelectionWidth < 0 ? Block.SIZE : 0), mSelectionStartY * Block.SIZE + (mSelectionHeight < 0 ? Block.SIZE : 0), mSelectionWidth * Block.SIZE,
+					mSelectionHeight * Block.SIZE);
+		}
 	}
 	
 	private int[] showOpenDialog()
@@ -297,6 +342,42 @@ public class NewEditor extends JFrame
 		mWidthModel.setValue(mWidth);
 		mHeightModel.setValue(mHeight);
 		mSizeModelChanged = false;
+		repaint();
+	}
+	
+	private void setSelection()
+	{
+		mSelectionWidth = -mSelectionStartX + mMouseX;
+		if (mSelectionWidth >= 0) mSelectionWidth++ ;
+		else mSelectionWidth-- ;
+		mSelectionHeight = -mSelectionStartY + mMouseY;
+		if (mSelectionHeight >= 0) mSelectionHeight++ ;
+		else mSelectionHeight-- ;
+	}
+	
+	private void fillSelection()
+	{
+		if ( !mSelectionMade) return;
+		int startX = mSelectionStartX, startY = mSelectionStartY;
+		if (mSelectionWidth < 0) startX += mSelectionWidth + 1;
+		if (mSelectionHeight < 0) startY += mSelectionHeight + 1;
+		for (int x = startX; x < startX + Math.abs(mSelectionWidth); x++ )
+			for (int y = startY; y < startY + Math.abs(mSelectionHeight); y++ )
+				setBlock(x, y);
+		mSelectionMade = false;
+		repaint();
+	}
+	
+	private void deleteSelection()
+	{
+		if ( !mSelectionMade) return;
+		int startX = mSelectionStartX, startY = mSelectionStartY;
+		if (mSelectionWidth < 0) startX += mSelectionWidth + 1;
+		if (mSelectionHeight < 0) startY += mSelectionHeight + 1;
+		for (int x = startX; x < startX + Math.abs(mSelectionWidth); x++ )
+			for (int y = startY; y < startY + Math.abs(mSelectionHeight); y++ )
+				deleteBlock(x, y);
+		mSelectionMade = false;
 		repaint();
 	}
 	
@@ -365,6 +446,11 @@ public class NewEditor extends JFrame
 			file.setMnemonic('D');
 			menu.add(file);
 			
+			final JMenuItem fillSelection = new JMenuItem("Selektion füllen");
+			fillSelection.setEnabled(false);
+			final JMenuItem deleteSelection = new JMenuItem("Selektion löschen");
+			deleteSelection.setEnabled(false);
+			
 			final JMenu edit = new JMenu("Bearbeiten");
 			{
 				final JMenuItem nextBlock = new JMenuItem("Nächster Block");
@@ -392,6 +478,86 @@ public class NewEditor extends JFrame
 				previousBlock.setMnemonic('V');
 				previousBlock.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, Event.CTRL_MASK));
 				edit.add(previousBlock);
+				
+				edit.addSeparator();
+				
+				final JMenuItem nextItem = new JMenuItem("Nächstes Item");
+				nextItem.addActionListener(new ActionListener()
+				{
+					@Override
+					public void actionPerformed(final ActionEvent aE)
+					{
+						mItems.setSelectedIndex((mItems.getSelectedIndex() + 1) % Item.values().size());
+					}
+				});
+				nextItem.setMnemonic('c');
+				nextItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_ADD, 0));
+				edit.add(nextItem);
+				
+				final JMenuItem previousItem = new JMenuItem("Vorheriges Item");
+				previousItem.addActionListener(new ActionListener()
+				{
+					@Override
+					public void actionPerformed(final ActionEvent aE)
+					{
+						mItems.setSelectedIndex((mItems.getSelectedIndex() - 1 + Item.values().size()) % Item.values().size());
+					}
+				});
+				previousItem.setMnemonic('r');
+				previousItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_SUBTRACT, 0));
+				edit.add(previousItem);
+				
+				edit.addSeparator();
+				
+				final JMenuItem pencilTool = new JMenuItem("Stift Tool");
+				pencilTool.addActionListener(new ActionListener()
+				{
+					@Override
+					public void actionPerformed(final ActionEvent aE)
+					{
+						mTools.setSelectedItem("Stift");
+					}
+				});
+				pencilTool.setMnemonic('S');
+				pencilTool.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_P, Event.CTRL_MASK));
+				edit.add(pencilTool);
+				
+				final JMenuItem selectionTool = new JMenuItem("Selektions Tool");
+				selectionTool.addActionListener(new ActionListener()
+				{
+					@Override
+					public void actionPerformed(final ActionEvent aE)
+					{
+						mTools.setSelectedItem("Selektion");
+					}
+				});
+				selectionTool.setMnemonic('l');
+				selectionTool.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_L, Event.CTRL_MASK));
+				edit.add(selectionTool);
+				
+				fillSelection.addActionListener(new ActionListener()
+				{
+					@Override
+					public void actionPerformed(final ActionEvent aE)
+					{
+						fillSelection();
+					}
+				});
+				fillSelection.setMnemonic('F');
+				fillSelection.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0));
+				edit.add(fillSelection);
+				
+				deleteSelection.addActionListener(new ActionListener()
+				{
+					@Override
+					public void actionPerformed(final ActionEvent aE)
+					{
+						deleteSelection();
+					}
+				});
+				deleteSelection.setMnemonic('ö');
+				deleteSelection.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, Event.CTRL_MASK));
+				edit.add(deleteSelection);
 			}
 			edit.setMnemonic('B');
 			menu.add(edit);
@@ -423,10 +589,28 @@ public class NewEditor extends JFrame
 			menu.add(width);
 			menu.add(height);
 			
-			final JComboBox<String> tools = new JComboBox<>();
-			tools.addItem("Stift");
-			tools.addItem("Selektion");
-			menu.add(tools);
+			mTools.addItem("Stift");
+			mTools.addItem("Selektion");
+			mTools.addItemListener(new ItemListener()
+			{
+				@Override
+				public void itemStateChanged(final ItemEvent aArg0)
+				{
+					if (mTools.getSelectedItem().equals("Stift"))
+					{
+						fillSelection.setEnabled(false);
+						deleteSelection.setEnabled(false);
+						mSelectionMade = false;
+						repaint();
+					}
+					else
+					{
+						fillSelection.setEnabled(true);
+						deleteSelection.setEnabled(true);
+					}
+				}
+			});
+			menu.add(mTools);
 			
 			final JComboBox<String> texturePacks = new JComboBox<>();
 			for (final String texturePack : EditorDataManager.getTexturePacks())

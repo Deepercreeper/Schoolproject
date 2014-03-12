@@ -29,8 +29,7 @@ public class Block
 																						.setDestroyable(AIR);
 	public static final Block						OPENED						= new Block(3, new int[] { 0xC03010, 0xC03011, 0xC03014, 0xC03012, 0xC03015, 0xC03016, 0xC03017, 0xC03013, 0xC03018 });
 	public static final Block						QUESTION					= new Block(4, new int[] { 0xD8B018, 0xFFD800, 0xD8B019, 0x14466D, 0x14466E, 0xD8B020, 0xD8B021, 0x9B00CD, 0xD8B022 })
-																						.setDestroyable(OPENED).setItem(255, Item.SUPER_BANANA).setItem(254, Item.BANANA).setItem(253, Item.HEART)
-																						.addRenderBlock(OPENED);
+																						.setDestroyable(OPENED).setContainsItems().addRenderBlock(OPENED);
 	public static final Block						GROUND_TOP_LEFT				= new Block(5, new int[] { 0x00E000, 0x93FFFF, 0xFFA359, 0x3D2C77, 0x564E75, 0x00E096, 0x00AA71, 0xD32C77, 0x005B3B });
 	public static final Block						GROUND_TOP					= new Block(6, new int[] { 0x00BA00, 0x00FFFF, 0xFF7400, 0x291D4F, 0x39334C, 0x00BA96, 0x00846A, 0xBF1D4F, 0x00352A });
 	public static final Block						GROUND_TOP_RIGHT			= new Block(7, new int[] { 0x009300, 0x00D3D3, 0xB75200, 0x1D1438, 0x272335, 0x009396, 0x005F60, 0xB31438, 0x001111 });
@@ -89,12 +88,11 @@ public class Block
 	private final HashSet<UpdateAction>				mUpdateActions				= new HashSet<>();
 	private final HashSet<HitAction>				mHitActions					= new HashSet<>();
 	private final HashMap<Texture, Short>			mIds						= new HashMap<>();
-	private final HashMap<Byte, Item>				mItems						= new HashMap<>();
 	private final HashSet<Block>					mRenderBlocks				= new HashSet<>();
 	private Direction								mHurtDirection				= Direction.NONE;
 	private Direction								mSolid						= Direction.NONE;
 	private Block									mDestination				= null;
-	private boolean									mVisible					= true, mUpdatable = false, mLiquid = false, mFlag = false, mIce = false, mItemBlock = false;
+	private boolean									mVisible					= true, mUpdatable = false, mLiquid = false, mFlag = false, mIce = false, mItemBlock = false, mContainsItems = false;
 	
 	private Block(final int aId, final int[] aRGBs)
 	{
@@ -197,9 +195,9 @@ public class Block
 		return this;
 	}
 	
-	private Block setItem(final int aAlpha, final Item aItem)
+	private Block setContainsItems()
 	{
-		mItems.put((byte) aAlpha, aItem);
+		mContainsItems = true;
 		return this;
 	}
 	
@@ -227,14 +225,9 @@ public class Block
 		return mDestination;
 	}
 	
-	Item getItem(final short aAlpha)
+	boolean containsItems()
 	{
-		return mItems.get(aAlpha);
-	}
-	
-	public HashMap<Byte, Item> getItems()
-	{
-		return mItems;
+		return mContainsItems;
 	}
 	
 	/**
