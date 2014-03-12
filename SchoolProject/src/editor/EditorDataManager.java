@@ -4,8 +4,10 @@ import game.level.block.Block;
 import game.level.block.Texture;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -68,7 +70,7 @@ public class EditorDataManager
 		{
 			e.printStackTrace();
 		}
-		if ( !data.toString().isEmpty()) for (final String level : data.toString().split("\r\n"))
+		if ( !data.toString().isEmpty()) for (final String level : data.toString().split("\n"))
 			mLevels.add(level.replace("\r", "").replace("\n", ""));
 	}
 	
@@ -87,7 +89,7 @@ public class EditorDataManager
 		return TEXTUREPACKS;
 	}
 	
-	public static void saveMapImage(final short[][] aData, final int aWorldId, final int aLevelId)
+	public static void saveMapImage(final short[][] aData, final short[][] aAlphas, final int aWorld, final int aLevel)
 	{
 		final BufferedImage image = new BufferedImage(aData.length, aData[0].length, BufferedImage.TYPE_INT_ARGB);
 		for (int x = 0; x < aData.length; x++ )
@@ -96,10 +98,29 @@ public class EditorDataManager
 				final short id = aData[x][y];
 				final int rgb = Block.getCodeFromId(id);
 				image.setRGB(x, y, rgb);
+				image.getAlphaRaster().setPixel(x, y, new int[] { aAlphas[x][y] });
 			}
 		try
 		{
-			ImageIO.write(image, "PNG", new File("data/images/worldData/level" + aWorldId + "-" + aLevelId + ".png"));
+			ImageIO.write(image, "PNG", new File("data/images/worldData/level" + aWorld + "-" + aLevel + ".png"));
+		}
+		catch (final IOException e)
+		{
+			e.printStackTrace();
+		}
+		if (mLevels.contains(aWorld + "-" + aLevel)) return;
+		final File levels = new File("data/images/worldData/#Levels#.txt");
+		if (levels.exists()) levels.delete();
+		try
+		{
+			new File(levels.getParent()).mkdir();
+			levels.createNewFile();
+			final BufferedWriter writer = new BufferedWriter(new FileWriter(levels));
+			for (final String level : mLevels)
+				writer.write(level + "\n");
+			writer.write(aWorld + "-" + aLevel);
+			mLevels.add(aWorld + "-" + aLevel);
+			writer.close();
 		}
 		catch (final IOException e)
 		{

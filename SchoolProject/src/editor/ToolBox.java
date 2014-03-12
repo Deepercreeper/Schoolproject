@@ -24,7 +24,7 @@ public class ToolBox extends JDialog
 	private int					mId				= 0;
 	private Block				mBlock			= Block.AIR;
 	
-	public ToolBox(final NewEditor aEditor)
+	public ToolBox(final Editor aEditor)
 	{
 		super(aEditor, false);
 		final JMenuBar toolBar = new JMenuBar();
