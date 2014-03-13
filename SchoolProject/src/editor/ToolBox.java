@@ -15,13 +15,16 @@ import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JMenuBar;
 
-@SuppressWarnings("serial")
-public class ToolBox extends JDialog
+@SuppressWarnings("serial") public class ToolBox extends JDialog
 {
-	private static final int	WINDOW_WIDTH	= 10 * 16, WINDOW_HEIGHT = (int) (Math.ceil(Block.getBlockList().size() / 10.0) * 16);
+	private static final int	WINDOW_WIDTH	= 10 * 16,
+			WINDOW_HEIGHT = (int) (Math
+					.ceil(Block.getBlockList().size() / 10.0) * 16);
 	
 	private Texture				mActiveTexture	= Texture.NORMAL;
+	
 	private int					mId				= 0;
+	
 	private Block				mBlock			= Block.AIR;
 	
 	public ToolBox(final Editor aEditor)
@@ -34,10 +37,10 @@ public class ToolBox extends JDialog
 				textures.addItem(texture);
 			textures.addActionListener(new ActionListener()
 			{
-				@Override
-				public void actionPerformed(final ActionEvent aArg0)
+				@Override public void actionPerformed(final ActionEvent aArg0)
 				{
-					mActiveTexture = textures.getItemAt(textures.getSelectedIndex());
+					mActiveTexture = textures.getItemAt(textures
+							.getSelectedIndex());
 					repaint();
 				}
 			});
@@ -47,8 +50,7 @@ public class ToolBox extends JDialog
 		
 		final Container cp = new Container()
 		{
-			@Override
-			public void paint(final Graphics aG)
+			@Override public void paint(final Graphics aG)
 			{
 				render(aG);
 			}
@@ -57,8 +59,7 @@ public class ToolBox extends JDialog
 		cp.setLocation(0, 0);
 		cp.addMouseListener(new MouseAdapter()
 		{
-			@Override
-			public void mousePressed(final MouseEvent aE)
+			@Override public void mousePressed(final MouseEvent aE)
 			{
 				click(aE.getX(), aE.getY());
 			}
@@ -84,7 +85,8 @@ public class ToolBox extends JDialog
 	
 	public void previousBlock()
 	{
-		mId = (mId - 1 + Block.getBlockList().size()) % Block.getBlockList().size();
+		mId = (mId - 1 + Block.getBlockList().size())
+				% Block.getBlockList().size();
 		mBlock = Block.getBlockList().get(mId);
 		repaint();
 	}
@@ -94,12 +96,19 @@ public class ToolBox extends JDialog
 		return mBlock.getId(mActiveTexture);
 	}
 	
+	public void setBlock(Block aBlock)
+	{
+		mBlock = aBlock;
+		mId = Block.getBlockList().indexOf(mBlock);
+		repaint();
+	}
+	
 	private void render(final Graphics aG)
 	{
 		aG.setColor(Color.black);
 		aG.fillRect(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
 		final ArrayList<Block> blocks = Block.getBlockList();
-		for (int i = 0; i < blocks.size(); i++ )
+		for (int i = 0; i < blocks.size(); i++)
 		{
 			aG.setColor(new Color(i, i, i));
 			final short id = blocks.get(i).getId(mActiveTexture);

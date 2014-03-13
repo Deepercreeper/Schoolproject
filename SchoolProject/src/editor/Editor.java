@@ -37,12 +37,14 @@ import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-@SuppressWarnings("serial")
-public class Editor extends JFrame
+@SuppressWarnings("serial") public class Editor extends JFrame
 {
-	private boolean					mSaved, mChangesMade, mSizeModelChanged, mMouseLeft, mSelectionMade, mSelecting;
+	private boolean					mSaved, mChangesMade, mSizeModelChanged,
+			mMouseLeft, mSelectionMade, mSelecting;
 	
-	private int						mWidth, mHeight, mWorld, mLevel, mMouseX, mMouseY, mSelectionStartX, mSelectionStartY, mSelectionWidth, mSelectionHeight;
+	private int						mWidth, mHeight, mWorld, mLevel, mMouseX,
+			mMouseY, mSelectionStartX, mSelectionStartY, mSelectionWidth,
+			mSelectionHeight;
 	
 	private final JPanel			mCP;
 	
@@ -57,7 +59,8 @@ public class Editor extends JFrame
 	private SpinnerModel			mWidthModel, mHeightModel;
 	
 	private short[][]				mMap, mAlphas;
-	private boolean[][] mSelection;
+	
+	private boolean[][]				mSelection;
 	
 	public Editor()
 	{
@@ -66,14 +69,14 @@ public class Editor extends JFrame
 		{
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		}
-		catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e)
+		catch (ClassNotFoundException | InstantiationException
+				| IllegalAccessException | UnsupportedLookAndFeelException e)
 		{
 			e.printStackTrace();
 		}
 		addWindowListener(new WindowAdapter()
 		{
-			@Override
-			public void windowClosing(final WindowEvent aE)
+			@Override public void windowClosing(final WindowEvent aE)
 			{
 				close();
 			}
@@ -85,16 +88,14 @@ public class Editor extends JFrame
 			mTools = new JComboBox<>();
 			mCP = new JPanel()
 			{
-				@Override
-				public void paint(final Graphics aG)
+				@Override public void paint(final Graphics aG)
 				{
 					render(aG);
 				}
 			};
 			mCP.addMouseMotionListener(new MouseMotionAdapter()
 			{
-				@Override
-				public void mouseMoved(final MouseEvent aE)
+				@Override public void mouseMoved(final MouseEvent aE)
 				{
 					mMouseX = aE.getX() / Block.SIZE;
 					mMouseY = aE.getY() / Block.SIZE;
@@ -102,8 +103,7 @@ public class Editor extends JFrame
 					repaint();
 				}
 				
-				@Override
-				public void mouseDragged(final MouseEvent aE)
+				@Override public void mouseDragged(final MouseEvent aE)
 				{
 					mMouseX = aE.getX() / Block.SIZE;
 					mMouseY = aE.getY() / Block.SIZE;
@@ -119,16 +119,20 @@ public class Editor extends JFrame
 			});
 			mCP.addMouseListener(new MouseAdapter()
 			{
-				@Override
-				public void mouseClicked(final MouseEvent aE)
+				@Override public void mouseClicked(final MouseEvent aE)
 				{
-					if (mTools.getSelectedItem().equals("Selektion")) mSelectionMade = false;
+					if (mTools.getSelectedItem().equals("Selektion"))
+						mSelectionMade = false;
 				}
 				
-				@Override
-				public void mousePressed(final MouseEvent aE)
+				@Override public void mousePressed(final MouseEvent aE)
 				{
 					mMouseLeft = aE.getButton() == MouseEvent.BUTTON1;
+					if (aE.getButton() == MouseEvent.BUTTON2)
+					{
+						pickBlock();
+						return;
+					}
 					if (mTools.getSelectedItem().equals("Stift"))
 					{
 						if (mMouseLeft) setBlock(mMouseX, mMouseY);
@@ -136,8 +140,9 @@ public class Editor extends JFrame
 					}
 					else
 					{
-						mSelectionMade = mSelecting =  true;
-						if(!aE.isControlDown()) mSelection = new boolean[mWidth][mHeight];
+						mSelectionMade = mSelecting = true;
+						if (! aE.isControlDown())
+							mSelection = new boolean[mWidth][mHeight];
 						mSelectionStartX = mMouseX;
 						mSelectionStartY = mMouseY;
 						mSelectionWidth = mSelectionHeight = 1;
@@ -145,14 +150,14 @@ public class Editor extends JFrame
 					repaint();
 				}
 				
-				@Override
-				public void mouseReleased(final MouseEvent aE)
+				@Override public void mouseReleased(final MouseEvent aE)
 				{
 					if (mTools.getSelectedItem().equals("Selektion"))
 					{
 						mSelecting = false;
 						setSelection(true);
-						if (mSelectionWidth == 1 && mSelectionHeight == 1) mSelectionMade = false;
+						if (mSelectionWidth == 1 && mSelectionHeight == 1)
+							mSelectionMade = false;
 						repaint();
 					}
 				}
@@ -170,15 +175,25 @@ public class Editor extends JFrame
 		pack();
 		{
 			final Dimension size = Toolkit.getDefaultToolkit().getScreenSize();
-			setLocation(size.width / 2 - (getWidth() + mToolBox.getWidth()) / 2 + mToolBox.getWidth(), size.height / 2 - getHeight() / 2);
-			mToolBox.setLocation(getX() - mToolBox.getWidth(), size.height / 2 - mToolBox.getHeight() / 2);
+			setLocation(size.width / 2 - (getWidth() + mToolBox.getWidth()) / 2
+					+ mToolBox.getWidth(), size.height / 2 - getHeight() / 2);
+			mToolBox.setLocation(getX() - mToolBox.getWidth(), size.height / 2
+					- mToolBox.getHeight() / 2);
 		}
 		setVisible(true);
 	}
 	
+	private void pickBlock()
+	{
+		final Block block = Block.get(mMap[mMouseX][mMouseY]);
+		mToolBox.setBlock(block);
+		if (block.isItemBlock() || block == Block.QUESTION)
+			mItems.setSelectedItem(Item.getItem(mAlphas[mMouseX][mMouseY]));
+	}
+	
 	private void newMap()
 	{
-		if (mChangesMade && !mSaved) saveMap();
+		if (mChangesMade && ! mSaved) saveMap();
 		mChangesMade = mSaved = false;
 		mWidth = 100;
 		mHeight = 30;
@@ -192,21 +207,22 @@ public class Editor extends JFrame
 		mMap = new short[mWidth][mHeight];
 		mAlphas = new short[mWidth][mHeight];
 		mSelection = new boolean[mWidth][mHeight];
-		for (int x = 0; x < mWidth; x++ )
-			for (int y = 0; y < mHeight; y++ )
+		for (int x = 0; x < mWidth; x++)
+			for (int y = 0; y < mHeight; y++)
 				mAlphas[x][y] = 255;
 	}
 	
 	private void openMap()
 	{
-		if (mChangesMade && !mSaved) saveMap();
+		if (mChangesMade && ! mSaved) saveMap();
 		final int[] worldAndLevel = showOpenDialog();
 		if (worldAndLevel == null) return;
 		mChangesMade = mSaved = false;
 		mWorld = worldAndLevel[0];
 		mLevel = worldAndLevel[1];
 		
-		final BufferedImage data = EditorDataManager.getMapImage(mWorld, mLevel);
+		final BufferedImage data = EditorDataManager
+				.getMapImage(mWorld, mLevel);
 		mWidth = data.getWidth();
 		mHeight = data.getHeight();
 		
@@ -215,17 +231,20 @@ public class Editor extends JFrame
 		final int[] alphas = new int[mWidth * mHeight];
 		data.getRGB(0, 0, mWidth, mHeight, rgb, 0, mWidth);
 		data.getAlphaRaster().getPixels(0, 0, mWidth, mHeight, alphas);
-		for (int x = 0; x < mWidth; x++ )
-			for (int y = 0; y < mHeight; y++ )
+		for (int x = 0; x < mWidth; x++)
+			for (int y = 0; y < mHeight; y++)
 			{
-				final short id = Block.getIdFromCode(0xffffff & rgb[x + y * mWidth]);
-				if (id == -1) mMap[x][y] = Block.AIR.getId();
+				final short id = Block.getIdFromCode(0xffffff & rgb[x + y
+						* mWidth]);
+				if (id == - 1) mMap[x][y] = Block.AIR.getId();
 				else
 				{
 					final Block block = Block.get(id);
 					mMap[x][y] = id;
-					if (block.isItemBlock()) mAlphas[x][y] = Item.getItem(0xffffff & rgb[x + y * mWidth]).getAlpha();
-					else if (block == Block.QUESTION) mAlphas[x][y] = (short) alphas[x + y * mWidth];
+					if (block.isItemBlock()) mAlphas[x][y] = Item.getItem(
+							0xffffff & rgb[x + y * mWidth]).getAlpha();
+					else if (block == Block.QUESTION) mAlphas[x][y] = (short) alphas[x
+							+ y * mWidth];
 					else mAlphas[x][y] = 255;
 				}
 			}
@@ -240,7 +259,8 @@ public class Editor extends JFrame
 		if (aX < 0 || aX >= mWidth || aY < 0 || aY >= mHeight) return;
 		final Block block = Block.get(mToolBox.getBlockId());
 		mMap[aX][aY] = mToolBox.getBlockId();
-		if (block.isItemBlock() || block == Block.QUESTION) mAlphas[aX][aY] = mItems.getItemAt(mItems.getSelectedIndex()).getAlpha();
+		if (block.isItemBlock() || block == Block.QUESTION) mAlphas[aX][aY] = mItems
+				.getItemAt(mItems.getSelectedIndex()).getAlpha();
 		else mAlphas[aX][aY] = 255;
 	}
 	
@@ -253,26 +273,29 @@ public class Editor extends JFrame
 	
 	private void showItem()
 	{
-		if (mMouseX < 0 || mMouseX >= mWidth || mMouseY < 0 || mMouseY >= mHeight) return;
-		if (mMap[mMouseX][mMouseY] != Block.ITEM.getId() && Block.get(mMap[mMouseX][mMouseY]) != Block.QUESTION) mCP.setToolTipText("");
-		else mCP.setToolTipText(Item.getItem(mAlphas[mMouseX][mMouseY]).toString());
+		if (mMouseX < 0 || mMouseX >= mWidth || mMouseY < 0
+				|| mMouseY >= mHeight) return;
+		if (mMap[mMouseX][mMouseY] != Block.ITEM.getId()
+				&& Block.get(mMap[mMouseX][mMouseY]) != Block.QUESTION) mCP
+				.setToolTipText("");
+		else mCP.setToolTipText(Item.getItem(mAlphas[mMouseX][mMouseY])
+				.toString());
 	}
 	
 	private void saveMap()
 	{
-		if ( !showSaveDialog()) return;
+		if (! showSaveDialog()) return;
 		EditorDataManager.saveMapImage(mMap, mAlphas, mWorld, mLevel);
 		setTitle("Level:" + mWorld + "-" + mLevel);
 		/*
-		 * TODO
-		 * - set mChangesMade
+		 * TODO - set mChangesMade
 		 */
 		mSaved = true;
 	}
 	
 	private void close()
 	{
-		if (mChangesMade && !mSaved) saveMap();
+		if (mChangesMade && ! mSaved) saveMap();
 		setVisible(false);
 		System.exit(0);
 	}
@@ -285,8 +308,8 @@ public class Editor extends JFrame
 		mHeight = (int) mHeightModel.getValue();
 		final short[][] oldMap = mMap, oldAlphas = mAlphas;
 		resetMap();
-		for (int x = 0; x < oldWidth && x < mWidth; x++ )
-			for (int y = 0; y < oldHeight && y < mHeight; y++ )
+		for (int x = 0; x < oldWidth && x < mWidth; x++)
+			for (int y = 0; y < oldHeight && y < mHeight; y++)
 			{
 				mMap[x][y] = oldMap[x][y];
 				mAlphas[x][y] = oldAlphas[x][y];
@@ -299,25 +322,31 @@ public class Editor extends JFrame
 		aG.setColor(Color.black);
 		aG.fillRect(0, 0, mWidth * Block.SIZE, mHeight * Block.SIZE);
 		
-		for (int x = 0; x < mWidth; x++ )
-			for (int y = 0; y < mHeight; y++ )
+		for (int x = 0; x < mWidth; x++)
+			for (int y = 0; y < mHeight; y++)
 				Block.render(x, y, mMap[x][y], aG, false);
 		
 		aG.setColor(Color.red);
-		aG.drawRect(mMouseX * Block.SIZE, mMouseY * Block.SIZE, Block.SIZE, Block.SIZE);
+		aG.drawRect(mMouseX * Block.SIZE, mMouseY * Block.SIZE, Block.SIZE,
+				Block.SIZE);
 		
 		if (mSelectionMade)
 		{
 			aG.setColor(new Color(0f, 0f, 1f, 0.5f));
-			for (int x = 0; x < mWidth; x++ )
-				for (int y = 0; y < mHeight; y++ )
-					if(mSelection[x][y])aG.fillRect(x * Block.SIZE, y * Block.SIZE, Block.SIZE, Block.SIZE);
-			if(mSelecting){
+			for (int x = 0; x < mWidth; x++)
+				for (int y = 0; y < mHeight; y++)
+					if (mSelection[x][y])
+						aG.fillRect(x * Block.SIZE, y * Block.SIZE, Block.SIZE,
+								Block.SIZE);
+			if (mSelecting)
+			{
 				aG.setColor(new Color(1f, 0f, 0f, 0.5f));
 				int startX = mSelectionStartX, startY = mSelectionStartY;
 				if (mSelectionWidth < 0) startX += mSelectionWidth + 1;
 				if (mSelectionHeight < 0) startY += mSelectionHeight + 1;
-				aG.fillRect(startX * Block.SIZE,startY * Block.SIZE, Math.abs(mSelectionWidth) * Block.SIZE, Math.abs(mSelectionHeight)*Block.SIZE);
+				aG.fillRect(startX * Block.SIZE, startY * Block.SIZE,
+						Math.abs(mSelectionWidth) * Block.SIZE,
+						Math.abs(mSelectionHeight) * Block.SIZE);
 			}
 		}
 	}
@@ -326,7 +355,9 @@ public class Editor extends JFrame
 	{
 		final ArrayList<String> levels = EditorDataManager.getLevels();
 		final String[] levelArray = levels.toArray(new String[levels.size()]);
-		final String level = (String) JOptionPane.showInputDialog(this, "Level öffnen:", "Öffnen...", JOptionPane.PLAIN_MESSAGE, null, levelArray, levels.get(0));
+		final String level = (String) JOptionPane.showInputDialog(this,
+				"Level öffnen:", "Öffnen...", JOptionPane.PLAIN_MESSAGE, null,
+				levelArray, levels.get(0));
 		if (level == null) return null;
 		final int[] worldAndLevel = new int[2];
 		worldAndLevel[0] = Integer.parseInt(level.split("-")[0]);
@@ -337,10 +368,12 @@ public class Editor extends JFrame
 	private boolean showSaveDialog()
 	{
 		boolean done = false;
-		int world = -1, level = -1;
+		int world = - 1, level = - 1;
 		do
 		{
-			final String worldText = JOptionPane.showInputDialog(this, "Welt auswählen:", "Speichern...", JOptionPane.PLAIN_MESSAGE);
+			final String worldText = JOptionPane.showInputDialog(this,
+					"Welt auswählen:", "Speichern...",
+					JOptionPane.PLAIN_MESSAGE);
 			if (worldText == null) return false;
 			try
 			{
@@ -350,11 +383,13 @@ public class Editor extends JFrame
 			catch (final NumberFormatException aE)
 			{}
 		}
-		while ( !done);
+		while (! done);
 		done = false;
 		do
 		{
-			final String levelText = JOptionPane.showInputDialog(this, "Level auswählen:", "Speichern...", JOptionPane.PLAIN_MESSAGE);
+			final String levelText = JOptionPane.showInputDialog(this,
+					"Level auswählen:", "Speichern...",
+					JOptionPane.PLAIN_MESSAGE);
 			if (levelText == null) return false;
 			try
 			{
@@ -364,9 +399,12 @@ public class Editor extends JFrame
 			catch (final NumberFormatException aE)
 			{}
 		}
-		while ( !done);
+		while (! done);
 		if (EditorDataManager.getLevels().contains(world + "-" + level)
-				&& JOptionPane.showConfirmDialog(this, "Bereits vorhanden. Überschreiben?", "Überschreiben", JOptionPane.YES_NO_OPTION) != JOptionPane.YES_OPTION) return false;
+				&& JOptionPane.showConfirmDialog(this,
+						"Bereits vorhanden. Überschreiben?", "Überschreiben",
+						JOptionPane.YES_NO_OPTION) != JOptionPane.YES_OPTION)
+			return false;
 		mWorld = world;
 		mLevel = level;
 		return true;
@@ -374,7 +412,8 @@ public class Editor extends JFrame
 	
 	private void resizeCP()
 	{
-		mCP.setPreferredSize(new Dimension(mWidth * Block.SIZE, mHeight * Block.SIZE));
+		mCP.setPreferredSize(new Dimension(mWidth * Block.SIZE, mHeight
+				* Block.SIZE));
 		mScrollPane.revalidate();
 		mSizeModelChanged = true;
 		mWidthModel.setValue(mWidth);
@@ -385,38 +424,38 @@ public class Editor extends JFrame
 	
 	private void setSelection(boolean aAddToSelection)
 	{
-		mSelectionWidth = -mSelectionStartX + mMouseX;
-		if (mSelectionWidth >= 0) mSelectionWidth++ ;
-		else mSelectionWidth-- ;
-		mSelectionHeight = -mSelectionStartY + mMouseY;
-		if (mSelectionHeight >= 0) mSelectionHeight++ ;
-		else mSelectionHeight-- ;
-		if(!aAddToSelection) return;
+		mSelectionWidth = - mSelectionStartX + mMouseX;
+		if (mSelectionWidth >= 0) mSelectionWidth++;
+		else mSelectionWidth--;
+		mSelectionHeight = - mSelectionStartY + mMouseY;
+		if (mSelectionHeight >= 0) mSelectionHeight++;
+		else mSelectionHeight--;
+		if (! aAddToSelection) return;
 		int startX = mSelectionStartX, startY = mSelectionStartY;
 		if (mSelectionWidth < 0) startX += mSelectionWidth + 1;
 		if (mSelectionHeight < 0) startY += mSelectionHeight + 1;
-		for (int x = startX; x < startX + Math.abs(mSelectionWidth); x++ )
-			for (int y = startY; y < startY + Math.abs(mSelectionHeight); y++ )
+		for (int x = startX; x < startX + Math.abs(mSelectionWidth); x++)
+			for (int y = startY; y < startY + Math.abs(mSelectionHeight); y++)
 				mSelection[x][y] = true;
-				
+		
 	}
 	
 	private void fillSelection()
 	{
-		if ( !mSelectionMade) return;
-		for (int x = 0; x < mWidth; x++ )
-			for (int y = 0; y < mHeight; y++ )
-				if(mSelection[x][y])setBlock(x, y);
+		if (! mSelectionMade) return;
+		for (int x = 0; x < mWidth; x++)
+			for (int y = 0; y < mHeight; y++)
+				if (mSelection[x][y]) setBlock(x, y);
 		mSelectionMade = false;
 		repaint();
 	}
 	
 	private void deleteSelection()
 	{
-		if ( !mSelectionMade) return;
-		for (int x = 0; x < mWidth; x++ )
-			for (int y = 0; y < mHeight; y++ )
-				if(mSelection[x][y])deleteBlock(x, y);
+		if (! mSelectionMade) return;
+		for (int x = 0; x < mWidth; x++)
+			for (int y = 0; y < mHeight; y++)
+				if (mSelection[x][y]) deleteBlock(x, y);
 		mSelectionMade = false;
 		repaint();
 	}
@@ -430,27 +469,27 @@ public class Editor extends JFrame
 				final JMenuItem newFile = new JMenuItem("Neu");
 				newFile.addActionListener(new ActionListener()
 				{
-					@Override
-					public void actionPerformed(final ActionEvent aE)
+					@Override public void actionPerformed(final ActionEvent aE)
 					{
 						newMap();
 					}
 				});
 				newFile.setMnemonic('N');
-				newFile.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, Event.CTRL_MASK));
+				newFile.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N,
+						Event.CTRL_MASK));
 				file.add(newFile);
 				
 				final JMenuItem openFile = new JMenuItem("Öffnen");
 				openFile.addActionListener(new ActionListener()
 				{
-					@Override
-					public void actionPerformed(final ActionEvent aE)
+					@Override public void actionPerformed(final ActionEvent aE)
 					{
 						openMap();
 					}
 				});
 				openFile.setMnemonic('f');
-				openFile.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, Event.CTRL_MASK));
+				openFile.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O,
+						Event.CTRL_MASK));
 				file.add(openFile);
 				
 				file.addSeparator();
@@ -458,14 +497,14 @@ public class Editor extends JFrame
 				final JMenuItem saveFile = new JMenuItem("Speichern");
 				saveFile.addActionListener(new ActionListener()
 				{
-					@Override
-					public void actionPerformed(final ActionEvent aE)
+					@Override public void actionPerformed(final ActionEvent aE)
 					{
 						saveMap();
 					}
 				});
 				saveFile.setMnemonic('S');
-				saveFile.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, Event.CTRL_MASK));
+				saveFile.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S,
+						Event.CTRL_MASK));
 				file.add(saveFile);
 				
 				file.addSeparator();
@@ -473,14 +512,14 @@ public class Editor extends JFrame
 				final JMenuItem close = new JMenuItem("Beenden");
 				close.addActionListener(new ActionListener()
 				{
-					@Override
-					public void actionPerformed(final ActionEvent aE)
+					@Override public void actionPerformed(final ActionEvent aE)
 					{
 						close();
 					}
 				});
 				close.setMnemonic('B');
-				close.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F4, Event.ALT_MASK));
+				close.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F4,
+						Event.ALT_MASK));
 				file.add(close);
 			}
 			file.setMnemonic('D');
@@ -496,27 +535,28 @@ public class Editor extends JFrame
 				final JMenuItem nextBlock = new JMenuItem("Nächster Block");
 				nextBlock.addActionListener(new ActionListener()
 				{
-					@Override
-					public void actionPerformed(final ActionEvent aE)
+					@Override public void actionPerformed(final ActionEvent aE)
 					{
 						mToolBox.nextBlock();
 					}
 				});
 				nextBlock.setMnemonic('N');
-				nextBlock.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_UP, Event.CTRL_MASK));
+				nextBlock.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_UP,
+						Event.CTRL_MASK));
 				edit.add(nextBlock);
 				
-				final JMenuItem previousBlock = new JMenuItem("Vorheriger Block");
+				final JMenuItem previousBlock = new JMenuItem(
+						"Vorheriger Block");
 				previousBlock.addActionListener(new ActionListener()
 				{
-					@Override
-					public void actionPerformed(final ActionEvent aE)
+					@Override public void actionPerformed(final ActionEvent aE)
 					{
 						mToolBox.previousBlock();
 					}
 				});
 				previousBlock.setMnemonic('V');
-				previousBlock.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, Event.CTRL_MASK));
+				previousBlock.setAccelerator(KeyStroke.getKeyStroke(
+						KeyEvent.VK_DOWN, Event.CTRL_MASK));
 				edit.add(previousBlock);
 				
 				edit.addSeparator();
@@ -524,27 +564,29 @@ public class Editor extends JFrame
 				final JMenuItem nextItem = new JMenuItem("Nächstes Item");
 				nextItem.addActionListener(new ActionListener()
 				{
-					@Override
-					public void actionPerformed(final ActionEvent aE)
+					@Override public void actionPerformed(final ActionEvent aE)
 					{
-						mItems.setSelectedIndex((mItems.getSelectedIndex() + 1) % Item.values().size());
+						mItems.setSelectedIndex((mItems.getSelectedIndex() + 1)
+								% Item.values().size());
 					}
 				});
 				nextItem.setMnemonic('c');
-				nextItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_ADD, 0));
+				nextItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_ADD,
+						0));
 				edit.add(nextItem);
 				
 				final JMenuItem previousItem = new JMenuItem("Vorheriges Item");
 				previousItem.addActionListener(new ActionListener()
 				{
-					@Override
-					public void actionPerformed(final ActionEvent aE)
+					@Override public void actionPerformed(final ActionEvent aE)
 					{
-						mItems.setSelectedIndex((mItems.getSelectedIndex() - 1 + Item.values().size()) % Item.values().size());
+						mItems.setSelectedIndex((mItems.getSelectedIndex() - 1 + Item
+								.values().size()) % Item.values().size());
 					}
 				});
 				previousItem.setMnemonic('r');
-				previousItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_SUBTRACT, 0));
+				previousItem.setAccelerator(KeyStroke.getKeyStroke(
+						KeyEvent.VK_SUBTRACT, 0));
 				edit.add(previousItem);
 				
 				edit.addSeparator();
@@ -552,51 +594,53 @@ public class Editor extends JFrame
 				final JMenuItem pencilTool = new JMenuItem("Stift Tool");
 				pencilTool.addActionListener(new ActionListener()
 				{
-					@Override
-					public void actionPerformed(final ActionEvent aE)
+					@Override public void actionPerformed(final ActionEvent aE)
 					{
 						mTools.setSelectedItem("Stift");
 					}
 				});
 				pencilTool.setMnemonic('S');
-				pencilTool.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_P, Event.CTRL_MASK));
+				pencilTool.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_P,
+						Event.CTRL_MASK));
 				edit.add(pencilTool);
 				
 				final JMenuItem selectionTool = new JMenuItem("Selektions Tool");
 				selectionTool.addActionListener(new ActionListener()
 				{
-					@Override
-					public void actionPerformed(final ActionEvent aE)
+					@Override public void actionPerformed(final ActionEvent aE)
 					{
 						mTools.setSelectedItem("Selektion");
 					}
 				});
 				selectionTool.setMnemonic('l');
-				selectionTool.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_L, Event.CTRL_MASK));
+				selectionTool.setAccelerator(KeyStroke.getKeyStroke(
+						KeyEvent.VK_L, Event.CTRL_MASK));
 				edit.add(selectionTool);
+				
+				edit.addSeparator();
 				
 				fillSelection.addActionListener(new ActionListener()
 				{
-					@Override
-					public void actionPerformed(final ActionEvent aE)
+					@Override public void actionPerformed(final ActionEvent aE)
 					{
 						fillSelection();
 					}
 				});
 				fillSelection.setMnemonic('F');
-				fillSelection.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0));
+				fillSelection.setAccelerator(KeyStroke.getKeyStroke(
+						KeyEvent.VK_ENTER, 0));
 				edit.add(fillSelection);
 				
 				deleteSelection.addActionListener(new ActionListener()
 				{
-					@Override
-					public void actionPerformed(final ActionEvent aE)
+					@Override public void actionPerformed(final ActionEvent aE)
 					{
 						deleteSelection();
 					}
 				});
 				deleteSelection.setMnemonic('ö');
-				deleteSelection.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, Event.CTRL_MASK));
+				deleteSelection.setAccelerator(KeyStroke.getKeyStroke(
+						KeyEvent.VK_ENTER, Event.CTRL_MASK));
 				edit.add(deleteSelection);
 			}
 			edit.setMnemonic('B');
@@ -610,16 +654,14 @@ public class Editor extends JFrame
 			new NumberEditor(height);
 			width.addChangeListener(new ChangeListener()
 			{
-				@Override
-				public void stateChanged(final ChangeEvent aE)
+				@Override public void stateChanged(final ChangeEvent aE)
 				{
 					resizeMap();
 				}
 			});
 			height.addChangeListener(new ChangeListener()
 			{
-				@Override
-				public void stateChanged(final ChangeEvent aE)
+				@Override public void stateChanged(final ChangeEvent aE)
 				{
 					resizeMap();
 				}
@@ -633,8 +675,7 @@ public class Editor extends JFrame
 			mTools.addItem("Selektion");
 			mTools.addItemListener(new ItemListener()
 			{
-				@Override
-				public void itemStateChanged(final ItemEvent aArg0)
+				@Override public void itemStateChanged(final ItemEvent aArg0)
 				{
 					if (mTools.getSelectedItem().equals("Stift"))
 					{
@@ -657,10 +698,10 @@ public class Editor extends JFrame
 				texturePacks.addItem(texturePack);
 			texturePacks.addActionListener(new ActionListener()
 			{
-				@Override
-				public void actionPerformed(final ActionEvent aE)
+				@Override public void actionPerformed(final ActionEvent aE)
 				{
-					EditorDataManager.setTexturePack(texturePacks.getItemAt(texturePacks.getSelectedIndex()));
+					EditorDataManager.setTexturePack(texturePacks
+							.getItemAt(texturePacks.getSelectedIndex()));
 					mToolBox.repaint();
 				}
 			});
