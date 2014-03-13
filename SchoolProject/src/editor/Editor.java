@@ -254,7 +254,7 @@ public class Editor extends JFrame
 	private void showItem()
 	{
 		if (mMouseX < 0 || mMouseX >= mWidth || mMouseY < 0 || mMouseY >= mHeight) return;
-		if (mMap[mMouseX][mMouseY] != Block.ITEM.getId() && mMap[mMouseX][mMouseY] != Block.QUESTION.getId()) mCP.setToolTipText("");
+		if (mMap[mMouseX][mMouseY] != Block.ITEM.getId() && Block.get(mMap[mMouseX][mMouseY]) != Block.QUESTION) mCP.setToolTipText("");
 		else mCP.setToolTipText(Item.getItem(mAlphas[mMouseX][mMouseY]).toString());
 	}
 	
