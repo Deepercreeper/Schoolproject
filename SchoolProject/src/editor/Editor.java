@@ -40,7 +40,7 @@ import javax.swing.event.ChangeListener;
 @SuppressWarnings("serial")
 public class Editor extends JFrame
 {
-	private boolean					mSaved, mChangesMade, mSizeModelChanged, mMouseLeft, mSelectionMade;
+	private boolean					mSaved, mChangesMade, mSizeModelChanged, mMouseLeft, mSelectionMade, mSelecting;
 	
 	private int						mWidth, mHeight, mWorld, mLevel, mMouseX, mMouseY, mSelectionStartX, mSelectionStartY, mSelectionWidth, mSelectionHeight;
 	
@@ -57,6 +57,7 @@ public class Editor extends JFrame
 	private SpinnerModel			mWidthModel, mHeightModel;
 	
 	private short[][]				mMap, mAlphas;
+	private boolean[][] mSelection;
 	
 	public Editor()
 	{
@@ -111,7 +112,7 @@ public class Editor extends JFrame
 						if (mMouseLeft) setBlock(mMouseX, mMouseY);
 						else deleteBlock(mMouseX, mMouseY);
 					}
-					else setSelection();
+					else setSelection(false);
 					repaint();
 				}
 				
@@ -135,7 +136,8 @@ public class Editor extends JFrame
 					}
 					else
 					{
-						mSelectionMade = true;
+						mSelectionMade = mSelecting =  true;
+						if(!aE.isControlDown()) mSelection = new boolean[mWidth][mHeight];
 						mSelectionStartX = mMouseX;
 						mSelectionStartY = mMouseY;
 						mSelectionWidth = mSelectionHeight = 1;
@@ -148,7 +150,8 @@ public class Editor extends JFrame
 				{
 					if (mTools.getSelectedItem().equals("Selektion"))
 					{
-						setSelection();
+						mSelecting = false;
+						setSelection(true);
 						if (mSelectionWidth == 1 && mSelectionHeight == 1) mSelectionMade = false;
 						repaint();
 					}
@@ -179,15 +182,16 @@ public class Editor extends JFrame
 		mChangesMade = mSaved = false;
 		mWidth = 100;
 		mHeight = 30;
-		mMap = new short[mWidth][mHeight];
-		resetAlphas();
+		resetMap();
 		resizeCP();
 		setTitle("Level: " + mWorld + "-" + mLevel);
 	}
 	
-	private void resetAlphas()
+	private void resetMap()
 	{
+		mMap = new short[mWidth][mHeight];
 		mAlphas = new short[mWidth][mHeight];
+		mSelection = new boolean[mWidth][mHeight];
 		for (int x = 0; x < mWidth; x++ )
 			for (int y = 0; y < mHeight; y++ )
 				mAlphas[x][y] = 255;
@@ -206,8 +210,7 @@ public class Editor extends JFrame
 		mWidth = data.getWidth();
 		mHeight = data.getHeight();
 		
-		mMap = new short[mWidth][mHeight];
-		resetAlphas();
+		resetMap();
 		final int[] rgb = new int[mWidth * mHeight];
 		final int[] alphas = new int[mWidth * mHeight];
 		data.getRGB(0, 0, mWidth, mHeight, rgb, 0, mWidth);
@@ -281,8 +284,7 @@ public class Editor extends JFrame
 		mWidth = (int) mWidthModel.getValue();
 		mHeight = (int) mHeightModel.getValue();
 		final short[][] oldMap = mMap, oldAlphas = mAlphas;
-		mMap = new short[mWidth][mHeight];
-		resetAlphas();
+		resetMap();
 		for (int x = 0; x < oldWidth && x < mWidth; x++ )
 			for (int y = 0; y < oldHeight && y < mHeight; y++ )
 			{
@@ -307,8 +309,16 @@ public class Editor extends JFrame
 		if (mSelectionMade)
 		{
 			aG.setColor(new Color(0f, 0f, 1f, 0.5f));
-			aG.fillRect(mSelectionStartX * Block.SIZE + (mSelectionWidth < 0 ? Block.SIZE : 0), mSelectionStartY * Block.SIZE + (mSelectionHeight < 0 ? Block.SIZE : 0), mSelectionWidth * Block.SIZE,
-					mSelectionHeight * Block.SIZE);
+			for (int x = 0; x < mWidth; x++ )
+				for (int y = 0; y < mHeight; y++ )
+					if(mSelection[x][y])aG.fillRect(x * Block.SIZE, y * Block.SIZE, Block.SIZE, Block.SIZE);
+			if(mSelecting){
+				aG.setColor(new Color(1f, 0f, 0f, 0.5f));
+				int startX = mSelectionStartX, startY = mSelectionStartY;
+				if (mSelectionWidth < 0) startX += mSelectionWidth + 1;
+				if (mSelectionHeight < 0) startY += mSelectionHeight + 1;
+				aG.fillRect(startX * Block.SIZE,startY * Block.SIZE, Math.abs(mSelectionWidth) * Block.SIZE, Math.abs(mSelectionHeight)*Block.SIZE);
+			}
 		}
 	}
 	
@@ -373,7 +383,7 @@ public class Editor extends JFrame
 		repaint();
 	}
 	
-	private void setSelection()
+	private void setSelection(boolean aAddToSelection)
 	{
 		mSelectionWidth = -mSelectionStartX + mMouseX;
 		if (mSelectionWidth >= 0) mSelectionWidth++ ;
@@ -381,17 +391,22 @@ public class Editor extends JFrame
 		mSelectionHeight = -mSelectionStartY + mMouseY;
 		if (mSelectionHeight >= 0) mSelectionHeight++ ;
 		else mSelectionHeight-- ;
-	}
-	
-	private void fillSelection()
-	{
-		if ( !mSelectionMade) return;
+		if(!aAddToSelection) return;
 		int startX = mSelectionStartX, startY = mSelectionStartY;
 		if (mSelectionWidth < 0) startX += mSelectionWidth + 1;
 		if (mSelectionHeight < 0) startY += mSelectionHeight + 1;
 		for (int x = startX; x < startX + Math.abs(mSelectionWidth); x++ )
 			for (int y = startY; y < startY + Math.abs(mSelectionHeight); y++ )
-				setBlock(x, y);
+				mSelection[x][y] = true;
+				
+	}
+	
+	private void fillSelection()
+	{
+		if ( !mSelectionMade) return;
+		for (int x = 0; x < mWidth; x++ )
+			for (int y = 0; y < mHeight; y++ )
+				if(mSelection[x][y])setBlock(x, y);
 		mSelectionMade = false;
 		repaint();
 	}
@@ -399,12 +414,9 @@ public class Editor extends JFrame
 	private void deleteSelection()
 	{
 		if ( !mSelectionMade) return;
-		int startX = mSelectionStartX, startY = mSelectionStartY;
-		if (mSelectionWidth < 0) startX += mSelectionWidth + 1;
-		if (mSelectionHeight < 0) startY += mSelectionHeight + 1;
-		for (int x = startX; x < startX + Math.abs(mSelectionWidth); x++ )
-			for (int y = startY; y < startY + Math.abs(mSelectionHeight); y++ )
-				deleteBlock(x, y);
+		for (int x = 0; x < mWidth; x++ )
+			for (int y = 0; y < mHeight; y++ )
+				if(mSelection[x][y])deleteBlock(x, y);
 		mSelectionMade = false;
 		repaint();
 	}
