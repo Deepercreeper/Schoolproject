@@ -41,7 +41,7 @@ import javax.swing.event.ChangeListener;
 @SuppressWarnings("serial")
 public class Editor extends JFrame
 {
-	private boolean					mSaved, mChangesMade, mSizeModelChanged, mMouseLeft, mSelectionMade, mSelecting;
+	private boolean					mSaved, mSizeModelChanged, mMouseLeft, mSelectionMade, mSelecting;
 	
 	private int						mWidth, mHeight, mWorld, mLevel, mMouseX, mMouseY, mSelectionStartX, mSelectionStartY, mSelectionWidth, mSelectionHeight;
 	
@@ -169,8 +169,7 @@ public class Editor extends JFrame
 			getContentPane().add(mScrollPane);
 			
 			initMenu();
-			mChangesMade = false;
-			mSaved = false;
+			mSaved = true;
 			mToolBox = new ToolBox(this);
 		}
 		
@@ -193,13 +192,19 @@ public class Editor extends JFrame
 	
 	private void newMap()
 	{
-		if (mChangesMade && !mSaved && !saveMap()) return;
-		mChangesMade = mSaved = false;
+		if ( !save()) return;
+		mSaved = true;
 		mWidth = 100;
 		mHeight = 30;
 		resetMap();
 		resizeCP();
 		setTitle("Level: " + mWorld + "-" + mLevel);
+	}
+	
+	private boolean save()
+	{
+		if ( !mSaved) return saveMap();
+		return true;
 	}
 	
 	private void resetMap()
@@ -214,10 +219,10 @@ public class Editor extends JFrame
 	
 	private void openMap()
 	{
-		if (mChangesMade && !mSaved && !saveMap()) return;
+		if ( !save()) return;
 		final int[] worldAndLevel = showOpenDialog();
 		if (worldAndLevel == null) return;
-		mChangesMade = mSaved = false;
+		mSaved = true;
 		mWorld = worldAndLevel[0];
 		mLevel = worldAndLevel[1];
 		
@@ -257,7 +262,7 @@ public class Editor extends JFrame
 		mMap[aX][aY] = mToolBox.getBlockId();
 		if (block.isItemBlock() || block == Block.QUESTION) mAlphas[aX][aY] = mItems.getItemAt(mItems.getSelectedIndex()).getAlpha();
 		else mAlphas[aX][aY] = 255;
-		mChangesMade = true;
+		mSaved = false;
 	}
 	
 	private void deleteBlock(final int aX, final int aY)
@@ -265,7 +270,7 @@ public class Editor extends JFrame
 		if (aX < 0 || aX >= mWidth || aY < 0 || aY >= mHeight) return;
 		mMap[aX][aY] = 0;
 		mAlphas[aX][aY] = 255;
-		mChangesMade = true;
+		mSaved = false;
 	}
 	
 	private void showItem()
@@ -277,22 +282,20 @@ public class Editor extends JFrame
 	
 	private boolean saveMap()
 	{
+		final int result = JOptionPane.showConfirmDialog(this, "Änderungen speichern?", "Speichern", JOptionPane.YES_NO_CANCEL_OPTION);
+		if (result == JOptionPane.CANCEL_OPTION) return false;
+		else if (result == JOptionPane.NO_OPTION) return true;
+		
 		if ( !showSaveDialog()) return false;
 		EditorDataManager.saveMapImage(mMap, mAlphas, mWorld, mLevel);
 		setTitle("Level:" + mWorld + "-" + mLevel);
 		mSaved = true;
-		mChangesMade = false;
 		return true;
 	}
 	
 	private void close()
 	{
-		if (mChangesMade && !mSaved)
-		{
-			int result = JOptionPane.showConfirmDialog(this, "Änderungen speichern?", "Speichern", JOptionPane.YES_NO_CANCEL_OPTION);
-			if (result == JOptionPane.CANCEL_OPTION) return;
-			else if (result == JOptionPane.YES_OPTION && !saveMap()) return;
-		}
+		if ( !save()) return;
 		setVisible(false);
 		System.exit(0);
 	}
@@ -312,7 +315,7 @@ public class Editor extends JFrame
 				mAlphas[x][y] = oldAlphas[x][y];
 			}
 		resizeCP();
-		mChangesMade = true;
+		mSaved = false;
 	}
 	
 	private void render(final Graphics aG)
@@ -405,7 +408,7 @@ public class Editor extends JFrame
 		repaint();
 	}
 	
-	private void setSelection(boolean aAddToSelection)
+	private void setSelection(final boolean aAddToSelection)
 	{
 		mSelectionWidth = -mSelectionStartX + mMouseX;
 		if (mSelectionWidth >= 0) mSelectionWidth++ ;
@@ -483,7 +486,7 @@ public class Editor extends JFrame
 					@Override
 					public void actionPerformed(final ActionEvent aE)
 					{
-						saveMap();
+						save();
 					}
 				});
 				saveFile.setMnemonic('S');

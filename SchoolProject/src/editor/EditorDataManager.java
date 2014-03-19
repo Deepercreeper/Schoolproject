@@ -20,9 +20,7 @@ public class EditorDataManager
 	
 	private static final HashMap<String, BufferedImage>						IMAGES			= new HashMap<>();
 	
-	private static final String[]											TEXTUREPACKS	= new String[ ] {
-			"Mario", "Minecraft"
-																							};
+	private static final String[]											TEXTUREPACKS	= new String[] { "Mario", "Minecraft" };
 	
 	private static ArrayList<String>										mLevels			= new ArrayList<>();
 	
@@ -40,16 +38,11 @@ public class EditorDataManager
 				final HashMap<Texture, BufferedImage[]> textureImages = new HashMap<>();
 				for (final Texture texture : Texture.values())
 				{
-					final BufferedImage blocks = ImageIO.read(new File(
-							"data/images/texturePacks/blocks" + texturePack
-									+ texture.getSuffix() + ".png"));
-					final int width = blocks.getWidth() / 16, height = blocks
-							.getHeight() / 16;
-					final BufferedImage[] images = new BufferedImage[width
-							* height];
-					for (int i = 0; i < images.length; i++)
-						images[i] = blocks.getSubimage((i % width) * 16,
-								(i / width) * 16, 16, 16);
+					final BufferedImage blocks = ImageIO.read(new File("data/images/texturePacks/blocks" + texturePack + texture.getSuffix() + ".png"));
+					final int width = blocks.getWidth() / 16, height = blocks.getHeight() / 16;
+					final BufferedImage[] images = new BufferedImage[width * height];
+					for (int i = 0; i < images.length; i++ )
+						images[i] = blocks.getSubimage((i % width) * 16, (i / width) * 16, 16, 16);
 					textureImages.put(texture, images);
 				}
 				SPLIT_IMAGES.put(texturePack, textureImages);
@@ -66,23 +59,20 @@ public class EditorDataManager
 	{
 		final File levels = new File("data/images/worldData/#Levels#.txt");
 		final StringBuilder data = new StringBuilder();
-		if (levels.exists())
-			try
-			{
-				final BufferedReader reader = new BufferedReader(
-						new FileReader(levels));
-				int c;
-				while ((c = reader.read()) != - 1)
-					data.append((char) c);
-				reader.close();
-			}
-			catch (final IOException e)
-			{
-				e.printStackTrace();
-			}
-		if (! data.toString().isEmpty())
-			for (final String level : data.toString().split("\n"))
-				mLevels.add(level.replace("\r", "").replace("\n", ""));
+		if (levels.exists()) try
+		{
+			final BufferedReader reader = new BufferedReader(new FileReader(levels));
+			int c;
+			while ((c = reader.read()) != -1)
+				data.append((char) c);
+			reader.close();
+		}
+		catch (final IOException e)
+		{
+			e.printStackTrace();
+		}
+		if ( !data.toString().isEmpty()) for (final String level : data.toString().split("\n"))
+			mLevels.add(level.replace("\r", "").replace("\n", ""));
 	}
 	
 	public static ArrayList<String> getLevels()
@@ -100,25 +90,20 @@ public class EditorDataManager
 		return TEXTUREPACKS;
 	}
 	
-	public static void saveMapImage(final short[][] aData,
-			final short[][] aAlphas, final int aWorld, final int aLevel)
+	public static void saveMapImage(final short[][] aData, final short[][] aAlphas, final int aWorld, final int aLevel)
 	{
-		final BufferedImage image = new BufferedImage(aData.length,
-				aData[0].length, BufferedImage.TYPE_INT_ARGB);
-		for (int x = 0; x < aData.length; x++)
-			for (int y = 0; y < aData[x].length; y++)
+		final BufferedImage image = new BufferedImage(aData.length, aData[0].length, BufferedImage.TYPE_INT_ARGB);
+		for (int x = 0; x < aData.length; x++ )
+			for (int y = 0; y < aData[x].length; y++ )
 			{
 				final short id = aData[x][y];
 				final int rgb = Block.getCodeFromId(id);
 				image.setRGB(x, y, rgb);
-				image.getAlphaRaster().setPixel(x, y, new int[ ] {
-					aAlphas[x][y]
-				});
+				image.getAlphaRaster().setPixel(x, y, new int[] { aAlphas[x][y] });
 			}
 		try
 		{
-			ImageIO.write(image, "PNG", new File("data/images/worldData/level"
-					+ aWorld + "-" + aLevel + ".png"));
+			ImageIO.write(image, "PNG", new File("data/images/worldData/level" + aWorld + "-" + aLevel + ".png"));
 		}
 		catch (final IOException e)
 		{
@@ -131,8 +116,7 @@ public class EditorDataManager
 		{
 			new File(levels.getParent()).mkdir();
 			levels.createNewFile();
-			final BufferedWriter writer = new BufferedWriter(new FileWriter(
-					levels));
+			final BufferedWriter writer = new BufferedWriter(new FileWriter(levels));
 			for (final String level : mLevels)
 				writer.write(level + "\n");
 			writer.write(aWorld + "-" + aLevel);
@@ -149,9 +133,7 @@ public class EditorDataManager
 	{
 		try
 		{
-			final BufferedImage image = ImageIO.read(new File(
-					"data/images/worldData/level" + aWorld + "-" + aLevel
-							+ ".png"));
+			final BufferedImage image = ImageIO.read(new File("data/images/worldData/level" + aWorld + "-" + aLevel + ".png"));
 			return image;
 		}
 		catch (final IOException e)
@@ -168,8 +150,7 @@ public class EditorDataManager
 		return image;
 	}
 	
-	public static BufferedImage getBlockImage(final int aId,
-			final Texture aTexture)
+	public static BufferedImage getBlockImage(final int aId, final Texture aTexture)
 	{
 		return SPLIT_IMAGES.get(sTexturePack).get(aTexture)[aId];
 	}
@@ -178,8 +159,7 @@ public class EditorDataManager
 	{
 		try
 		{
-			final BufferedImage image = ImageIO.read(new File("data/images/"
-					+ aName + ".png"));
+			final BufferedImage image = ImageIO.read(new File("data/images/" + aName + ".png"));
 			return image;
 		}
 		catch (final IOException e)
