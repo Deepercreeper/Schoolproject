@@ -42,19 +42,14 @@ import javax.swing.event.ChangeListener;
 public class Editor extends JFrame
 {
 	private boolean					mSaved, mSizeModelChanged, mMouseLeft, mSelectionMade, mSelecting;
-	
 	private int						mWidth, mHeight, mWorld, mLevel, mMouseX, mMouseY, mSelectionStartX, mSelectionStartY, mSelectionWidth, mSelectionHeight;
-	
-	private final JPanel			mCP;
-	
-	private final JScrollPane		mScrollPane;
 	
 	private final ToolBox			mToolBox;
 	
+	private final JPanel			mCP;
+	private final JScrollPane		mScrollPane;
 	private final JComboBox<Item>	mItems;
-	
 	private final JComboBox<String>	mTools;
-	
 	private SpinnerModel			mWidthModel, mHeightModel;
 	
 	private short[][]				mMap, mAlphas;
