@@ -72,7 +72,7 @@ public class EditorDataManager
 			e.printStackTrace();
 		}
 		if ( !data.toString().isEmpty()) for (final String level : data.toString().split("\n"))
-			mLevels.add(level.replace("\r", "").replace("\n", ""));
+			mLevels.add(level);
 	}
 	
 	public static ArrayList<String> getLevels()
