@@ -96,6 +96,7 @@ public class Editor extends JFrame
 				{
 					mMouseX = aE.getX() / Block.SIZE;
 					mMouseY = aE.getY() / Block.SIZE;
+					checkMousePosition();
 					showItem();
 					repaint();
 				}
@@ -105,6 +106,7 @@ public class Editor extends JFrame
 				{
 					mMouseX = aE.getX() / Block.SIZE;
 					mMouseY = aE.getY() / Block.SIZE;
+					checkMousePosition();
 					if (mTools.getSelectedItem().equals("Stift"))
 					{
 						if (mMouseLeft) setBlock(mMouseX, mMouseY);
@@ -176,6 +178,14 @@ public class Editor extends JFrame
 			mToolBox.setLocation(getX() - mToolBox.getWidth(), size.height / 2 - mToolBox.getHeight() / 2);
 		}
 		setVisible(true);
+	}
+	
+	private void checkMousePosition()
+	{
+		if (mMouseX < 0) mMouseX = 0;
+		if (mMouseY < 0) mMouseY = 0;
+		if (mMouseX >= mWidth) mMouseX = mWidth - 1;
+		if (mMouseY >= mHeight) mMouseY = mHeight - 1;
 	}
 	
 	private void pickBlock()
