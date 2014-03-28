@@ -87,7 +87,7 @@ public abstract class Item
 																};
 	
 	/**
-	 * Creates anew super banana.
+	 * Creates a new super banana.
 	 */
 	public static final Item					SUPER_BANANA	= new Item("Super Banane", 0xFF00FF, 255)
 																{
@@ -110,6 +110,9 @@ public abstract class Item
 																	}
 																};
 	
+	/**
+	 * Creates a new Rolling minion that tries to kill you but doesn't follow.
+	 */
 	public static final Item					ROLLER			= new Item("Rollender Minion", 0xB6FF00, 251)
 																{
 																	@Override
@@ -131,6 +134,9 @@ public abstract class Item
 																	}
 																};
 	
+	/**
+	 * Creates a new Minion that tries to kill and follow you.
+	 */
 	public static final Item					MINION			= new Item("Minion", 0x007F0E, 250)
 																{
 																	@Override
@@ -152,6 +158,9 @@ public abstract class Item
 																	}
 																};
 	
+	/**
+	 * Creates the pistol weapon that can be picked up and used to shoot.
+	 */
 	public static final Item					PISTOL			= new Item("Pistole", 0x039505, 249)
 																{
 																	@Override

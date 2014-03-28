@@ -156,7 +156,7 @@ public abstract class Entity
 	 *            The entity id.
 	 * @return {@code true} if the other entity has hit this one and {@code false} if not.
 	 */
-	public boolean hasCollidedWith(final int aId)
+	public final boolean hasCollidedWith(final int aId)
 	{
 		return mCollidedEntities.contains(aId);
 	}
@@ -167,7 +167,7 @@ public abstract class Entity
 	 * @param aId
 	 *            The entity id.
 	 */
-	public void addCollidedEntity(final int aId)
+	public final void addCollidedEntity(final int aId)
 	{
 		mCollidedEntities.add(aId);
 	}

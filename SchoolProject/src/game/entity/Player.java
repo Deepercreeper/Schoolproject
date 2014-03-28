@@ -65,10 +65,15 @@ public class Player extends Entity
 		mTime++ ;
 		if (mHurtDelay > 0) mHurtDelay-- ;
 		
-		if (aInput.isKeyPressed(InputKeys.instance().getKey(Key.NEXT_WEAPON))) mWeapon = (mWeapon + 1) % mWeapons.size();
-		if (aInput.isKeyPressed(InputKeys.instance().getKey(Key.PREVIOUS_WEAPON))) mWeapon = (mWeapon - 1 + mWeapons.size()) % mWeapons.size();
-		
-		if ( !mWeapons.isEmpty() && aInput.isMousePressed(Input.MOUSE_LEFT_BUTTON)) mWeapons.get(mWeapon).shoot(aInput);
+		if ( !mWeapons.isEmpty())
+		{
+			mWeapons.get(mWeapon).update(aInput);
+			
+			if (aInput.isKeyPressed(InputKeys.instance().getKey(Key.NEXT_WEAPON))) mWeapon = (mWeapon + 1) % mWeapons.size();
+			if (aInput.isKeyPressed(InputKeys.instance().getKey(Key.PREVIOUS_WEAPON))) mWeapon = (mWeapon - 1 + mWeapons.size()) % mWeapons.size();
+			
+			if ( !mWeapons.isEmpty() && aInput.isMousePressed(Input.MOUSE_LEFT_BUTTON)) mWeapons.get(mWeapon).shoot(aInput);
+		}
 		
 		// TODO Temporary
 		{
@@ -174,6 +179,7 @@ public class Player extends Entity
 	{
 		if ( !mWeapons.contains(aWeapon)) mWeapons.add(aWeapon);
 		mWeapon = mWeapons.indexOf(aWeapon);
+		aWeapon.remove();
 	}
 	
 	/**
@@ -223,6 +229,12 @@ public class Player extends Entity
 		}
 		if (mHurtDelay > 0 && mTime % 10 < 5) aG.drawImage(image, (float) mX - mLevel.getScreenX(), (float) mY - mLevel.getScreenY(), new Color(1, 1, 1, 0.5f));
 		else aG.drawImage(image, (float) mX - mLevel.getScreenX(), (float) mY - mLevel.getScreenY());
+		
+		// Weapon
+		if ( !mWeapons.isEmpty())
+		{
+			mWeapons.get(mWeapon).render(aG);
+		}
 		
 		// HUD
 		aG.setColor(Color.red);
