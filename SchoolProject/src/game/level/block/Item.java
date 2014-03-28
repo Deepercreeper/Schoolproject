@@ -5,6 +5,7 @@ import game.entity.Entity;
 import game.entity.Heart;
 import game.entity.enemy.Minion;
 import game.entity.enemy.Roller;
+import game.entity.weapon.Pistol;
 import java.util.Collection;
 import java.util.HashMap;
 
@@ -148,6 +149,27 @@ public abstract class Item
 																	public int getHeight()
 																	{
 																		return 32;
+																	}
+																};
+	
+	public static final Item					PISTOL			= new Item("Pistole", 0x039505, 249)
+																{
+																	@Override
+																	public Entity create(final int aX, final int aY)
+																	{
+																		return new Pistol(aX, aY);
+																	}
+																	
+																	@Override
+																	public int getHeight()
+																	{
+																		return 4;
+																	}
+																	
+																	@Override
+																	public int getWidth()
+																	{
+																		return 10;
 																	}
 																};
 	

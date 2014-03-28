@@ -2,8 +2,10 @@ package game.entity;
 
 import game.Stats;
 import game.entity.enemy.Enemy;
+import game.entity.weapon.Weapon;
 import game.level.Level;
 import game.level.block.Block;
+import java.util.ArrayList;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
@@ -15,21 +17,23 @@ import data.DataManager;
 
 public class Player extends Entity
 {
-	private int	mTime	= 0;
+	private int						mTime		= 0;
 	
-	private final int	mMaxLife	= 10, mLifeStep = 2;
-	private final double	mSpeed	= 1, mSpeedStep = 0.01;
-	private int				mSpeedSkill	= 0, mLifeSkill = 0;
+	private final int				mMaxLife	= 10, mLifeStep = 2;
+	private final double			mSpeed		= 1, mSpeedStep = 0.01;
+	private int						mSpeedSkill	= 0, mLifeSkill = 0;
 	
-	private Direction		mDir		= Direction.NONE;
+	private Direction				mDir		= Direction.NONE;
 	
-	private int				mLife;
+	private final ArrayList<Weapon>	mWeapons	= new ArrayList<>();
 	
-	private int				mHurtDelay;
+	private int						mLife;
 	
-	private boolean			mCannon, mJumping, mRunning, mFast;
+	private int						mHurtDelay;
 	
-	private int				mCannonTime;
+	private boolean					mCannon, mJumping, mRunning, mFast;
+	
+	private int						mCannonTime, mWeapon;
 	
 	/**
 	 * Creates a new player at {@code (0,0)}.
@@ -61,26 +65,13 @@ public class Player extends Entity
 		mTime++ ;
 		if (mHurtDelay > 0) mHurtDelay-- ;
 		
+		if (aInput.isKeyPressed(InputKeys.instance().getKey(Key.NEXT_WEAPON))) mWeapon = (mWeapon + 1) % mWeapons.size();
+		if (aInput.isKeyPressed(InputKeys.instance().getKey(Key.PREVIOUS_WEAPON))) mWeapon = (mWeapon - 1 + mWeapons.size()) % mWeapons.size();
+		
+		if ( !mWeapons.isEmpty() && aInput.isMousePressed(Input.MOUSE_LEFT_BUTTON)) mWeapons.get(mWeapon).shoot(aInput);
+		
 		// TODO Temporary
 		{
-			if (aInput.isMousePressed(Input.MOUSE_LEFT_BUTTON))
-			{
-				final int speed = 10;
-				final int mouseX = aInput.getMouseX() + mLevel.getScreenX(), mouseY = aInput.getMouseY() + mLevel.getScreenY();
-				int startX, startY = (int) (mY + mHeight / 2);
-				if (mouseX > mX + mWidth) startX = (int) (mX + mWidth);
-				else if (mouseX < mX) startX = (int) mX;
-				else
-				{
-					startX = (int) (mX + mWidth / 2);
-					startY = (int) mY;
-				}
-				final double xd = mouseX - startX, yd = mouseY - startY;
-				final double a = Math.acos(Math.abs(xd) / Math.sqrt(xd * xd + yd * yd));
-				final double xv = Math.cos(a) * speed * Math.signum(xd), yv = Math.sin(a) * speed * Math.signum(yd);
-				mLevel.addEntity(new Bullet(startX, startY, xv, yv, 5, this));
-			}
-			
 			if (aInput.isKeyPressed(Input.KEY_F)) skillLife();
 			if (aInput.isKeyPressed(Input.KEY_G)) skillSpeed();
 		}
@@ -177,6 +168,12 @@ public class Player extends Entity
 		
 		// Reset attributes
 		mInLiquid = false;
+	}
+	
+	public void addWeapon(final Weapon aWeapon)
+	{
+		if ( !mWeapons.contains(aWeapon)) mWeapons.add(aWeapon);
+		mWeapon = mWeapons.indexOf(aWeapon);
 	}
 	
 	/**
