@@ -225,7 +225,7 @@ public class Block
 		return mDestination;
 	}
 	
-	boolean containsItems()
+	public boolean containsItems()
 	{
 		return mContainsItems;
 	}

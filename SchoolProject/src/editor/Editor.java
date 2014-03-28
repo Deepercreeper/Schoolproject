@@ -192,7 +192,7 @@ public class Editor extends JFrame
 	{
 		final Block block = Block.get(mMap[mMouseX][mMouseY]);
 		mToolBox.setBlock(block);
-		if (block.isItemBlock() || block == Block.QUESTION) mItems.setSelectedItem(Item.getItem(mAlphas[mMouseX][mMouseY]));
+		if (block.isItemBlock() || block.containsItems()) mItems.setSelectedItem(Item.getItem(mAlphas[mMouseX][mMouseY]));
 	}
 	
 	private void newMap()
@@ -250,7 +250,7 @@ public class Editor extends JFrame
 					final Block block = Block.get(id);
 					mMap[x][y] = id;
 					if (block.isItemBlock()) mAlphas[x][y] = Item.getItem(0xffffff & rgb[x + y * mWidth]).getAlpha();
-					else if (block == Block.QUESTION) mAlphas[x][y] = (short) alphas[x + y * mWidth];
+					else if (block.containsItems()) mAlphas[x][y] = (short) alphas[x + y * mWidth];
 					else mAlphas[x][y] = 255;
 				}
 			}
@@ -265,7 +265,7 @@ public class Editor extends JFrame
 		if (aX < 0 || aX >= mWidth || aY < 0 || aY >= mHeight) return;
 		final Block block = Block.get(mToolBox.getBlockId());
 		mMap[aX][aY] = mToolBox.getBlockId();
-		if (block.isItemBlock() || block == Block.QUESTION) mAlphas[aX][aY] = mItems.getItemAt(mItems.getSelectedIndex()).getAlpha();
+		if (block.isItemBlock() || block.containsItems()) mAlphas[aX][aY] = mItems.getItemAt(mItems.getSelectedIndex()).getAlpha();
 		else mAlphas[aX][aY] = 255;
 		mSaved = false;
 	}
@@ -281,7 +281,7 @@ public class Editor extends JFrame
 	private void showItem()
 	{
 		if (mMouseX < 0 || mMouseX >= mWidth || mMouseY < 0 || mMouseY >= mHeight) return;
-		if (mMap[mMouseX][mMouseY] != Block.ITEM.getId() && Block.get(mMap[mMouseX][mMouseY]) != Block.QUESTION) mCP.setToolTipText("");
+		if ( !Block.get(mMap[mMouseX][mMouseY]).isItemBlock() && !Block.get(mMap[mMouseX][mMouseY]).containsItems()) mCP.setToolTipText("");
 		else mCP.setToolTipText(Item.getItem(mAlphas[mMouseX][mMouseY]).toString());
 	}
 	
