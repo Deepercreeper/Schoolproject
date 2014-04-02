@@ -1,6 +1,6 @@
 package game.entity;
 
-import game.level.Level;
+import game.level.Map;
 import game.level.block.Block;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -34,7 +34,7 @@ public abstract class Entity
 	/**
 	 * The parent level within this entity is living.
 	 */
-	protected Level								mLevel;
+	protected Map								mLevel;
 	
 	/**
 	 * Creates a entity with position {@code aX:aY} and size {@code aWidth:aHeight}.
@@ -437,7 +437,7 @@ public abstract class Entity
 	 * @param aId
 	 *            The created id.
 	 */
-	public final void init(final Level aLevel, final int aId)
+	public final void init(final Map aLevel, final int aId)
 	{
 		mLevel = aLevel;
 		mId = aId;

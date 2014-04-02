@@ -11,7 +11,7 @@ public class Screen
 	
 	private final Rectangle	mRect;
 	
-	private Level			mLevel;
+	private Map			mLevel;
 	
 	/**
 	 * Creates a screen that defines which area should be rendered.
@@ -32,7 +32,7 @@ public class Screen
 	 * @param aLevel
 	 *            The parent level.
 	 */
-	public void init(final Level aLevel)
+	public void init(final Map aLevel)
 	{
 		mLevel = aLevel;
 	}

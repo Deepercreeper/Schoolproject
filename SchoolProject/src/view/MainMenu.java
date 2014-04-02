@@ -10,6 +10,7 @@ import org.newdawn.slick.KeyListener;
 import util.InputKeys;
 import util.Key;
 import data.DataManager;
+import data.LevelManager;
 
 public class MainMenu extends Menu
 {
@@ -112,12 +113,11 @@ public class MainMenu extends Menu
 				}
 				else if (aInput.isKeyPressed(Input.KEY_RIGHT))
 				{
-					final int[] worlds = DataManager.getLevelsPerWorld();
-					if (mLevelId < worlds[mWorldId] - 1)
+					if (mLevelId < LevelManager.instance().getLevelsCount(mWorldId) - 1)
 					{
 						if (Save.instance().isAvailable(mWorldId, mLevelId + 1)) mLevelId++ ;
 					}
-					else if (mWorldId < worlds.length - 1 && Save.instance().isAvailable(mWorldId + 1))
+					else if (mWorldId < LevelManager.instance().getWorldsCount() - 1 && Save.instance().isAvailable(mWorldId + 1))
 					{
 						mWorldId++ ;
 						mLevelId = 0;
@@ -125,7 +125,6 @@ public class MainMenu extends Menu
 				}
 				else if (aInput.isKeyPressed(Input.KEY_LEFT))
 				{
-					final int[] worlds = DataManager.getLevelsPerWorld();
 					if (mLevelId > 0)
 					{
 						if (Save.instance().isAvailable(mWorldId, mLevelId - 1)) mLevelId-- ;
@@ -133,7 +132,7 @@ public class MainMenu extends Menu
 					else if (mWorldId > 0 && Save.instance().isAvailable(mWorldId - 1))
 					{
 						mWorldId-- ;
-						mLevelId = worlds[mWorldId] - 1;
+						mLevelId = LevelManager.instance().getLevelsCount(mWorldId) - 1;
 					}
 				}
 				else if (aInput.isKeyPressed(Input.KEY_O)) mState = State.OPTIONS;
@@ -211,8 +210,7 @@ public class MainMenu extends Menu
 		aG.drawString("O - Optionen", mWidth / 2 - 100, mHeight - 35);
 		aG.drawString("Escape - Ende", mWidth / 2 - 100, mHeight - 20);
 		
-		final int levels = DataManager.getLevelsPerWorld()[mWorldId];
-		
+		final int levels = LevelManager.instance().getLevelsCount(mWorldId);
 		for (int i = 0; i < levels; i++ )
 		{
 			if (Save.instance().isAvailable(mWorldId, i)) aG.setColor(Color.white);
@@ -230,7 +228,7 @@ public class MainMenu extends Menu
 			aG.setColor(Color.white);
 			aG.drawLine(0, mHeight / 2, mWidth / (levels + 1) - 25, mHeight / 2);
 		}
-		if (mWorldId < DataManager.getLevelsPerWorld().length - 1 && Save.instance().isAvailable(mWorldId + 1))
+		if (mWorldId < LevelManager.instance().getWorldsCount() - 1 && Save.instance().isAvailable(mWorldId + 1))
 		{
 			aG.setColor(Color.white);
 			aG.drawLine(mWidth / (levels + 1) * levels + 25, mHeight / 2, mWidth, mHeight / 2);

@@ -1,7 +1,7 @@
 package game;
 
 import game.entity.Player;
-import game.level.Level;
+import game.level.Map;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
@@ -10,6 +10,7 @@ import view.MainMenu;
 import view.Menu;
 import view.PauseMenu;
 import data.DataManager;
+import data.LevelManager;
 
 public class Game
 {
@@ -17,7 +18,7 @@ public class Game
 	private int				mShowingVolume	= 0;
 	
 	private Menu			mPauseMenu, mMainMenu;
-	private Level			mLevel;
+	private Map				mLevel;
 	private Input			mInput;
 	private GameContainer	mGC;
 	private Player			mPlayer;
@@ -95,13 +96,13 @@ public class Game
 		{
 			final int levelIndex = mLevel.getLevelId();
 			Save.instance().setScore(mLevel.getWorldId(), levelIndex, Stats.instance().getScore());
-			if (levelIndex < DataManager.getLevelsPerWorld()[mLevel.getWorldId()] - 1)
+			if (levelIndex < LevelManager.instance().getLevelsCount(mLevel.getWorldId()))
 			{
 				Save.instance().openLevel(mLevel.getWorldId(), levelIndex + 1);
 				mainMenu();
 				return;
 			}
-			if (mLevel.getWorldId() < DataManager.getLevelsPerWorld().length - 1) Save.instance().openWorld(mLevel.getWorldId() + 1);
+			if (mLevel.getWorldId() < LevelManager.instance().getWorldsCount() - 1) Save.instance().openWorld(mLevel.getWorldId() + 1);
 			mainMenu();
 			return;
 		}
@@ -210,6 +211,6 @@ public class Game
 	{
 		if (mInput == null) mInput = mGC.getInput();
 		if (mPauseMenu == null) mPauseMenu = new PauseMenu(mGC, this);
-		mLevel = new Level(aWorldId, aLevelId, mGC, mPlayer);
+		mLevel = new Map(aWorldId, aLevelId, mGC, mPlayer);
 	}
 }

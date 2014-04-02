@@ -28,7 +28,6 @@ public class DataManager
 	private static final String[]									sSplitImages		= new String[] { "player", "entity", "enemy" };
 	private static final int[][]									sSplitImageSizes	= new int[][] { { 14, 30 }, { 16, 16 }, { 16, 16 } };
 	private static final String[]									sTexturepacks		= new String[] { "Mario", "Minecraft" };
-	private static int[]											sLevelsPerWorld;
 	
 	private static int												sTexturepack		= 0, sTitle = 0;
 	private static float											sVolume				= 1;
@@ -117,16 +116,6 @@ public class DataManager
 	public static boolean isLoading()
 	{
 		return sLoading;
-	}
-	
-	/**
-	 * Returns of how many levels the worlds do consist.
-	 * 
-	 * @return an integer array that consists of the number of levels each world.
-	 */
-	public static int[] getLevelsPerWorld()
-	{
-		return sLevelsPerWorld;
 	}
 	
 	/**

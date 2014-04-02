@@ -4,14 +4,14 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Arrays;
+import java.util.HashMap;
 
 public class LevelManager
 {
 	private static LevelManager				INSTANCE;
 	
-	private final ArrayList<WorldAndLevel>	mLevels	= new ArrayList<>();
+	private final HashMap<Integer, World>	mWorlds	= new HashMap<>();
 	
 	private LevelManager()
 	{
@@ -29,17 +29,20 @@ public class LevelManager
 		{
 			e.printStackTrace();
 		}
-		if ( !data.toString().isEmpty()) for (final String level : data.toString().split("\n"))
+		if ( !data.toString().isEmpty())
 		{
-			String[] worldAndLevel = level.split("-");
-			mLevels.add(new WorldAndLevel(Integer.parseInt(worldAndLevel[0]), Integer.parseInt(worldAndLevel[1])));
+			final String[] dataLines = data.toString().split("\n");
+			Arrays.sort(dataLines);
+			for (final String level : dataLines)
+			{
+				final String[] worldAndLevel = level.split("-");
+				final int worldId = Integer.parseInt(worldAndLevel[0]), levelId = Byte.parseByte(worldAndLevel[1]);
+				World world = mWorlds.get(worldId);
+				if (world == null) world = new World(worldId);
+				world.addLevel(levelId);
+				mWorlds.put(worldId, world);
+			}
 		}
-		sort();
-	}
-	
-	private void sort()
-	{
-		Collections.sort(mLevels);
 	}
 	
 	public static LevelManager instance()
@@ -48,8 +51,18 @@ public class LevelManager
 		return INSTANCE;
 	}
 	
-	public ArrayList<WorldAndLevel> getLevels()
+	public int getWorldsCount()
 	{
-		return mLevels;
+		return mWorlds.size();
+	}
+	
+	public int getLevelsCount(final int aWorld)
+	{
+		return mWorlds.get(aWorld).getLevelsCount();
+	}
+	
+	public HashMap<Integer, World> getWorlds()
+	{
+		return mWorlds;
 	}
 }

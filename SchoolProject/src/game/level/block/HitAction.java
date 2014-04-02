@@ -1,7 +1,7 @@
 package game.level.block;
 
 import game.entity.Entity;
-import game.level.Level;
+import game.level.Map;
 import java.util.HashMap;
 import util.Direction;
 import data.DataManager;
@@ -14,7 +14,7 @@ abstract class HitAction
 	static HitAction	DESTROY	= new HitAction()
 								{
 									@Override
-									void execute(final int aX, final int aY, final Level aLevel, final Entity aEntity, final Block aBlock, final Direction aHitDirection,
+									void execute(final int aX, final int aY, final Map aLevel, final Entity aEntity, final Block aBlock, final Direction aHitDirection,
 											final HashMap<Block, Direction> aOtherBlocks)
 									{
 										destroy(aX, aY, aLevel, aEntity, aBlock, aHitDirection);
@@ -27,7 +27,7 @@ abstract class HitAction
 	static HitAction	HURT	= new HitAction()
 								{
 									@Override
-									void execute(final int aX, final int aY, final Level aLevel, final Entity aEntity, final Block aBlock, final Direction aHitDirection,
+									void execute(final int aX, final int aY, final Map aLevel, final Entity aEntity, final Block aBlock, final Direction aHitDirection,
 											final HashMap<Block, Direction> aOtherBlocks)
 									{
 										hurt(aX, aY, aEntity, aBlock, aHitDirection, aOtherBlocks);
@@ -40,7 +40,7 @@ abstract class HitAction
 	static HitAction	ICE		= new HitAction()
 								{
 									@Override
-									void execute(final int aX, final int aY, final Level aLevel, final Entity aEntity, final Block aBlock, final Direction aHitDirection,
+									void execute(final int aX, final int aY, final Map aLevel, final Entity aEntity, final Block aBlock, final Direction aHitDirection,
 											final HashMap<Block, Direction> aOtherBlocks)
 									{
 										ice(aEntity, aHitDirection, aOtherBlocks);
@@ -79,7 +79,7 @@ abstract class HitAction
 		}
 	}
 	
-	private static void destroy(final int aX, final int aY, final Level aLevel, final Entity aEntity, final Block aBlock, final Direction aHitDirection)
+	private static void destroy(final int aX, final int aY, final Map aLevel, final Entity aEntity, final Block aBlock, final Direction aHitDirection)
 	{
 		final Texture texture = Block.getBlockTexture(aX, aY, aLevel.getBlock(aX, aY));
 		
@@ -123,5 +123,5 @@ abstract class HitAction
 	 * @param aOtherBlocks
 	 *            All other blocks that where hit at this tick.
 	 */
-	abstract void execute(int aX, int aY, Level aLevel, Entity aEntity, Block aBlock, Direction aHitDirection, HashMap<Block, Direction> aOtherBlocks);
+	abstract void execute(int aX, int aY, Map aLevel, Entity aEntity, Block aBlock, Direction aHitDirection, HashMap<Block, Direction> aOtherBlocks);
 }

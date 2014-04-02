@@ -19,7 +19,7 @@ import util.Rectangle;
 import util.Util;
 import data.DataManager;
 
-public class Level
+public class Map
 {
 	/**
 	 * Friction and gravity of the level.
@@ -56,7 +56,7 @@ public class Level
 	 * @param aPlayer
 	 *            The player of this level.
 	 */
-	public Level(final int aWorldId, final int aLevelId, final GameContainer aGC, final Player aPlayer)
+	public Map(final int aWorldId, final int aLevelId, final GameContainer aGC, final Player aPlayer)
 	{
 		mWorldId = (byte) aWorldId;
 		mLevelId = (byte) aLevelId;

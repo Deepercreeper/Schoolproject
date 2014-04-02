@@ -1,7 +1,7 @@
 package game.level.block;
 
 import game.entity.Entity;
-import game.level.Level;
+import game.level.Map;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -345,7 +345,7 @@ public class Block
 	 * @param aLevel
 	 *            The parent level.
 	 */
-	public void initImage(final int aX, final int aY, final Level aLevel)
+	public void initImage(final int aX, final int aY, final Map aLevel)
 	{
 		final Texture texture = getBlockTexture(aX, aY, aLevel.getBlock(aX, aY));
 		DataManager.loadTexture(DataManager.getTexturePack(), texture, getId(texture) / Texture.values().size());
@@ -416,7 +416,7 @@ public class Block
 	 * @param aLevel
 	 *            The parent level.
 	 */
-	public static void render(final int aX, final int aY, final short aId, final Graphics aG, final Level aLevel)
+	public static void render(final int aX, final int aY, final short aId, final Graphics aG, final Map aLevel)
 	{
 		final Block block = get(aId);
 		final Texture texture = getBlockTexture(aX, aY, aId);
@@ -499,7 +499,7 @@ public class Block
 	 * @param aLevel
 	 *            the parent level.
 	 */
-	public void update(final int aX, final int aY, final Level aLevel)
+	public void update(final int aX, final int aY, final Map aLevel)
 	{
 		for (final UpdateAction action : mUpdateActions)
 			action.execute(aX, aY, aLevel);
@@ -521,7 +521,7 @@ public class Block
 	 * @param aOtherBlocks
 	 *            All other hit blocks by the given entity at this tick.
 	 */
-	public void hit(final int aX, final int aY, final Level aLevel, final Entity aEntity, final Direction aDirection, final HashMap<Block, Direction> aOtherBlocks)
+	public void hit(final int aX, final int aY, final Map aLevel, final Entity aEntity, final Direction aDirection, final HashMap<Block, Direction> aOtherBlocks)
 	{
 		for (final HitAction action : mHitActions)
 			action.execute(aX, aY, aLevel, aEntity, this, aDirection, aOtherBlocks);

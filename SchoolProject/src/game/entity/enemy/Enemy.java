@@ -4,7 +4,7 @@ import game.entity.Blood;
 import game.entity.Entity;
 import game.entity.Gore;
 import game.entity.Player;
-import game.level.Level;
+import game.level.Map;
 import org.newdawn.slick.Input;
 
 public abstract class Enemy extends Entity
@@ -32,7 +32,7 @@ public abstract class Enemy extends Entity
 		
 		mXV *= 0.95f - (mOnGround ? 0.45 : 0) + (mOnIce ? 0.48 : 0) - (mInLiquid ? 0.3 : 0);
 		
-		final double gravity = Level.GRAVITY - (mInLiquid ? 0.1 : 0), friction = Level.FRICTION - (mInLiquid ? 0.1 : 0);
+		final double gravity = Map.GRAVITY - (mInLiquid ? 0.1 : 0), friction = Map.FRICTION - (mInLiquid ? 0.1 : 0);
 		
 		mYV *= friction;
 		mYV += gravity;

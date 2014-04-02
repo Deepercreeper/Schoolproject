@@ -1,6 +1,6 @@
 package game.entity;
 
-import game.level.Level;
+import game.level.Map;
 import game.level.block.Block;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
@@ -47,7 +47,7 @@ public class Heart extends Entity
 		
 		mXV *= 0.95f - (mOnGround ? 0.45 : 0) + (mOnIce ? 0.48 : 0) - (mInLiquid ? 0.3 : 0);
 		
-		final double gravity = Level.GRAVITY * 0.7 - (mInLiquid ? 0.1 : 0), friction = Level.FRICTION - (mInLiquid ? 0.1 : 0);
+		final double gravity = Map.GRAVITY * 0.7 - (mInLiquid ? 0.1 : 0), friction = Map.FRICTION - (mInLiquid ? 0.1 : 0);
 		
 		mYV *= friction;
 		mYV += gravity;
