@@ -1,6 +1,7 @@
 package editor;
 
 import game.level.block.Block;
+import game.level.block.Item;
 import game.level.block.Texture;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
@@ -97,7 +98,10 @@ public class EditorDataManager
 			for (int y = 0; y < aData[x].length; y++ )
 			{
 				final short id = aData[x][y];
-				final int rgb = Block.getCodeFromId(id);
+				final int rgb;
+				final Block block = Block.get(id);
+				if (block.isItemBlock()) rgb = Item.getItem(aAlphas[x][y]).getRGB();
+				else rgb = Block.getCodeFromId(id);
 				image.setRGB(x, y, rgb);
 				image.getAlphaRaster().setPixel(x, y, new int[] { aAlphas[x][y] });
 			}

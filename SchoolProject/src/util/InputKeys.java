@@ -68,5 +68,7 @@ public class InputKeys
 			keyAndValue = data[i].split("=");
 			mKeys.put(Key.valueOf(keyAndValue[0]), Integer.parseInt(keyAndValue[1]));
 		}
+		for (final Key key : Key.values())
+			if ( !mKeys.containsKey(key)) mKeys.put(key, key.getDefault());
 	}
 }

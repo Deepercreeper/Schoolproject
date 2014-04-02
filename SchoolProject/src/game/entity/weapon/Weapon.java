@@ -6,12 +6,15 @@ import game.level.Map;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
+import util.Direction;
 
 public abstract class Weapon extends Entity
 {
 	protected Entity	mParent;
 	
 	protected int		mTime	= 0;
+	
+	protected Direction	mDir	= Direction.NONE;
 	
 	public Weapon(final Entity aParent, final int aWidth, final int aHeight)
 	{
@@ -32,6 +35,10 @@ public abstract class Weapon extends Entity
 		{
 			mX = (int) (mParent.getX() + mParent.getWidth() / 2 - mWidth / 2) + getXOffset();
 			mY = (int) (mParent.getY() + mParent.getHeight() / 2 - mHeight / 2) + getYOffset();
+			
+			final int mouseX = aInput.getMouseX() + mLevel.getScreenX();
+			if (mouseX < mX) mDir = Direction.LEFT;
+			else if (mouseX > mX + mWidth) mDir = Direction.RIGHT;
 		}
 		else
 		{

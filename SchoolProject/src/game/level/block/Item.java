@@ -194,6 +194,8 @@ public abstract class Item
 		mAlpha = (short) aAlpha;
 		ITEMS.put(mRGB, this);
 		ALPHAS.put(mAlpha, this);
+		RGBManager.instance().addRGB(mRGB);
+		RGBManager.instance().addAlpha(mAlpha);
 	}
 	
 	public static Collection<Item> values()

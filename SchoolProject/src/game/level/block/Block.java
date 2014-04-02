@@ -111,6 +111,8 @@ public class Block
 			TEXTURES.put(mIds.get(texture), texture);
 		mRenderBlocks.add(this);
 		BLOCK_LIST.add(aId, this);
+		for (final int rgb : aRGBs)
+			RGBManager.instance().addRGB(rgb);
 	}
 	
 	private Block(final int aId, final int aRGB)
@@ -124,6 +126,7 @@ public class Block
 		TEXTURES.put(id, Texture.NORMAL);
 		mRenderBlocks.add(this);
 		BLOCK_LIST.add(aId, this);
+		RGBManager.instance().addRGB(aRGB);
 	}
 	
 	private Block()

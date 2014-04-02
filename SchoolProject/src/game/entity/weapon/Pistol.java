@@ -2,7 +2,11 @@ package game.entity.weapon;
 
 import game.entity.Bullet;
 import game.entity.Entity;
+import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
+import util.Direction;
+import data.DataManager;
 
 public class Pistol extends Weapon
 {
@@ -45,5 +49,13 @@ public class Pistol extends Weapon
 		final double a = Math.acos(Math.abs(xd) / Math.sqrt(xd * xd + yd * yd));
 		final double xv = Math.cos(a) * speed * Math.signum(xd), yv = Math.sin(a) * speed * Math.signum(yd);
 		mLevel.addEntity(new Bullet(startX, startY, xv, yv, 5, this));
+	}
+	
+	@Override
+	public void render(final Graphics aG)
+	{
+		Image image = DataManager.getSplitImage("weapon" + DataManager.getTexturePack(), 0);
+		if (mDir == Direction.LEFT) image = image.getFlippedCopy(true, false);
+		aG.drawImage(image, (int) (mX - mLevel.getScreenX()), (int) (mY - mLevel.getScreenY()), null);
 	}
 }
