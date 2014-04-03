@@ -3,7 +3,7 @@ package game.entity;
 import game.Stats;
 import game.entity.enemy.Enemy;
 import game.entity.weapon.Weapon;
-import game.level.Level;
+import game.level.Map;
 import game.level.block.Block;
 import java.util.ArrayList;
 import org.newdawn.slick.Color;
@@ -157,7 +157,7 @@ public class Player extends Entity
 		
 		mXV *= 0.95f - (mOnGround ? 0.45 : 0) + (mOnIce ? 0.48 : 0) - (mInLiquid ? 0.3 : 0);
 		
-		final double gravity = Level.GRAVITY - (mInLiquid ? 0.1 : 0), friction = Level.FRICTION - (mInLiquid ? 0.1 : 0);
+		final double gravity = Map.GRAVITY - (mInLiquid ? 0.1 : 0), friction = Map.FRICTION - (mInLiquid ? 0.1 : 0);
 		
 		if (mYV < 0 && aInput.isKeyDown(InputKeys.instance().getKey(Key.JUMP)))
 		{
