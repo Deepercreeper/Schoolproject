@@ -184,7 +184,7 @@ public class Player extends Entity
 		aWeapon.remove();
 	}
 	
-	public void addExp(int aAmount)
+	public void addExp(final int aAmount)
 	{
 		mExp += aAmount;
 		if (mExp >= mExpStep)
@@ -195,7 +195,7 @@ public class Player extends Entity
 		}
 	}
 	
-	public void spendExpPoints(int aAmount)
+	public void spendExpPoints(final int aAmount)
 	{
 		mExpPoints -= aAmount;
 	}
@@ -319,6 +319,8 @@ public class Player extends Entity
 	{
 		mDead = false;
 		mLife = mMaxLife + mLifeStep * mLifeSkill;
+		for (final Weapon weapon : mWeapons)
+			weapon.respawn();
 		mHurtDelay = 0;
 		mXV = mYV = 0;
 	}

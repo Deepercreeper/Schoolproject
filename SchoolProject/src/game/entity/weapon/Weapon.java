@@ -58,6 +58,14 @@ public abstract class Weapon extends Entity
 	}
 	
 	@Override
+	public void respawn()
+	{
+		mDead = false;
+		// TODO write
+		if (mParent != null) mLevel.addEntity(this);
+	}
+	
+	@Override
 	public final boolean isSolid()
 	{
 		return mParent == null;

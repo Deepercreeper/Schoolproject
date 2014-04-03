@@ -248,6 +248,11 @@ public class Map
 	 */
 	public void addEntity(final Entity aEntity)
 	{
+		if ( !aEntity.isParticle() && mEntities.containsKey(aEntity.getId()))
+		{
+			aEntity.init(this, aEntity.getId());
+			return;
+		}
 		aEntity.init(this, generateId());
 		mAddEntities.put(aEntity.getId(), aEntity);
 	}
@@ -262,6 +267,11 @@ public class Map
 	 */
 	public void addEntity(final Entity aEntity, final int aX, final int aY)
 	{
+		if ( !aEntity.isParticle() && mEntities.containsKey(aEntity.getId()))
+		{
+			aEntity.init(this, aEntity.getId());
+			return;
+		}
 		aEntity.init(this, generateId());
 		aEntity.setX(aX);
 		aEntity.setY(aY);

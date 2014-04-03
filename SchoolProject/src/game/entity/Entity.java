@@ -11,7 +11,7 @@ import util.Rectangle;
 
 public abstract class Entity
 {
-	private int									mId;
+	private int									mId					= -1;
 	private boolean								mRemoved;
 	private final HashMap<Integer, Direction>	mTouchingBlocks		= new HashMap<>();
 	private final HashSet<Integer>				mCollidedEntities	= new HashSet<>();
@@ -441,6 +441,7 @@ public abstract class Entity
 	{
 		mLevel = aLevel;
 		mId = aId;
+		mRemoved = false;
 	}
 	
 	/**
