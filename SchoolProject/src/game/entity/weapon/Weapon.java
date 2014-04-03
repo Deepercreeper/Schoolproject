@@ -33,12 +33,12 @@ public abstract class Weapon extends Entity
 		mTime++ ;
 		if (mParent != null)
 		{
-			mX = (int) (mParent.getX() + mParent.getWidth() / 2 - mWidth / 2) + getXOffset();
-			mY = (int) (mParent.getY() + mParent.getHeight() / 2 - mHeight / 2) + getYOffset();
-			
 			final int mouseX = aInput.getMouseX() + mLevel.getScreenX();
 			if (mouseX < mX) mDir = Direction.LEFT;
 			else if (mouseX > mX + mWidth) mDir = Direction.RIGHT;
+			
+			mX = (int) (mParent.getX() + mParent.getWidth() / 2 - mWidth / 2) + (mDir == Direction.LEFT ? -1 : 1) * getXOffset();
+			mY = (int) (mParent.getY() + mParent.getHeight() / 2 - mHeight / 2) + getYOffset();
 		}
 		else
 		{

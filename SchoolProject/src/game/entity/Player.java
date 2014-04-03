@@ -220,8 +220,8 @@ public class Player extends Entity
 			if (mRunning)
 			{
 				final int delay = 6 - (mFast ? 2 : 0);
-				id = mTime % (delay * 6) / delay;
-				if (Math.signum(mXV) != Math.signum(mDir.XD)) id = 5 - id;
+				id = mTime % (delay * 4) / delay;
+				if (Math.signum(mXV) != Math.signum(mDir.XD)) id = 4 - id;
 			}
 			else id = -4;
 			image = DataManager.getSplitImage("player" + DataManager.getTexturePack(), 5 + id).getScaledCopy(mWidth, mHeight);

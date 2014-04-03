@@ -96,7 +96,7 @@ public class Game
 		{
 			final int levelIndex = mLevel.getLevelId();
 			Save.instance().setScore(mLevel.getWorldId(), levelIndex, Stats.instance().getScore());
-			if (levelIndex < LevelManager.instance().getLevelsCount(mLevel.getWorldId()))
+			if (levelIndex < LevelManager.instance().getLevelsCount(mLevel.getWorldId()) - 1)
 			{
 				Save.instance().openLevel(mLevel.getWorldId(), levelIndex + 1);
 				mainMenu();
