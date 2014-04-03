@@ -29,6 +29,8 @@ public class Player extends Entity
 	
 	private int						mLife;
 	
+	private int						mExp, mExpPoints, mExpStep = 100;
+	
 	private int						mHurtDelay;
 	
 	private boolean					mCannon, mJumping, mRunning, mFast;
@@ -182,6 +184,27 @@ public class Player extends Entity
 		aWeapon.remove();
 	}
 	
+	public void addExp(int aAmount)
+	{
+		mExp += aAmount;
+		if (mExp >= mExpStep)
+		{
+			mExp = mExp - mExpStep;
+			mExpStep *= 1.5;
+			mExpPoints++ ;
+		}
+	}
+	
+	public void spendExpPoints(int aAmount)
+	{
+		mExpPoints -= aAmount;
+	}
+	
+	public int getExpPoints()
+	{
+		return mExpPoints;
+	}
+	
 	/**
 	 * Increases the speed slightly.
 	 */
@@ -243,11 +266,16 @@ public class Player extends Entity
 		aG.fillRect(10, mLevel.getScreenHeight() - 20, 100 * mLife / (mMaxLife + mLifeStep * mLifeSkill), 10);
 		aG.setColor(Color.white);
 		aG.drawString(mLife + "/" + (mMaxLife + mLifeStep * mLifeSkill), 120, mLevel.getScreenHeight() - 25);
+		aG.setColor(Color.black);
+		aG.fillRect(mLevel.getScreenWidth() / 2 - 200, mLevel.getScreenHeight() - 50, 400, 20);
+		aG.setColor(Color.blue);
+		aG.fillRect(mLevel.getScreenWidth() / 2 - 200 + 1, mLevel.getScreenHeight() - 49, mExp * 398 / mExpStep, 18);
 		
 		// Skills
 		aG.setColor(Color.white);
-		aG.drawString("Speed: " + mSpeedSkill, mLevel.getScreenWidth() - 200, 10);
-		aG.drawString("Life: " + mLifeSkill, mLevel.getScreenWidth() - 200, 25);
+		aG.drawString("Points: " + mExpPoints, mLevel.getScreenWidth() - 200, 10);
+		aG.drawString("Speed: " + mSpeedSkill, mLevel.getScreenWidth() - 200, 25);
+		aG.drawString("Life: " + mLifeSkill, mLevel.getScreenWidth() - 200, 30);
 	}
 	
 	@Override
@@ -256,6 +284,7 @@ public class Player extends Entity
 		if (aEntity instanceof Gore) ((Gore) aEntity).hit(this);
 		if (aEntity instanceof Banana) ((Banana) aEntity).collect();
 		if (aEntity instanceof Heart) ((Heart) aEntity).collect();
+		if (aEntity instanceof Experience) ((Experience) aEntity).collect();
 		if (aEntity instanceof Enemy)
 		{
 			if (mHurtDelay <= 0 && mY + mHeight < aEntity.getY() + 5)
