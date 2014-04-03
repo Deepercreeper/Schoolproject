@@ -2,6 +2,7 @@ package game.entity.enemy;
 
 import game.entity.Blood;
 import game.entity.Entity;
+import game.entity.Experience;
 import game.entity.Gore;
 import game.entity.Player;
 import game.level.Map;
@@ -87,6 +88,14 @@ public abstract class Enemy extends Entity
 		for (int i = (int) (Math.random() * 3 + (mLife <= 0 ? 10 : 0)); i > 0; i-- )
 			mLevel.addEntity(new Gore((int) (mX + mWidth / 2), (int) (mY + mHeight / 2)));
 		if (mLife <= 0) die();
+	}
+	
+	@Override
+	public void die()
+	{
+		mLevel.addEntity(new Experience((int) (mX + mWidth / 2), (int) (mY + mHeight / 2), (int) (Math.random() * 10 + 1)));
+		mDead = true;
+		remove();
 	}
 	
 	/**
