@@ -3,7 +3,7 @@ package game.entity;
 import game.Stats;
 import game.entity.enemy.Enemy;
 import game.entity.weapon.Weapon;
-import game.level.Level;
+import game.level.Map;
 import game.level.block.Block;
 import java.util.ArrayList;
 import org.newdawn.slick.Color;
@@ -28,6 +28,8 @@ public class Player extends Entity
 	private final ArrayList<Weapon>	mWeapons	= new ArrayList<>();
 	
 	private int						mLife;
+	
+	private int						mExp, mExpPoints, mExpStep = 100;
 	
 	private int						mHurtDelay;
 	
@@ -157,7 +159,7 @@ public class Player extends Entity
 		
 		mXV *= 0.95f - (mOnGround ? 0.45 : 0) + (mOnIce ? 0.48 : 0) - (mInLiquid ? 0.3 : 0);
 		
-		final double gravity = Level.GRAVITY - (mInLiquid ? 0.1 : 0), friction = Level.FRICTION - (mInLiquid ? 0.1 : 0);
+		final double gravity = Map.GRAVITY - (mInLiquid ? 0.1 : 0), friction = Map.FRICTION - (mInLiquid ? 0.1 : 0);
 		
 		if (mYV < 0 && aInput.isKeyDown(InputKeys.instance().getKey(Key.JUMP)))
 		{
@@ -180,6 +182,27 @@ public class Player extends Entity
 		if ( !mWeapons.contains(aWeapon)) mWeapons.add(aWeapon);
 		mWeapon = mWeapons.indexOf(aWeapon);
 		aWeapon.remove();
+	}
+	
+	public void addExp(int aAmount)
+	{
+		mExp += aAmount;
+		if (mExp >= mExpStep)
+		{
+			mExp = mExp - mExpStep;
+			mExpStep *= 1.5;
+			mExpPoints++ ;
+		}
+	}
+	
+	public void spendExpPoints(int aAmount)
+	{
+		mExpPoints -= aAmount;
+	}
+	
+	public int getExpPoints()
+	{
+		return mExpPoints;
 	}
 	
 	/**
@@ -220,8 +243,8 @@ public class Player extends Entity
 			if (mRunning)
 			{
 				final int delay = 6 - (mFast ? 2 : 0);
-				id = mTime % (delay * 6) / delay;
-				if (Math.signum(mXV) != Math.signum(mDir.XD)) id = 5 - id;
+				id = mTime % (delay * 4) / delay;
+				if (Math.signum(mXV) != Math.signum(mDir.XD)) id = 4 - id;
 			}
 			else id = -4;
 			image = DataManager.getSplitImage("player" + DataManager.getTexturePack(), 5 + id).getScaledCopy(mWidth, mHeight);
@@ -243,11 +266,16 @@ public class Player extends Entity
 		aG.fillRect(10, mLevel.getScreenHeight() - 20, 100 * mLife / (mMaxLife + mLifeStep * mLifeSkill), 10);
 		aG.setColor(Color.white);
 		aG.drawString(mLife + "/" + (mMaxLife + mLifeStep * mLifeSkill), 120, mLevel.getScreenHeight() - 25);
+		aG.setColor(Color.black);
+		aG.fillRect(mLevel.getScreenWidth() / 2 - 200, mLevel.getScreenHeight() - 50, 400, 20);
+		aG.setColor(Color.blue);
+		aG.fillRect(mLevel.getScreenWidth() / 2 - 200 + 1, mLevel.getScreenHeight() - 49, mExp * 398 / mExpStep, 18);
 		
 		// Skills
 		aG.setColor(Color.white);
-		aG.drawString("Speed: " + mSpeedSkill, mLevel.getScreenWidth() - 200, 10);
-		aG.drawString("Life: " + mLifeSkill, mLevel.getScreenWidth() - 200, 25);
+		aG.drawString("Points: " + mExpPoints, mLevel.getScreenWidth() - 200, 10);
+		aG.drawString("Speed: " + mSpeedSkill, mLevel.getScreenWidth() - 200, 25);
+		aG.drawString("Life: " + mLifeSkill, mLevel.getScreenWidth() - 200, 30);
 	}
 	
 	@Override
@@ -256,6 +284,7 @@ public class Player extends Entity
 		if (aEntity instanceof Gore) ((Gore) aEntity).hit(this);
 		if (aEntity instanceof Banana) ((Banana) aEntity).collect();
 		if (aEntity instanceof Heart) ((Heart) aEntity).collect();
+		if (aEntity instanceof Experience) ((Experience) aEntity).collect();
 		if (aEntity instanceof Enemy)
 		{
 			if (mHurtDelay <= 0 && mY + mHeight < aEntity.getY() + 5)
