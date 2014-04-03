@@ -37,7 +37,8 @@ public abstract class Weapon extends Entity
 			if (mouseX < mX) mDir = Direction.LEFT;
 			else if (mouseX > mX + mWidth) mDir = Direction.RIGHT;
 			
-			mX = (int) (mParent.getX() + mParent.getWidth() / 2 - mWidth / 2) + (mDir == Direction.LEFT ? -1 : 1) * getXOffset();
+			mX = (int) (mParent.getX() + mParent.getWidth() / 2 - (mDir == Direction.RIGHT ? mWidth / 2 : 0)) + (mDir == Direction.LEFT ? -1 : 1) * getXOffset()
+					- (mDir == Direction.LEFT ? mWidth : 0);
 			mY = (int) (mParent.getY() + mParent.getHeight() / 2 - mHeight / 2) + getYOffset();
 		}
 		else
