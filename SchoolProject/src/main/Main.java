@@ -2,15 +2,17 @@ package main;
 
 import org.newdawn.slick.SlickException;
 import view.View;
+import editor.Editor;
 
 public class Main
 {
 	public static void main(final String[] args)
 	{
-		// if (args.length > 0)
-		// {
-		// if (args[0].equals("Editor")) new Editor();
-		// else if (args[0].equals("Game"))
+		if (args.length > 0 && args[0].equals("Editor"))
+		{
+			new Editor();
+			return;
+		}
 		try
 		{
 			new View();
@@ -19,6 +21,5 @@ public class Main
 		{
 			e.printStackTrace();
 		}
-		// }
 	}
 }
