@@ -63,10 +63,10 @@ public class Player extends Entity
 		mExpStep = Integer.parseInt(data[4]);
 		if ( !aWeaponData.equals("Weapons:"))
 		{
-			String[] weaponData = aWeaponData.split(":")[1].split(",");
-			for (String name : weaponData)
+			final String[] weaponData = aWeaponData.split(":")[1].split(",");
+			for (final String name : weaponData)
 			{
-				Weapon weapon = Weapon.getWeapon(this, name);
+				final Weapon weapon = Weapon.getWeapon(this, name);
 				addWeapon(weapon);
 			}
 		}
@@ -193,7 +193,7 @@ public class Player extends Entity
 	public void init(final Map aLevel, final int aId)
 	{
 		super.init(aLevel, aId);
-		for (Weapon weapon : mWeapons)
+		for (final Weapon weapon : mWeapons)
 			mLevel.addEntity(weapon);
 	}
 	
@@ -273,9 +273,10 @@ public class Player extends Entity
 			int id = 0;
 			if (mRunning)
 			{
-				final int delay = 6 - (mFast ? 2 : 0);
-				id = mTime % (delay * 4) / delay;
-				if (Math.signum(mXV) != Math.signum(mDir.XD)) id = 4 - id;
+				final int frames = 6;
+				final int delay = frames - (mFast ? 2 : 0);
+				id = mTime % (delay * 6) / delay;
+				if (Math.signum(mXV) != Math.signum(mDir.XD)) id = frames - id - 1;
 			}
 			else id = -4;
 			image = DataManager.getSplitImage("player" + DataManager.getTexturePack(), 5 + id).getScaledCopy(mWidth, mHeight);
@@ -369,7 +370,7 @@ public class Player extends Entity
 		final StringBuilder data = new StringBuilder();
 		data.append(mLifeSkill).append("," + mSpeedSkill).append("," + mExp).append("," + mExpPoints).append("," + mExpStep);
 		data.append("\nWeapons:");
-		for (Weapon weapon : mWeapons)
+		for (final Weapon weapon : mWeapons)
 			data.append(weapon.getName());
 		return data.toString();
 	}

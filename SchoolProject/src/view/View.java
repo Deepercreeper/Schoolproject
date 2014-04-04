@@ -2,11 +2,14 @@ package view;
 
 import game.Game;
 import java.awt.Toolkit;
+import java.io.IOException;
+import org.lwjgl.LWJGLException;
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.BasicGame;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.opengl.CursorLoader;
 
 public class View extends BasicGame
 {
@@ -50,6 +53,14 @@ public class View extends BasicGame
 	@Override
 	public void init(final GameContainer aGC) throws SlickException
 	{
+		try
+		{
+			mGameContainer.setMouseCursor(CursorLoader.get().getCursor("data/images/Cursor.png", 16, 16), 16, 16);
+		}
+		catch (IOException | LWJGLException e)
+		{
+			e.printStackTrace();
+		}
 		mGame.init(aGC);
 	}
 }
