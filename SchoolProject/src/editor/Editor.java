@@ -19,6 +19,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.Arrays;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -356,6 +357,7 @@ public class Editor extends JFrame
 	{
 		final ArrayList<String> levels = EditorDataManager.getLevels();
 		final String[] levelArray = levels.toArray(new String[levels.size()]);
+		Arrays.sort(levelArray);
 		final String level = (String) JOptionPane.showInputDialog(this, "Level öffnen:", "Öffnen...", JOptionPane.PLAIN_MESSAGE, null, levelArray, levels.get(0));
 		if (level == null) return null;
 		final int[] worldAndLevel = new int[2];
