@@ -437,7 +437,7 @@ public abstract class Entity
 	 * @param aId
 	 *            The created id.
 	 */
-	public final void init(final Map aLevel, final int aId)
+	public void init(final Map aLevel, final int aId)
 	{
 		mLevel = aLevel;
 		mId = aId;
@@ -477,7 +477,7 @@ public abstract class Entity
 	}
 	
 	@Override
-	public final boolean equals(final Object aO)
+	public boolean equals(final Object aO)
 	{
 		if (aO instanceof Entity)
 		{

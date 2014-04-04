@@ -2,23 +2,28 @@ package game.entity;
 
 import game.level.Map;
 import game.level.block.Block;
+import org.newdawn.slick.Color;
+import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
 
 public class Experience extends Entity
 {
-	private int	mSize, mLife;
+	private int			mSize, mLife;
 	
-	public Experience(int aX, int aY, int aSize)
+	private final Color	mColor;
+	
+	public Experience(final int aX, final int aY, final int aSize)
 	{
-		super(aX, aY, 2 + aSize / 4, 2 + aSize / 4);
+		super(aX, aY, 2 + aSize, 2 + aSize);
 		mXV += (int) (Math.random() * 5 - Math.random() * 5);
 		mYV -= (int) (Math.random() * 5);
 		mSize = aSize;
 		mLife = (int) (Math.random() * aSize * 100) + 200;
+		mColor = new Color(0f, (float) (Math.random() * 0.5f + 0.25f), (float) (Math.random() * 0.5f + 0.5f));
 	}
 	
 	@Override
-	public void update(Input aInput)
+	public void update(final Input aInput)
 	{
 		if (--mLife < 0)
 		{
@@ -44,6 +49,13 @@ public class Experience extends Entity
 		
 		// Reset attributes
 		mInLiquid = false;
+	}
+	
+	@Override
+	public void render(final Graphics aG)
+	{
+		aG.setColor(mColor);
+		aG.fillOval((int) (mX - mLevel.getScreenX()), (int) (mY - mLevel.getScreenY()), mWidth, mHeight);
 	}
 	
 	public void collect()

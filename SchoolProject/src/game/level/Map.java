@@ -62,13 +62,13 @@ public class Map
 		mLevelId = (byte) aLevelId;
 		mScreen = new Screen(aGC.getWidth(), aGC.getHeight());
 		mScreen.init(this);
-		mPlayer = aPlayer;
-		mPlayer.respawn();
 		reload();
 		mWidth = mBlocks.length;
 		if (mWidth > 0) mHeight = mBlocks[0].length;
 		else mHeight = 0;
+		mPlayer = aPlayer;
 		addPlayer(mPlayer);
+		mPlayer.respawn();
 		DataManager.playMusic("world" + (mWorldId % 6));
 	}
 	

@@ -38,8 +38,8 @@ public class Bullet extends Entity
 	public void hitEntity(final double aXV, final double aYV, final Entity aEntity)
 	{
 		if (aEntity == mSource) return;
-		if (aEntity instanceof Banana) ((Banana) aEntity).collect();
-		if (mSource instanceof Player && aEntity instanceof Heart) ((Heart) aEntity).collect();
+		// if (aEntity instanceof Banana) ((Banana) aEntity).collect();
+		// if (mSource instanceof Player && aEntity instanceof Heart) ((Heart) aEntity).collect();
 		if (aEntity instanceof Enemy)
 		{
 			((Enemy) aEntity).hurt(1, Math.signum(mXV) * 2, -2);

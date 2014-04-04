@@ -19,6 +19,7 @@ public abstract class Weapon extends Entity
 	public Weapon(final Entity aParent, final int aWidth, final int aHeight)
 	{
 		super((int) (aParent.getX() + aParent.getWidth() / 2 - aWidth / 2), (int) (aParent.getY() + aParent.getHeight() / 2 - aHeight / 2), aWidth, aHeight);
+		mParent = null;
 	}
 	
 	public Weapon(final int aX, final int aY, final int aWidth, final int aHeight)
@@ -55,20 +56,43 @@ public abstract class Weapon extends Entity
 			mYV *= friction;
 			mYV += gravity;
 		}
+		tick();
 	}
+	
+	public static Weapon getWeapon(final Player aPlayer, final String aName)
+	{
+		switch (aName)
+		{
+			case "Pistol" :
+				return new Pistol(aPlayer);
+			default :
+				return null;
+		}
+	}
+	
+	protected abstract void tick();
 	
 	@Override
 	public void respawn()
 	{
 		mDead = false;
-		// TODO write
-		if (mParent != null) mLevel.addEntity(this);
 	}
 	
 	@Override
 	public final boolean isSolid()
 	{
-		return mParent == null;
+		return false;
+	}
+	
+	@Override
+	public boolean equals(final Object aO)
+	{
+		if (aO instanceof Weapon)
+		{
+			final Weapon e = (Weapon) aO;
+			return e.mLevel == mLevel && e.getName().equals(getName());
+		}
+		return false;
 	}
 	
 	@Override
@@ -93,6 +117,8 @@ public abstract class Weapon extends Entity
 	protected abstract int getXOffset();
 	
 	protected abstract int getYOffset();
+	
+	public abstract String getName();
 	
 	@Override
 	public void render(final Graphics aG)

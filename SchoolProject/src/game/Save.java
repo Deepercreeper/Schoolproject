@@ -312,13 +312,13 @@ public class Save
 		mVolume = Integer.parseInt(aData[1]);
 		mLastWorldId = Integer.parseInt(aData[2]);
 		mLastLevelId = Integer.parseInt(aData[3]);
-		mPlayer = new Player(aData[4]);
-		InputKeys.loadInstance(aData[5]);
-		mTexturePack = aData[6];
+		mPlayer = new Player(aData[4], aData[5]);
+		InputKeys.loadInstance(aData[6]);
+		mTexturePack = aData[7];
 		
 		String[] levelAndScore, worldAndLevel;
 		int world, level, score;
-		for (int i = 7; i < aData.length; i++ )
+		for (int i = 8; i < aData.length; i++ )
 		{
 			levelAndScore = aData[i].split("=");
 			worldAndLevel = levelAndScore[0].split(":");
