@@ -30,7 +30,7 @@ public class Bullet extends Entity
 	@Override
 	public void render(final Graphics aG)
 	{
-		aG.setColor(Color.white);
+		aG.setColor(Color.darkGray);
 		aG.drawLine((float) (mX - mLevel.getScreenX()), (float) (mY - mLevel.getScreenY()), (float) (mX - mXV - mLevel.getScreenX()), (float) (mY - mYV - mLevel.getScreenY()));
 	}
 	
