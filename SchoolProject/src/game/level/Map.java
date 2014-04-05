@@ -3,6 +3,7 @@ package game.level;
 import game.Stats;
 import game.entity.Entity;
 import game.entity.Player;
+import game.entity.weapon.Weapon;
 import game.level.block.Block;
 import game.level.block.Item;
 import java.util.HashMap;
@@ -62,13 +63,13 @@ public class Map
 		mLevelId = (byte) aLevelId;
 		mScreen = new Screen(aGC.getWidth(), aGC.getHeight());
 		mScreen.init(this);
+		mPlayer = aPlayer;
 		reload();
+		addPlayer(mPlayer);
+		mPlayer.respawn();
 		mWidth = mBlocks.length;
 		if (mWidth > 0) mHeight = mBlocks[0].length;
 		else mHeight = 0;
-		mPlayer = aPlayer;
-		addPlayer(mPlayer);
-		mPlayer.respawn();
 		DataManager.playMusic("world" + (mWorldId % 6));
 	}
 	
@@ -465,7 +466,11 @@ public class Map
 					if (block.isItemBlock())
 					{
 						mBlocks[x][y] = Block.AIR.getId();
-						addEntity(Item.getEntity(x * Block.SIZE, y * Block.SIZE, rgb));
+						final Entity entity = Item.getEntity(x * Block.SIZE, y * Block.SIZE, rgb);
+						
+						boolean add = true;
+						if (entity instanceof Weapon && mPlayer != null && mPlayer.hasWeapon((Weapon) entity)) add = false;
+						if (add) addEntity(entity);
 					}
 					else if (block == Block.START)
 					{

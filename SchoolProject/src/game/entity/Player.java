@@ -65,10 +65,7 @@ public class Player extends Entity
 		{
 			final String[] weaponData = aWeaponData.split(":")[1].split(",");
 			for (final String name : weaponData)
-			{
-				final Weapon weapon = Weapon.getWeapon(this, name);
-				addWeapon(weapon);
-			}
+				addWeapon(Weapon.getWeapon(this, name));
 		}
 		mLife = mMaxLife + mLifeStep * mLifeSkill;
 	}
@@ -89,7 +86,7 @@ public class Player extends Entity
 			if ( !mWeapons.isEmpty() && aInput.isMousePressed(Input.MOUSE_LEFT_BUTTON)) mWeapons.get(mWeapon).shoot(aInput);
 		}
 		
-		// TODO Temporary
+		// Skills
 		{
 			if (aInput.isKeyPressed(Input.KEY_F) && mExpPoints > 0) if (skillLife()) spendExpPoints(1);
 			if (aInput.isKeyPressed(Input.KEY_G) && mExpPoints > 0) if (skillSpeed()) spendExpPoints(1);
@@ -189,20 +186,18 @@ public class Player extends Entity
 		mInLiquid = false;
 	}
 	
-	@Override
-	public void init(final Map aLevel, final int aId)
-	{
-		super.init(aLevel, aId);
-		for (final Weapon weapon : mWeapons)
-			mLevel.addEntity(weapon);
-	}
-	
 	public void addWeapon(final Weapon aWeapon)
 	{
 		if (mWeapons.contains(aWeapon)) mWeapons.remove(aWeapon);
 		mWeapons.add(aWeapon);
 		mWeapon = mWeapons.indexOf(aWeapon);
 		aWeapon.remove();
+		aWeapon.collect(this);
+	}
+	
+	public boolean hasWeapon(final Weapon aWeapon)
+	{
+		return mWeapons.contains(aWeapon);
 	}
 	
 	public void addExp(final int aAmount)
@@ -270,16 +265,15 @@ public class Player extends Entity
 		if (mDir == Direction.NONE) image = DataManager.getSplitImage("player" + DataManager.getTexturePack(), 0).getScaledCopy(mWidth, mHeight);
 		else
 		{
-			int id = 0;
+			int id = 1;
 			if (mRunning)
 			{
-				final int frames = 6;
-				final int delay = frames - (mFast ? 2 : 0);
-				id = mTime % (delay * 6) / delay;
-				if (Math.signum(mXV) != Math.signum(mDir.XD)) id = frames - id - 1;
+				// id has to be between 2 and 6
+				final int delay = 6 - (mFast ? 2 : 0);
+				id = mTime % (delay * 5) / delay + 2;
+				if (Math.signum(mXV) != Math.signum(mDir.XD)) id = 8 - id;
 			}
-			else id = -4;
-			image = DataManager.getSplitImage("player" + DataManager.getTexturePack(), 5 + id).getScaledCopy(mWidth, mHeight);
+			image = DataManager.getSplitImage("player" + DataManager.getTexturePack(), id).getScaledCopy(mWidth, mHeight);
 			if (mDir == Direction.LEFT) image = image.getFlippedCopy(true, false);
 		}
 		if (mHurtDelay > 0 && mTime % 10 < 5) aG.drawImage(image, (float) mX - mLevel.getScreenX(), (float) mY - mLevel.getScreenY(), new Color(1, 1, 1, 0.5f));
@@ -292,16 +286,29 @@ public class Player extends Entity
 		}
 		
 		// HUD
-		aG.setColor(Color.red);
-		aG.fillRect(10, mLevel.getScreenHeight() - 20, 100, 10);
-		aG.setColor(Color.green);
-		aG.fillRect(10, mLevel.getScreenHeight() - 20, 100 * mLife / (mMaxLife + mLifeStep * mLifeSkill), 10);
-		aG.setColor(Color.white);
-		aG.drawString(mLife + "/" + (mMaxLife + mLifeStep * mLifeSkill), 120, mLevel.getScreenHeight() - 25);
-		aG.setColor(Color.black);
-		aG.fillRect(mLevel.getScreenWidth() / 2 - 200, mLevel.getScreenHeight() - 30, 400, 10);
-		aG.setColor(Color.blue);
-		aG.fillRect(mLevel.getScreenWidth() / 2 - 200 + 1, mLevel.getScreenHeight() - 29, mExp * 398 / mExpStep, 8);
+		{
+			// Life
+			aG.setColor(Color.red);
+			aG.fillRect(10, mLevel.getScreenHeight() - 20, 100, 10);
+			aG.setColor(Color.green);
+			aG.fillRect(10, mLevel.getScreenHeight() - 20, 100 * mLife / (mMaxLife + mLifeStep * mLifeSkill), 10);
+			aG.setColor(Color.white);
+			aG.drawString(mLife + "/" + (mMaxLife + mLifeStep * mLifeSkill), 120, mLevel.getScreenHeight() - 25);
+			
+			// Exp
+			aG.setColor(Color.black);
+			aG.fillRect(mLevel.getScreenWidth() / 2 - 200, mLevel.getScreenHeight() - 20, 400, 10);
+			aG.setColor(Color.blue);
+			aG.fillRect(mLevel.getScreenWidth() / 2 - 200 + 1, mLevel.getScreenHeight() - 19, mExp * 398 / mExpStep, 8);
+			
+			// Weapon
+			if ( !mWeapons.isEmpty())
+			{
+				aG.setColor(Color.white);
+				aG.drawString("Weapon:    " + mWeapons.get(mWeapon).getName(), mLevel.getScreenWidth() - 300, mLevel.getScreenHeight() - 25);
+				mWeapons.get(mWeapon).renderIcon(aG, mLevel.getScreenWidth() - 228, mLevel.getScreenHeight() - 25);
+			}
+		}
 		
 		// Skills
 		aG.setColor(Color.white);

@@ -1,6 +1,7 @@
 package game.level.block;
 
 import game.entity.Entity;
+import game.entity.weapon.Weapon;
 import game.level.Map;
 import java.util.HashMap;
 import util.Direction;
@@ -98,7 +99,12 @@ abstract class HitAction
 					y -= dir.YD * (Block.SIZE / 2 + height / 2);
 					
 					final Entity entity = item.create(x - width / 2, y - height / 2);
-					if ( !Block.get(aLevel.getBlock(aX - dir.XD, aY - dir.YD)).isSolid(aX - dir.XD, aY - dir.YD, entity)) aLevel.addEntity(entity);
+					if ( !Block.get(aLevel.getBlock(aX - dir.XD, aY - dir.YD)).isSolid(aX - dir.XD, aY - dir.YD, entity))
+					{
+						boolean add = true;
+						if (entity instanceof Weapon && aLevel.getPlayer().hasWeapon((Weapon) entity)) add = false;
+						if (add) aLevel.addEntity(entity);
+					}
 					DataManager.playSound("item");
 				}
 				else DataManager.playSound("destroyBlock");

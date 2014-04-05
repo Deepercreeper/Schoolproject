@@ -14,18 +14,18 @@ public class Pistol extends Weapon
 	
 	public Pistol(final Entity aParent)
 	{
-		super(aParent, 10, 4);
+		super(aParent, 20, 10);
 	}
 	
 	public Pistol(final int aX, final int aY)
 	{
-		super(aX, aY, 10, 4);
+		super(aX, aY, 20, 10);
 	}
 	
 	@Override
 	protected int getXOffset()
 	{
-		return 3;
+		return 5;
 	}
 	
 	@Override
@@ -74,5 +74,12 @@ public class Pistol extends Weapon
 		Image image = DataManager.getSplitImage("weapon" + DataManager.getTexturePack(), 0);
 		if (mDir == Direction.LEFT) image = image.getFlippedCopy(true, false);
 		aG.drawImage(image, (int) (mX - mLevel.getScreenX()), (int) (mY - mLevel.getScreenY()), null);
+	}
+	
+	@Override
+	public void renderIcon(final Graphics aG, final int aX, final int aY)
+	{
+		final Image image = DataManager.getSplitImage("weapon" + DataManager.getTexturePack(), 0);
+		aG.drawImage(image, aX, aY, null);
 	}
 }

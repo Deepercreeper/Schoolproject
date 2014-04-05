@@ -38,8 +38,10 @@ public abstract class Weapon extends Entity
 			if (mouseX < mX) mDir = Direction.LEFT;
 			else if (mouseX > mX + mWidth) mDir = Direction.RIGHT;
 			
-			mX = (int) (mParent.getX() + mParent.getWidth() / 2 - (mDir == Direction.RIGHT ? mWidth / 2 : 0)) + (mDir == Direction.LEFT ? -1 : 1) * getXOffset()
-					- (mDir == Direction.LEFT ? mWidth : 0);
+			int xPos = (int) (mParent.getX() + mParent.getWidth() / 2 - mWidth / 2);
+			if (mDir == Direction.LEFT) xPos -= getXOffset();
+			else xPos += getXOffset();
+			mX = xPos;
 			mY = (int) (mParent.getY() + mParent.getHeight() / 2 - mHeight / 2) + getYOffset();
 		}
 		else
@@ -90,7 +92,7 @@ public abstract class Weapon extends Entity
 		if (aO instanceof Weapon)
 		{
 			final Weapon e = (Weapon) aO;
-			return e.mLevel == mLevel && e.getName().equals(getName());
+			return e.getName().equals(getName());
 		}
 		return false;
 	}
@@ -101,6 +103,11 @@ public abstract class Weapon extends Entity
 		return mParent != null;
 	}
 	
+	public void collect(final Player aPlayer)
+	{
+		mParent = aPlayer;
+	}
+	
 	@Override
 	public final void hitEntity(final double aXV, final double aYV, final Entity aEntity)
 	{
@@ -108,7 +115,6 @@ public abstract class Weapon extends Entity
 		{
 			final Player p = (Player) aEntity;
 			p.addWeapon(this);
-			mParent = p;
 		}
 	}
 	
@@ -117,6 +123,8 @@ public abstract class Weapon extends Entity
 	protected abstract int getXOffset();
 	
 	protected abstract int getYOffset();
+	
+	public abstract void renderIcon(Graphics aG, int aX, int aY);
 	
 	public abstract String getName();
 	

@@ -172,13 +172,13 @@ public abstract class Item
 																	@Override
 																	public int getHeight()
 																	{
-																		return 4;
+																		return 10;
 																	}
 																	
 																	@Override
 																	public int getWidth()
 																	{
-																		return 10;
+																		return 20;
 																	}
 																};
 	
