@@ -393,36 +393,6 @@ public class DataManager
 		return null;
 	}
 	
-	// private static void loadLevels()
-	// {
-	// final File levels = new File("data/images/worldData/#Levels#.txt");
-	// final StringBuilder data = new StringBuilder();
-	// if (levels.exists()) try
-	// {
-	// final BufferedReader reader = new BufferedReader(new FileReader(levels));
-	// int c;
-	// while ((c = reader.read()) != -1)
-	// data.append((char) c);
-	// reader.close();
-	// }
-	// catch (final IOException e)
-	// {
-	// e.printStackTrace();
-	// }
-	// final ArrayList<String> levelNames = new ArrayList<>();
-	// if ( !data.toString().isEmpty()) for (final String level : data.toString().split("\n"))
-	// levelNames.add(level.replace("\r", "").replace("\n", ""));
-	// final String[] levelNamesArray = levelNames.toArray(new String[levelNames.size()]);
-	// Arrays.sort(levelNamesArray);
-	// final int lastLevel = Integer.parseInt(levelNamesArray[levelNamesArray.length - 1].split("-")[0]);
-	// sLevelsPerWorld = new int[lastLevel + 1];
-	// for (final String level : levelNamesArray)
-	// sLevelsPerWorld[Integer.parseInt(level.split("-")[0])]++ ;
-	// // TODO more beautiful...
-	// // for (final int levelNumber : sLevelsPerWorld)
-	// // System.out.println(levelNumber);
-	// }
-	
 	private static Sound loadSound(final String aName)
 	{
 		try
