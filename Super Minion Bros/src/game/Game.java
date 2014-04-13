@@ -31,7 +31,7 @@ public class Game
 	 */
 	public void render(final Graphics aG)
 	{
-		if ( !DataManager.isInitiated() || DataManager.isLoading()) aG.drawImage(DataManager.getImage("splash").getScaledCopy(mGC.getWidth(), mGC.getHeight()), 0, 0);
+		if ( !DataManager.instance().isInitiated() || DataManager.instance().isLoading()) aG.drawImage(DataManager.instance().getImage("splash").getScaledCopy(mGC.getWidth(), mGC.getHeight()), 0, 0);
 		else
 		{
 			if (mMain) mMainMenu.render(aG);
@@ -52,7 +52,7 @@ public class Game
 			// Render volume
 			if (mShowingVolume > 0)
 			{
-				final float volume = DataManager.getVolume();
+				final float volume = DataManager.instance().getVolume();
 				aG.setColor(Color.white);
 				aG.drawString("Volume", mGC.getWidth() / 2 - 25, mGC.getHeight() - 100);
 				aG.setColor(Color.darkGray);
@@ -71,9 +71,9 @@ public class Game
 	 */
 	public void update(final int aDelta)
 	{
-		if ( !DataManager.isInitiated())
+		if ( !DataManager.instance().isInitiated())
 		{
-			DataManager.init();
+			DataManager.instance().init();
 			mainMenu();
 		}
 		
@@ -124,7 +124,7 @@ public class Game
 			showVolume();
 		}
 		
-		if ( !DataManager.wasloading()) Stats.instance().tick(aDelta);
+		if ( !DataManager.instance().wasloading()) Stats.instance().tick(aDelta);
 		
 		// Updating level
 		mLevel.update(mInput);
@@ -158,7 +158,7 @@ public class Game
 	{
 		mPause = false;
 		mMain = true;
-		DataManager.playMusic("menu");
+		DataManager.instance().playMusic("menu");
 		mLevel = null;
 		mInput.clearKeyPressedRecord();
 	}

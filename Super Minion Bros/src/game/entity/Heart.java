@@ -60,8 +60,8 @@ public class Heart extends Entity
 	@Override
 	public void render(final Graphics aG)
 	{
-		if (mLife > 40 || mLife % 8 < 4) aG.drawImage(DataManager.getSplitImage("entity" + DataManager.getTexturePack(), 3).getScaledCopy(mWidth, mHeight), (float) (mX - mLevel.getScreenX()),
-				(float) (mY - mLevel.getScreenY()));
+		if (mLife > 40 || mLife % 8 < 4) aG.drawImage(DataManager.instance().getSplitImage("entity" + DataManager.instance().getTexturePack(), 3).getScaledCopy(mWidth, mHeight),
+				(float) (mX - mLevel.getScreenX()), (float) (mY - mLevel.getScreenY()));
 	}
 	
 	/**
@@ -71,7 +71,7 @@ public class Heart extends Entity
 	{
 		if (isRemoved()) return;
 		mLevel.getPlayer().addLife(mSize);
-		DataManager.playSound("heart");
+		DataManager.instance().playSound("heart");
 		remove();
 	}
 	

@@ -59,7 +59,7 @@ public class Editor extends JFrame
 	
 	public Editor()
 	{
-		EditorDataManager.init();
+		EditorDataManager.instance().init();
 		try
 		{
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -232,7 +232,7 @@ public class Editor extends JFrame
 		mWorld = worldAndLevel[0];
 		mLevel = worldAndLevel[1];
 		
-		final BufferedImage data = EditorDataManager.getMapImage(mWorld, mLevel);
+		final BufferedImage data = EditorDataManager.instance().getMapImage(mWorld, mLevel);
 		mWidth = data.getWidth();
 		mHeight = data.getHeight();
 		
@@ -293,7 +293,7 @@ public class Editor extends JFrame
 		else if (result == JOptionPane.NO_OPTION) return true;
 		
 		if ( !showSaveDialog()) return false;
-		EditorDataManager.saveMapImage(mMap, mAlphas, mWorld, mLevel);
+		EditorDataManager.instance().saveMapImage(mMap, mAlphas, mWorld, mLevel);
 		setTitle("Level:" + mWorld + "-" + mLevel);
 		mSaved = true;
 		return true;
@@ -355,7 +355,7 @@ public class Editor extends JFrame
 	
 	private int[] showOpenDialog()
 	{
-		final ArrayList<String> levels = EditorDataManager.getLevels();
+		final ArrayList<String> levels = EditorDataManager.instance().getLevels();
 		final String[] levelArray = levels.toArray(new String[levels.size()]);
 		Arrays.sort(levelArray);
 		final String level = (String) JOptionPane.showInputDialog(this, "Level öffnen:", "Öffnen...", JOptionPane.PLAIN_MESSAGE, null, levelArray, levels.get(0));
@@ -397,7 +397,7 @@ public class Editor extends JFrame
 			{}
 		}
 		while ( !done);
-		if (EditorDataManager.getLevels().contains(world + "-" + level)
+		if (EditorDataManager.instance().getLevels().contains(world + "-" + level)
 				&& JOptionPane.showConfirmDialog(this, "Bereits vorhanden. Überschreiben?", "Überschreiben", JOptionPane.YES_NO_OPTION) != JOptionPane.YES_OPTION) return false;
 		mWorld = world;
 		mLevel = level;
@@ -687,14 +687,14 @@ public class Editor extends JFrame
 			menu.add(mTools);
 			
 			final JComboBox<String> texturePacks = new JComboBox<>();
-			for (final String texturePack : EditorDataManager.getTexturePacks())
+			for (final String texturePack : EditorDataManager.instance().getTexturePacks())
 				texturePacks.addItem(texturePack);
 			texturePacks.addActionListener(new ActionListener()
 			{
 				@Override
 				public void actionPerformed(final ActionEvent aE)
 				{
-					EditorDataManager.setTexturePack(texturePacks.getItemAt(texturePacks.getSelectedIndex()));
+					EditorDataManager.instance().setTexturePack(texturePacks.getItemAt(texturePacks.getSelectedIndex()));
 					mToolBox.repaint();
 				}
 			});

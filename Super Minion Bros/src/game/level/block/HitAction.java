@@ -105,9 +105,9 @@ abstract class HitAction
 						if (entity instanceof Weapon && aLevel.getPlayer().hasWeapon((Weapon) entity)) add = false;
 						if (add) aLevel.addEntity(entity);
 					}
-					DataManager.playSound("item");
+					DataManager.instance().playSound("item");
 				}
-				else DataManager.playSound("destroyBlock");
+				else DataManager.instance().playSound("destroyBlock");
 			}
 	}
 	

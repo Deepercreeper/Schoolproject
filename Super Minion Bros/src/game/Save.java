@@ -56,16 +56,16 @@ public class Save
 		mName = aName;
 		mPlayer = new Player();
 		mVolume = 10;
-		mTexturePack = DataManager.getTexturePack();
+		mTexturePack = DataManager.instance().getTexturePack();
 		openWorld(0);
 	}
 	
 	private Save(final String[] aData)
 	{
 		mName = readData(aData);
-		while ( !mTexturePack.equals(DataManager.getTexturePack()))
-			DataManager.nextTexturePack();
-		DataManager.setVolume(mVolume / 10f);
+		while ( !mTexturePack.equals(DataManager.instance().getTexturePack()))
+			DataManager.instance().nextTexturePack();
+		DataManager.instance().setVolume(mVolume / 10f);
 	}
 	
 	/**
@@ -73,8 +73,8 @@ public class Save
 	 */
 	public void nextTexturePack()
 	{
-		DataManager.nextTexturePack();
-		mTexturePack = DataManager.getTexturePack();
+		DataManager.instance().nextTexturePack();
+		mTexturePack = DataManager.instance().getTexturePack();
 	}
 	
 	/**
@@ -82,8 +82,8 @@ public class Save
 	 */
 	public void previousTexturePack()
 	{
-		DataManager.previousTexturePack();
-		mTexturePack = DataManager.getTexturePack();
+		DataManager.instance().previousTexturePack();
+		mTexturePack = DataManager.instance().getTexturePack();
 	}
 	
 	/**
@@ -92,7 +92,7 @@ public class Save
 	public void volumeUp()
 	{
 		if (mVolume < 10) mVolume += 1;
-		DataManager.setVolume((float) mVolume / 10);
+		DataManager.instance().setVolume((float) mVolume / 10);
 	}
 	
 	/**
@@ -101,7 +101,7 @@ public class Save
 	public void volumeDown()
 	{
 		if (mVolume > 0) mVolume -= 1;
-		DataManager.setVolume((float) mVolume / 10);
+		DataManager.instance().setVolume((float) mVolume / 10);
 	}
 	
 	/**

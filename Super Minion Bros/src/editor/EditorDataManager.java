@@ -17,10 +17,10 @@ import org.newdawn.slick.util.Log;
 
 public class EditorDataManager
 {
+	private static EditorDataManager										INSTANCE;
+	
 	private static final HashMap<String, HashMap<Texture, BufferedImage[]>>	SPLIT_IMAGES	= new HashMap<>();
-	
 	private static final HashMap<String, BufferedImage>						IMAGES			= new HashMap<>();
-	
 	private static final String[]											TEXTUREPACKS	= new String[] { "Mario", "Minecraft" };
 	
 	private static ArrayList<String>										mLevels			= new ArrayList<>();
@@ -30,7 +30,13 @@ public class EditorDataManager
 	private EditorDataManager()
 	{}
 	
-	public static void init()
+	public static EditorDataManager instance()
+	{
+		if (INSTANCE == null) INSTANCE = new EditorDataManager();
+		return INSTANCE;
+	}
+	
+	public void init()
 	{
 		try
 		{
@@ -56,7 +62,7 @@ public class EditorDataManager
 		loadLevels();
 	}
 	
-	private static void loadLevels()
+	private void loadLevels()
 	{
 		final File levels = new File("data/images/worldData/#Levels#.txt");
 		final StringBuilder data = new StringBuilder();
@@ -76,22 +82,22 @@ public class EditorDataManager
 			mLevels.add(level);
 	}
 	
-	public static ArrayList<String> getLevels()
+	public ArrayList<String> getLevels()
 	{
 		return mLevels;
 	}
 	
-	public static void setTexturePack(final String aTexturePack)
+	public void setTexturePack(final String aTexturePack)
 	{
 		sTexturePack = aTexturePack;
 	}
 	
-	public static String[] getTexturePacks()
+	public String[] getTexturePacks()
 	{
 		return TEXTUREPACKS;
 	}
 	
-	public static void saveMapImage(final short[][] aData, final short[][] aAlphas, final int aWorld, final int aLevel)
+	public void saveMapImage(final short[][] aData, final short[][] aAlphas, final int aWorld, final int aLevel)
 	{
 		final BufferedImage image = new BufferedImage(aData.length, aData[0].length, BufferedImage.TYPE_INT_ARGB);
 		for (int x = 0; x < aData.length; x++ )
@@ -133,7 +139,7 @@ public class EditorDataManager
 		}
 	}
 	
-	public static BufferedImage getMapImage(final int aWorld, final int aLevel)
+	public BufferedImage getMapImage(final int aWorld, final int aLevel)
 	{
 		try
 		{
@@ -147,19 +153,19 @@ public class EditorDataManager
 		return null;
 	}
 	
-	public static BufferedImage getImage(final String aName)
+	public BufferedImage getImage(final String aName)
 	{
 		BufferedImage image = IMAGES.get(aName);
 		if (image == null) image = loadImage(aName);
 		return image;
 	}
 	
-	public static BufferedImage getBlockImage(final int aId, final Texture aTexture)
+	public BufferedImage getBlockImage(final int aId, final Texture aTexture)
 	{
 		return SPLIT_IMAGES.get(sTexturePack).get(aTexture)[aId];
 	}
 	
-	private static BufferedImage loadImage(final String aName)
+	private BufferedImage loadImage(final String aName)
 	{
 		try
 		{

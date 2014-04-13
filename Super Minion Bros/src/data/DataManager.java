@@ -18,22 +18,48 @@ import org.newdawn.slick.util.Log;
 
 public class DataManager
 {
-	private static final HashMap<String, Image>						IMAGES				= new HashMap<>();
-	private static final HashMap<String, HashMap<Integer, Image>>	SPLIT_IMAGES		= new HashMap<>();
-	private static final HashMap<String, Sound>						SOUNDS				= new HashMap<>();
-	private static final HashMap<String, Music>						MUSIC				= new HashMap<>();
-	private static final ArrayList<String>							mSaves				= new ArrayList<>();
+	private static DataManager								INSTANCE;
 	
-	private static final String										sVersion			= loadVersion();
+	private final HashMap<String, Image>					mImages;
+	private final HashMap<String, HashMap<Integer, Image>>	mSplitImages;
+	private final HashMap<String, Sound>					mSounds;
+	private final HashMap<String, Music>					mMusic;
+	private final ArrayList<String>							mSaves;
 	
-	private static final String[]									sMusicTitles		= new String[] { "world4", "world0", "world3", "world1", "world2", "world5", "menu" };
-	private static final String[]									sSplitImages		= new String[] { "player", "entity", "enemy", "weapon" };
-	private static final int[][]									sSplitImageSizes	= new int[][] { { 14, 30 }, { 16, 16 }, { 16, 16 }, { 20, 20 } };
-	private static final String[]									sTexturepacks		= new String[] { "Mario", "Minecraft" };
+	private final String									mVersion;
 	
-	private static int												sTexturepack		= 0, sTitle = 0;
-	private static float											sVolume				= 1;
-	private static boolean											sInitiated			= false, sLoading = false, sWasLoading = false;
+	private final String[]									mMusicTitles;
+	private final String[]									mSplitImageNames;
+	private final int[][]									mSplitImageSizes;
+	private final String[]									mTexturepacks;
+	
+	private int												mCurrentTexturepack	= 0;
+	
+	private final int										mCurrentTitle			= 0;
+	private float											mVolume			= 1;
+	private boolean											mInitiated		= false, mLoading = false, mWasLoading = false;
+	
+	private DataManager()
+	{
+		mImages = new HashMap<>();
+		mSplitImages = new HashMap<>();
+		mSounds = new HashMap<>();
+		mMusic = new HashMap<>();
+		mSaves = new ArrayList<>();
+		
+		mMusicTitles = new String[] { "world4", "world0", "world3", "world1", "world2", "world5", "menu" };
+		mSplitImageNames = new String[] { "player", "entity", "enemy", "weapon" };
+		mSplitImageSizes = new int[][] { { 14, 30 }, { 16, 16 }, { 16, 16 }, { 20, 20 } };
+		mTexturepacks = new String[] { "Mario", "Minecraft" };
+		
+		mVersion = loadVersion();
+	}
+	
+	public static DataManager instance()
+	{
+		if (INSTANCE == null) INSTANCE = new DataManager();
+		return INSTANCE;
+	}
 	
 	/**
 	 * Plays a sound with the given name. All sounds have to have the type wav and sounds can be played more times simultanely.
@@ -41,12 +67,12 @@ public class DataManager
 	 * @param aName
 	 *            The name of the sound to play.
 	 */
-	public static void playSound(final String aName)
+	public void playSound(final String aName)
 	{
-		Sound sound = SOUNDS.get(aName);
+		Sound sound = mSounds.get(aName);
 		if (sound == null) sound = loadSound(aName);
 		if (sound.playing()) sound.stop();
-		if (sVolume > 0) sound.play(1, sVolume);
+		if (mVolume > 0) sound.play(1, mVolume);
 	}
 	
 	/**
@@ -55,11 +81,11 @@ public class DataManager
 	 * @param aName
 	 *            The name of the music title.
 	 */
-	public static void playMusic(final String aName)
+	public void playMusic(final String aName)
 	{
-		final Music music = MUSIC.get(aName);
+		final Music music = mMusic.get(aName);
 		music.loop();
-		music.setVolume(sVolume);
+		music.setVolume(mVolume);
 	}
 	
 	/**
@@ -67,11 +93,11 @@ public class DataManager
 	 * 
 	 * @return {@code true} the first time invoked after loading a texture pack and {@code false} otherwise.
 	 */
-	public static boolean wasloading()
+	public boolean wasloading()
 	{
-		if (sWasLoading)
+		if (mWasLoading)
 		{
-			sWasLoading = false;
+			mWasLoading = false;
 			return true;
 		}
 		return false;
@@ -82,9 +108,9 @@ public class DataManager
 	 * 
 	 * @return a float out of {@code [0,1]}.
 	 */
-	public static float getVolume()
+	public float getVolume()
 	{
-		return MUSIC.get(sMusicTitles[0]).getVolume();
+		return mMusic.get(mMusicTitles[0]).getVolume();
 	}
 	
 	/**
@@ -93,11 +119,11 @@ public class DataManager
 	 * @param aVolume
 	 *            The new volume.
 	 */
-	public static void setVolume(final float aVolume)
+	public void setVolume(final float aVolume)
 	{
-		sVolume = aVolume;
-		for (final Music music : MUSIC.values())
-			music.setVolume(sVolume);
+		mVolume = aVolume;
+		for (final Music music : mMusic.values())
+			music.setVolume(mVolume);
 	}
 	
 	/**
@@ -105,9 +131,9 @@ public class DataManager
 	 * 
 	 * @return {@code true} if it has finished or {@code false} if not.
 	 */
-	public static boolean isInitiated()
+	public boolean isInitiated()
 	{
-		return sInitiated;
+		return mInitiated;
 	}
 	
 	/**
@@ -115,9 +141,9 @@ public class DataManager
 	 * 
 	 * @return {@code true} if busy and {@code false} if not.
 	 */
-	public static boolean isLoading()
+	public boolean isLoading()
 	{
-		return sLoading;
+		return mLoading;
 	}
 	
 	/**
@@ -127,9 +153,9 @@ public class DataManager
 	 *            the name of the image.
 	 * @return an image with name {@code aName} that is laying inside {@code data/images/}.
 	 */
-	public static Image getImage(final String aName)
+	public Image getImage(final String aName)
 	{
-		Image image = IMAGES.get(aName);
+		Image image = mImages.get(aName);
 		if (image == null) image = loadImage(aName);
 		return image;
 	}
@@ -143,7 +169,7 @@ public class DataManager
 	 *            The level id.
 	 * @return an image that contains level data.
 	 */
-	public static Image getLevelImage(final int aWorldId, final int aLevelId)
+	public Image getLevelImage(final int aWorldId, final int aLevelId)
 	{
 		return getImage("worldData/level" + aWorldId + "-" + aLevelId);
 	}
@@ -155,7 +181,7 @@ public class DataManager
 	 *            The world id.
 	 * @return an image that contains a background.
 	 */
-	public static Image getBackgroundImage(final int aWorldId)
+	public Image getBackgroundImage(final int aWorldId)
 	{
 		return getImage("backgrounds/background" + aWorldId);
 	}
@@ -169,9 +195,9 @@ public class DataManager
 	 *            The index of the image part.
 	 * @return the {@code aIndex}s part of {@code aName}.png.
 	 */
-	public static Image getSplitImage(final String aName, final int aIndex)
+	public Image getSplitImage(final String aName, final int aIndex)
 	{
-		return SPLIT_IMAGES.get(aName).get(aIndex);
+		return mSplitImages.get(aName).get(aIndex);
 	}
 	
 	/**
@@ -183,9 +209,9 @@ public class DataManager
 	 *            The index of the image part.
 	 * @return the {@code aIndex}s part of {@code <aName><aTexture.getSuffix()>}.png.
 	 */
-	public static Image getTextureImage(final String aName, final Texture aTexture, final int aIndex)
+	public Image getTextureImage(final String aName, final Texture aTexture, final int aIndex)
 	{
-		final HashMap<Integer, Image> images = SPLIT_IMAGES.get(aName + aTexture.getSuffix());
+		final HashMap<Integer, Image> images = mSplitImages.get(aName + aTexture.getSuffix());
 		final Image image = images.get(aIndex);
 		return image;
 	}
@@ -200,38 +226,38 @@ public class DataManager
 	 * @param aIndex
 	 *            The block id.
 	 */
-	public static void loadTexture(final String aName, final Texture aTexture, final int aIndex)
+	public void loadTexture(final String aName, final Texture aTexture, final int aIndex)
 	{
-		HashMap<Integer, Image> images = SPLIT_IMAGES.get(aName + aTexture.getSuffix());
+		HashMap<Integer, Image> images = mSplitImages.get(aName + aTexture.getSuffix());
 		if (images == null)
 		{
 			images = new HashMap<>();
-			SPLIT_IMAGES.put(aName + aTexture.getSuffix(), images);
+			mSplitImages.put(aName + aTexture.getSuffix(), images);
 		}
 		Image image = images.get(aIndex);
 		if (image == null)
 		{
-			sLoading = sWasLoading = true;
+			mLoading = mWasLoading = true;
 			image = loadSplittedImage("texturepacks/blocks" + aName + aTexture.getSuffix(), aIndex, new int[] { 16, 16 });
 			images.put(aIndex, image);
-			sLoading = false;
+			mLoading = false;
 		}
 	}
 	
 	/**
 	 * Selects the next texture pack.
 	 */
-	public static void nextTexturePack()
+	public void nextTexturePack()
 	{
-		sTexturepack = (sTexturepack + 1) % sTexturepacks.length;
+		mCurrentTexturepack = (mCurrentTexturepack + 1) % mTexturepacks.length;
 	}
 	
 	/**
 	 * Selects the previous texture pack.
 	 */
-	public static void previousTexturePack()
+	public void previousTexturePack()
 	{
-		sTexturepack = (sTexturepack - 1 + sTexturepacks.length) % sTexturepacks.length;
+		mCurrentTexturepack = (mCurrentTexturepack - 1 + mTexturepacks.length) % mTexturepacks.length;
 	}
 	
 	/**
@@ -239,9 +265,9 @@ public class DataManager
 	 * 
 	 * @return the name of the texture pack.
 	 */
-	public static String getTexturePack()
+	public String getTexturePack()
 	{
-		return sTexturepacks[sTexturepack];
+		return mTexturepacks[mCurrentTexturepack];
 	}
 	
 	/**
@@ -249,31 +275,31 @@ public class DataManager
 	 * 
 	 * @return the music title.
 	 */
-	public static String getTitle()
+	public String getTitle()
 	{
-		return sMusicTitles[sTitle];
+		return mMusicTitles[mCurrentTitle];
 	}
 	
 	/**
 	 * Loads all split images and music titles.
 	 */
-	public static void init()
+	public void init()
 	{
-		sLoading = true;
-		for (int tile = 0; tile < sSplitImages.length; tile++ )
+		mLoading = true;
+		for (int tile = 0; tile < mSplitImageNames.length; tile++ )
 		{
-			for (final String texture : sTexturepacks)
+			for (final String texture : mTexturepacks)
 			{
-				final HashMap<Integer, Image> images = loadSplittedImages(sSplitImages[tile] + texture, sSplitImageSizes[tile]);
-				SPLIT_IMAGES.put(sSplitImages[tile] + texture, images);
+				final HashMap<Integer, Image> images = loadSplittedImages(mSplitImageNames[tile] + texture, mSplitImageSizes[tile]);
+				mSplitImages.put(mSplitImageNames[tile] + texture, images);
 			}
 		}
-		for (final String name : sMusicTitles)
-			MUSIC.put(name, loadMusic(name));
+		for (final String name : mMusicTitles)
+			mMusic.put(name, loadMusic(name));
 		loadSaves();
 		LevelManager.instance();
-		sLoading = false;
-		sInitiated = true;
+		mLoading = false;
+		mInitiated = true;
 	}
 	
 	/**
@@ -282,7 +308,7 @@ public class DataManager
 	 * @param aName
 	 *            The name of the save.
 	 */
-	public static void loadSave(final String aName)
+	public void loadSave(final String aName)
 	{
 		final File save = new File("data/saves/" + aName + ".txt");
 		final StringBuilder data = new StringBuilder();
@@ -304,7 +330,7 @@ public class DataManager
 	/**
 	 * Creates a save file out of the current save.
 	 */
-	public static void save()
+	public void save()
 	{
 		final String name = Save.instance().getName();
 		File save = new File("data/saves/" + name + ".txt");
@@ -349,7 +375,7 @@ public class DataManager
 	 * @param aIndex
 	 *            The save index to delete.
 	 */
-	public static void deleteSave(final int aIndex)
+	public void deleteSave(final int aIndex)
 	{
 		File save = new File("data/saves/" + mSaves.get(aIndex) + ".txt");
 		if (save.exists()) save.delete();
@@ -376,17 +402,17 @@ public class DataManager
 	 * 
 	 * @return an array list of all saves.
 	 */
-	public static ArrayList<String> getSaves()
+	public ArrayList<String> getSaves()
 	{
 		return mSaves;
 	}
 	
-	public static String getVersion()
+	public String getVersion()
 	{
-		return sVersion;
+		return mVersion;
 	}
 	
-	private static String loadVersion()
+	private String loadVersion()
 	{
 		final File version = new File("data/version.txt");
 		final StringBuilder data = new StringBuilder();
@@ -407,7 +433,7 @@ public class DataManager
 		throw new IllegalArgumentException("Not the right version format!");
 	}
 	
-	private static Image loadImage(final String aName)
+	private Image loadImage(final String aName)
 	{
 		try
 		{
@@ -421,7 +447,7 @@ public class DataManager
 		return null;
 	}
 	
-	private static Sound loadSound(final String aName)
+	private Sound loadSound(final String aName)
 	{
 		try
 		{
@@ -435,7 +461,7 @@ public class DataManager
 		return null;
 	}
 	
-	private static Music loadMusic(final String aName)
+	private Music loadMusic(final String aName)
 	{
 		try
 		{
@@ -449,7 +475,7 @@ public class DataManager
 		return null;
 	}
 	
-	private static void loadSaves()
+	private void loadSaves()
 	{
 		final File saves = new File("data/saves/#Saves#.txt");
 		final StringBuilder data = new StringBuilder();
@@ -469,14 +495,14 @@ public class DataManager
 			mSaves.add(save);
 	}
 	
-	private static Image loadSplittedImage(final String aName, final int aIndex, final int[] aSize)
+	private Image loadSplittedImage(final String aName, final int aIndex, final int[] aSize)
 	{
 		final Image image = loadImage(aName);
 		final int imageWidth = aSize[0], imageHeight = aSize[1], width = image.getWidth() / imageWidth;
 		return image.getSubImage((aIndex % width) * imageWidth, (aIndex / width) * imageHeight, imageWidth, imageHeight);
 	}
 	
-	private static HashMap<Integer, Image> loadSplittedImages(final String aName, final int[] aSize)
+	private HashMap<Integer, Image> loadSplittedImages(final String aName, final int[] aSize)
 	{
 		final Image image = loadImage(aName);
 		final int imageWidth = aSize[0], imageHeight = aSize[1], width = image.getWidth() / imageWidth, height = image.getHeight() / imageHeight;

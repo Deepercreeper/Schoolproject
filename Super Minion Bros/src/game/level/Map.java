@@ -70,7 +70,7 @@ public class Map
 		mWidth = mBlocks.length;
 		if (mWidth > 0) mHeight = mBlocks[0].length;
 		else mHeight = 0;
-		DataManager.playMusic("world" + (mWorldId % 6));
+		DataManager.instance().playMusic("world" + (mWorldId % 6));
 	}
 	
 	/**
@@ -412,7 +412,7 @@ public class Map
 	public void render(final Graphics aG)
 	{
 		// Render background
-		final Image background = DataManager.getBackgroundImage(0);
+		final Image background = DataManager.instance().getBackgroundImage(0);
 		aG.drawImage(background, -(mScreen.getX() / 5 % background.getWidth()), 0);
 		aG.drawImage(background, background.getWidth() - (mScreen.getX() / 5 % background.getWidth()), 0);
 		
@@ -443,7 +443,7 @@ public class Map
 	
 	private void loadBlocks()
 	{
-		final Image image = DataManager.getLevelImage(mWorldId, mLevelId);
+		final Image image = DataManager.instance().getLevelImage(mWorldId, mLevelId);
 		final int width = image.getWidth(), height = image.getHeight();
 		final int redInt = (int) Math.pow(2, 16), greenInt = (int) Math.pow(2, 8);
 		mBlocks = new short[width][height];

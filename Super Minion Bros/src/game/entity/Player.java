@@ -105,11 +105,11 @@ public class Player extends Entity
 			{
 				mCannon = true;
 				mCannonTime = 10;
-				DataManager.playSound("cannon");
+				DataManager.instance().playSound("cannon");
 			}
 			if (aInput.isKeyPressed(InputKeys.instance().getKey(Key.UP)) || mOnGround)
 			{
-				if (mCannon && mOnGround) DataManager.playSound("bomb");
+				if (mCannon && mOnGround) DataManager.instance().playSound("bomb");
 				mCannon = false;
 			}
 			
@@ -144,7 +144,7 @@ public class Player extends Entity
 					}
 					else mYV = -6;
 					mJumping = false;
-					DataManager.playSound("jump");
+					DataManager.instance().playSound("jump");
 				}
 			}
 			else
@@ -262,7 +262,7 @@ public class Player extends Entity
 	{
 		// Player
 		Image image;
-		if (mDir == Direction.NONE) image = DataManager.getSplitImage("player" + DataManager.getTexturePack(), 0).getScaledCopy(mWidth, mHeight);
+		if (mDir == Direction.NONE) image = DataManager.instance().getSplitImage("player" + DataManager.instance().getTexturePack(), 0).getScaledCopy(mWidth, mHeight);
 		else
 		{
 			int id = 1;
@@ -273,7 +273,7 @@ public class Player extends Entity
 				id = mTime % (delay * 5) / delay + 2;
 				if (Math.signum(mXV) != Math.signum(mDir.XD)) id = 8 - id;
 			}
-			image = DataManager.getSplitImage("player" + DataManager.getTexturePack(), id).getScaledCopy(mWidth, mHeight);
+			image = DataManager.instance().getSplitImage("player" + DataManager.instance().getTexturePack(), id).getScaledCopy(mWidth, mHeight);
 			if (mDir == Direction.LEFT) image = image.getFlippedCopy(true, false);
 		}
 		if (mHurtDelay > 0 && mTime % 10 < 5) aG.drawImage(image, (float) mX - mLevel.getScreenX(), (float) mY - mLevel.getScreenY(), new Color(1, 1, 1, 0.5f));

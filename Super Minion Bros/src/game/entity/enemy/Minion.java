@@ -44,10 +44,10 @@ public class Minion extends Enemy
 		int id = 0;
 		final int delay = 6;
 		id = mTime % (delay * 6) / delay;
-		Image image = DataManager.getSplitImage("enemy" + DataManager.getTexturePack(), id);
+		Image image = DataManager.instance().getSplitImage("enemy" + DataManager.instance().getTexturePack(), id);
 		if (mDir == Direction.LEFT) image = image.getFlippedCopy(true, false);
 		aG.drawImage(image, (float) (mX - mLevel.getScreenX()), (float) (mY - mLevel.getScreenY()));
-		image = DataManager.getSplitImage("enemy" + DataManager.getTexturePack(), START_ID + id);
+		image = DataManager.instance().getSplitImage("enemy" + DataManager.instance().getTexturePack(), START_ID + id);
 		if (mDir == Direction.LEFT) image = image.getFlippedCopy(true, false);
 		aG.drawImage(image, (float) (mX - mLevel.getScreenX()), (float) (mY + mHeight / 2 - mLevel.getScreenY()));
 	}

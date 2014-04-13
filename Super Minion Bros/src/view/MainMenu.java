@@ -58,12 +58,12 @@ public class MainMenu extends Menu
 				break;
 			case LOAD_INPUT :
 			case NEW_INPUT :
-				for (int i = 1; i <= DataManager.getSaves().size() && mHeight / 2 - i * 15 > 0; i++ )
-					aG.drawString(DataManager.getSaves().get(DataManager.getSaves().size() - i), mWidth / 2 - 100, mHeight / 2 - 15 - i * 15);
+				for (int i = 1; i <= DataManager.instance().getSaves().size() && mHeight / 2 - i * 15 > 0; i++ )
+					aG.drawString(DataManager.instance().getSaves().get(DataManager.instance().getSaves().size() - i), mWidth / 2 - 100, mHeight / 2 - 15 - i * 15);
 				if (mState == State.NEW_INPUT) aG.drawString("Name: " + mText, mWidth / 2 - 100, mHeight / 2);
 				else
 				{
-					aG.drawString("< > - Save: " + DataManager.getSaves().get(mSaveIndex), mWidth / 2 - 100, mHeight / 2);
+					aG.drawString("< > - Save: " + DataManager.instance().getSaves().get(mSaveIndex), mWidth / 2 - 100, mHeight / 2);
 					aG.drawString("Entf - Löschen", mWidth / 2 - 100, mHeight / 2 + 45);
 				}
 				aG.drawString("Enter - Bestätigen", mWidth / 2 - 100, mHeight / 2 + 15);
@@ -87,7 +87,7 @@ public class MainMenu extends Menu
 		{
 			case MAIN :
 				if (aInput.isKeyPressed(Input.KEY_SPACE)) mState = State.NEW_INPUT;
-				else if (aInput.isKeyPressed(Input.KEY_ENTER) && !DataManager.getSaves().isEmpty()) mState = State.LOAD_INPUT;
+				else if (aInput.isKeyPressed(Input.KEY_ENTER) && !DataManager.instance().getSaves().isEmpty()) mState = State.LOAD_INPUT;
 				else if (aInput.isKeyPressed(Input.KEY_ESCAPE)) mGame.stop();
 				if (mState == State.NEW_INPUT) aInput.addKeyListener(new Listener(aInput));
 				break;
@@ -150,21 +150,21 @@ public class MainMenu extends Menu
 				}
 				break;
 			case LOAD_INPUT :
-				if (aInput.isKeyPressed(Input.KEY_RIGHT)) mSaveIndex = (mSaveIndex + 1) % DataManager.getSaves().size();
-				else if (aInput.isKeyPressed(Input.KEY_LEFT)) mSaveIndex = (mSaveIndex - 1 + DataManager.getSaves().size()) % DataManager.getSaves().size();
+				if (aInput.isKeyPressed(Input.KEY_RIGHT)) mSaveIndex = (mSaveIndex + 1) % DataManager.instance().getSaves().size();
+				else if (aInput.isKeyPressed(Input.KEY_LEFT)) mSaveIndex = (mSaveIndex - 1 + DataManager.instance().getSaves().size()) % DataManager.instance().getSaves().size();
 				else if (aInput.isKeyPressed(Input.KEY_DELETE))
 				{
-					DataManager.deleteSave(mSaveIndex);
-					if (DataManager.getSaves().isEmpty())
+					DataManager.instance().deleteSave(mSaveIndex);
+					if (DataManager.instance().getSaves().isEmpty())
 					{
 						mState = State.MAIN;
 						aInput.clearKeyPressedRecord();
 					}
-					else if (mSaveIndex == DataManager.getSaves().size()) mSaveIndex-- ;
+					else if (mSaveIndex == DataManager.instance().getSaves().size()) mSaveIndex-- ;
 				}
 				else if (aInput.isKeyPressed(Input.KEY_ENTER))
 				{
-					loadGame(DataManager.getSaves().get(mSaveIndex));
+					loadGame(DataManager.instance().getSaves().get(mSaveIndex));
 					mState = State.GAME;
 					aInput.clearKeyPressedRecord();
 				}
@@ -194,12 +194,12 @@ public class MainMenu extends Menu
 		}
 		
 		aG.setColor(Color.white);
-		aG.drawString(DataManager.getVersion(), 10, mHeight - 20);
+		aG.drawString(DataManager.instance().getVersion(), 10, mHeight - 20);
 	}
 	
 	private void renderLevelSelection(final Graphics aG)
 	{
-		aG.drawImage(DataManager.getImage(DataManager.getTexturePack()), 0, 0);
+		aG.drawImage(DataManager.instance().getImage(DataManager.instance().getTexturePack()), 0, 0);
 		
 		aG.drawString("World: " + mWorldId + " Level: " + mLevelId, mWidth / 2 - 100, 5);
 		
@@ -208,7 +208,7 @@ public class MainMenu extends Menu
 		aG.drawString("World score: " + Save.instance().getScore(mWorldId), 10, mHeight - 20);
 		
 		aG.drawString("< > - Level auswählen", mWidth / 2 - 100, mHeight - 80);
-		aG.drawString("A D - Texturepack: " + DataManager.getTexturePack(), mWidth / 2 - 100, mHeight - 65);
+		aG.drawString("A D - Texturepack: " + DataManager.instance().getTexturePack(), mWidth / 2 - 100, mHeight - 65);
 		aG.drawString("Space - Start", mWidth / 2 - 100, mHeight - 50);
 		aG.drawString("O - Optionen", mWidth / 2 - 100, mHeight - 35);
 		aG.drawString("Escape - Ende", mWidth / 2 - 100, mHeight - 20);
@@ -247,7 +247,7 @@ public class MainMenu extends Menu
 	
 	private void loadGame(final String aName)
 	{
-		DataManager.loadSave(aName);
+		DataManager.instance().loadSave(aName);
 		mWorldId = Save.instance().getLastWorldId();
 		mLevelId = Save.instance().getLastLevelId();
 	}
@@ -256,7 +256,7 @@ public class MainMenu extends Menu
 	{
 		Save.instance().setLastWorldId(mWorldId);
 		Save.instance().setLastLevelId(mLevelId);
-		DataManager.save();
+		DataManager.instance().save();
 	}
 	
 	private class InputKeyListener implements KeyListener

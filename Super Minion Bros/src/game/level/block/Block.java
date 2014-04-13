@@ -351,7 +351,7 @@ public class Block
 	public void initImage(final int aX, final int aY, final Map aLevel)
 	{
 		final Texture texture = getBlockTexture(aX, aY, aLevel.getBlock(aX, aY));
-		DataManager.loadTexture(DataManager.getTexturePack(), texture, getId(texture) / Texture.values().size());
+		DataManager.instance().loadTexture(DataManager.instance().getTexturePack(), texture, getId(texture) / Texture.values().size());
 	}
 	
 	/**
@@ -423,9 +423,9 @@ public class Block
 	{
 		final Block block = get(aId);
 		final Texture texture = getBlockTexture(aX, aY, aId);
-		if (block.mFlag) aG.drawImage(DataManager.getImage("flag"), aX * SIZE - aLevel.getScreenX(), (aY - 7) * SIZE - aLevel.getScreenY());
-		else aG.drawImage(DataManager.getTextureImage(DataManager.getTexturePack(), texture, block.getId(texture) / Texture.values().size()).getScaledCopy(SIZE, SIZE),
-				aX * SIZE - aLevel.getScreenX(), aY * SIZE - aLevel.getScreenY());
+		if (block.mFlag) aG.drawImage(DataManager.instance().getImage("flag"), aX * SIZE - aLevel.getScreenX(), (aY - 7) * SIZE - aLevel.getScreenY());
+		else aG.drawImage(DataManager.instance().getTextureImage(DataManager.instance().getTexturePack(), texture, block.getId(texture) / Texture.values().size()).getScaledCopy(SIZE, SIZE), aX * SIZE
+				- aLevel.getScreenX(), aY * SIZE - aLevel.getScreenY());
 	}
 	
 	/**
@@ -448,12 +448,12 @@ public class Block
 		final Texture texture = getBlockTexture(aX, aY, aId);
 		if (block.mFlag)
 		{
-			if (aToolBox) aG.drawImage(EditorDataManager.getImage("flagBlock"), aX * SIZE, aY * SIZE, null);
-			else aG.drawImage(EditorDataManager.getImage("flag"), aX * SIZE, (aY - 7) * SIZE, null);
+			if (aToolBox) aG.drawImage(EditorDataManager.instance().getImage("flagBlock"), aX * SIZE, aY * SIZE, null);
+			else aG.drawImage(EditorDataManager.instance().getImage("flag"), aX * SIZE, (aY - 7) * SIZE, null);
 		}
-		else if (block.mItemBlock) aG.drawImage(EditorDataManager.getImage("item"), aX * SIZE, aY * SIZE, null);
-		else if (block == START) aG.drawImage(EditorDataManager.getImage("start"), aX * SIZE, aY * SIZE, null);
-		else aG.drawImage(EditorDataManager.getBlockImage(block.getId(texture) / Texture.values().size(), texture), aX * SIZE, aY * SIZE, null);
+		else if (block.mItemBlock) aG.drawImage(EditorDataManager.instance().getImage("item"), aX * SIZE, aY * SIZE, null);
+		else if (block == START) aG.drawImage(EditorDataManager.instance().getImage("start"), aX * SIZE, aY * SIZE, null);
+		else aG.drawImage(EditorDataManager.instance().getBlockImage(block.getId(texture) / Texture.values().size(), texture), aX * SIZE, aY * SIZE, null);
 	}
 	
 	/**
