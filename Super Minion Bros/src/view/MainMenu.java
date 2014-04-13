@@ -192,6 +192,9 @@ public class MainMenu extends Menu
 			else aG.setColor(Color.white);
 			aG.drawString(key + ": Standard: " + Input.getKeyName(key.getDefault()) + ", Aktiv: " + Input.getKeyName(InputKeys.instance().getKey(key)), mWidth / 2 - 100, 200 + i * 20);
 		}
+		
+		aG.setColor(Color.white);
+		aG.drawString(DataManager.getVersion(), 10, mHeight - 20);
 	}
 	
 	private void renderLevelSelection(final Graphics aG)

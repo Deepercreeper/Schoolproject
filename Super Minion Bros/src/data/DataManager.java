@@ -24,6 +24,8 @@ public class DataManager
 	private static final HashMap<String, Music>						MUSIC				= new HashMap<>();
 	private static final ArrayList<String>							mSaves				= new ArrayList<>();
 	
+	private static final String										sVersion			= loadVersion();
+	
 	private static final String[]									sMusicTitles		= new String[] { "world4", "world0", "world3", "world1", "world2", "world5", "menu" };
 	private static final String[]									sSplitImages		= new String[] { "player", "entity", "enemy", "weapon" };
 	private static final int[][]									sSplitImageSizes	= new int[][] { { 14, 30 }, { 16, 16 }, { 16, 16 }, { 20, 20 } };
@@ -377,6 +379,32 @@ public class DataManager
 	public static ArrayList<String> getSaves()
 	{
 		return mSaves;
+	}
+	
+	public static String getVersion()
+	{
+		return sVersion;
+	}
+	
+	private static String loadVersion()
+	{
+		final File version = new File("data/version.txt");
+		final StringBuilder data = new StringBuilder();
+		if (version.exists()) try
+		{
+			final BufferedReader reader = new BufferedReader(new FileReader(version));
+			int c;
+			while ((c = reader.read()) != -1)
+				data.append((char) c);
+			reader.close();
+		}
+		catch (final IOException e)
+		{
+			e.printStackTrace();
+		}
+		final String[] versionData = data.toString().split(": ");
+		if (versionData.length == 2) return versionData[1];
+		throw new IllegalArgumentException("Not the right version format!");
 	}
 	
 	private static Image loadImage(final String aName)
