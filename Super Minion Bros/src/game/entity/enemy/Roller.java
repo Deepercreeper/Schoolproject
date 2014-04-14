@@ -4,7 +4,7 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import util.Direction;
 import data.DataManager;
-import data.ImageName;
+import data.names.ImageName;
 
 public class Roller extends Enemy
 {

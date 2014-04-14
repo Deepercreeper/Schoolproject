@@ -11,6 +11,11 @@ import java.util.ArrayList;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.Music;
 import org.newdawn.slick.Sound;
+import data.names.ImageName;
+import data.names.MusicName;
+import data.names.SoundName;
+import data.names.Texture;
+import data.names.TexturePack;
 
 public class DataManager
 {

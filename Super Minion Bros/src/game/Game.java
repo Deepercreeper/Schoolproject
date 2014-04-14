@@ -10,9 +10,9 @@ import view.MainMenu;
 import view.Menu;
 import view.PauseMenu;
 import data.DataManager;
-import data.ImageName;
 import data.LevelManager;
-import data.MusicName;
+import data.names.ImageName;
+import data.names.MusicName;
 
 public class Game
 {

@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import javax.imageio.ImageIO;
 import org.newdawn.slick.util.Log;
-import data.Texture;
+import data.names.Texture;
 
 public class EditorDataManager
 {

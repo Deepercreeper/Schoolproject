@@ -1,4 +1,4 @@
-package data;
+package data.names;
 
 public enum SoundName
 {

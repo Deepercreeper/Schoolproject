@@ -1,4 +1,6 @@
-package data;
+package data.names;
+
+import data.DataManager;
 
 public enum ImageName
 {

@@ -8,8 +8,8 @@ import java.util.HashSet;
 import org.newdawn.slick.Graphics;
 import util.Direction;
 import data.DataManager;
-import data.ImageName;
-import data.Texture;
+import data.names.ImageName;
+import data.names.Texture;
 import editor.EditorDataManager;
 
 public class Block

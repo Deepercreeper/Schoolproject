@@ -19,7 +19,7 @@ import util.Direction;
 import util.Rectangle;
 import util.Util;
 import data.DataManager;
-import data.MusicName;
+import data.names.MusicName;
 
 public class Map
 {

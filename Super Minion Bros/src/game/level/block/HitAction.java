@@ -6,8 +6,8 @@ import game.level.Map;
 import java.util.HashMap;
 import util.Direction;
 import data.DataManager;
-import data.SoundName;
-import data.Texture;
+import data.names.SoundName;
+import data.names.Texture;
 
 abstract class HitAction
 {

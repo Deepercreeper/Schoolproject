@@ -7,7 +7,7 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import util.Direction;
 import data.DataManager;
-import data.ImageName;
+import data.names.ImageName;
 
 public class Pistol extends Weapon
 {

@@ -3,8 +3,8 @@ package game.entity;
 import game.Stats;
 import org.newdawn.slick.Graphics;
 import data.DataManager;
-import data.ImageName;
-import data.SoundName;
+import data.names.ImageName;
+import data.names.SoundName;
 
 public class Banana extends Entity
 {

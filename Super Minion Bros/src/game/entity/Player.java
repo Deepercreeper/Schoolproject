@@ -14,8 +14,8 @@ import util.Direction;
 import util.InputKeys;
 import util.Key;
 import data.DataManager;
-import data.ImageName;
-import data.SoundName;
+import data.names.ImageName;
+import data.names.SoundName;
 
 public class Player extends Entity
 {

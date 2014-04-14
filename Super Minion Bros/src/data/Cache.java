@@ -6,6 +6,11 @@ import org.newdawn.slick.Music;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.Sound;
 import org.newdawn.slick.util.Log;
+import data.names.ImageName;
+import data.names.MusicName;
+import data.names.SoundName;
+import data.names.Texture;
+import data.names.TexturePack;
 
 public class Cache
 {

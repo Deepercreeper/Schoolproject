@@ -4,7 +4,7 @@ import game.level.Map;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
 import data.DataManager;
-import data.ImageName;
+import data.names.ImageName;
 
 public class Gore extends Entity
 {

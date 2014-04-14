@@ -5,8 +5,8 @@ import game.level.block.Block;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
 import data.DataManager;
-import data.ImageName;
-import data.SoundName;
+import data.names.ImageName;
+import data.names.SoundName;
 
 public class Heart extends Entity
 {

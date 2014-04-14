@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JMenuBar;
-import data.Texture;
+import data.names.Texture;
 
 @SuppressWarnings("serial")
 public class ToolBox extends JDialog

@@ -10,8 +10,8 @@ import org.newdawn.slick.KeyListener;
 import util.InputKeys;
 import util.Key;
 import data.DataManager;
-import data.ImageName;
 import data.LevelManager;
+import data.names.ImageName;
 
 public class MainMenu extends Menu
 {
