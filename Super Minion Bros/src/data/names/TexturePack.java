@@ -36,13 +36,6 @@ public enum TexturePack
 		});
 	}
 	
-	public static TexturePack get(final String aName)
-	{
-		for (final TexturePack texturePack : values())
-			if (texturePack.getSuffix().equals(aName)) return texturePack;
-		return null;
-	}
-	
 	public static ArrayList<TexturePack> getTexturePacks()
 	{
 		return TEXTUREPACKS;

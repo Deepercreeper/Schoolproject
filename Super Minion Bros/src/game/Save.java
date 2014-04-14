@@ -315,7 +315,7 @@ public class Save
 		mLastLevelId = Integer.parseInt(aData[3]);
 		mPlayer = new Player(aData[4], aData[5]);
 		InputKeys.loadInstance(aData[6]);
-		mTexturePack = TexturePack.get(aData[7]);
+		mTexturePack = TexturePack.valueOf(aData[7]);
 		
 		String[] levelAndScore, worldAndLevel;
 		int world, level, score;
