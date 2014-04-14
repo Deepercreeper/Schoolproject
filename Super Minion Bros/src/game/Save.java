@@ -4,6 +4,7 @@ import game.entity.Player;
 import java.util.HashMap;
 import util.InputKeys;
 import data.DataManager;
+import data.TexturePack;
 
 public class Save
 {
@@ -13,7 +14,7 @@ public class Save
 	
 	private int													mLastWorldId, mLastLevelId, mVolume;
 	
-	private String												mTexturePack;
+	private TexturePack											mTexturePack;
 	
 	private Player												mPlayer;
 	
@@ -314,7 +315,7 @@ public class Save
 		mLastLevelId = Integer.parseInt(aData[3]);
 		mPlayer = new Player(aData[4], aData[5]);
 		InputKeys.loadInstance(aData[6]);
-		mTexturePack = aData[7];
+		mTexturePack = TexturePack.get(aData[7]);
 		
 		String[] levelAndScore, worldAndLevel;
 		int world, level, score;

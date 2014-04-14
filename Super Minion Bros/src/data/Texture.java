@@ -1,4 +1,4 @@
-package game.level.block;
+package data;
 
 import java.util.Collection;
 import java.util.HashMap;

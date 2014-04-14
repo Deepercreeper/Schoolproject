@@ -5,6 +5,8 @@ import game.level.block.Block;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
 import data.DataManager;
+import data.ImageName;
+import data.SoundName;
 
 public class Heart extends Entity
 {
@@ -60,8 +62,8 @@ public class Heart extends Entity
 	@Override
 	public void render(final Graphics aG)
 	{
-		if (mLife > 40 || mLife % 8 < 4) aG.drawImage(DataManager.instance().getSplitImage("entity" + DataManager.instance().getTexturePack(), 3).getScaledCopy(mWidth, mHeight),
-				(float) (mX - mLevel.getScreenX()), (float) (mY - mLevel.getScreenY()));
+		if (mLife > 40 || mLife % 8 < 4) aG.drawImage(DataManager.instance().getTexturedSplitImage(ImageName.ENTITY, 3).getScaledCopy(mWidth, mHeight), (float) (mX - mLevel.getScreenX()),
+				(float) (mY - mLevel.getScreenY()));
 	}
 	
 	/**
@@ -71,7 +73,7 @@ public class Heart extends Entity
 	{
 		if (isRemoved()) return;
 		mLevel.getPlayer().addLife(mSize);
-		DataManager.instance().playSound("heart");
+		DataManager.instance().playSound(SoundName.HEART);
 		remove();
 	}
 	

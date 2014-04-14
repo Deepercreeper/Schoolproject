@@ -3,6 +3,8 @@ package game.entity;
 import game.Stats;
 import org.newdawn.slick.Graphics;
 import data.DataManager;
+import data.ImageName;
+import data.SoundName;
 
 public class Banana extends Entity
 {
@@ -27,7 +29,7 @@ public class Banana extends Entity
 	@Override
 	public void render(final Graphics aG)
 	{
-		aG.drawImage(DataManager.instance().getSplitImage("entity" + DataManager.instance().getTexturePack(), mSuper ? 2 : 1), (float) (mX - mLevel.getScreenX()), (float) (mY - mLevel.getScreenY()));
+		aG.drawImage(DataManager.instance().getTexturedSplitImage(ImageName.ENTITY, mSuper ? 2 : 1), (float) (mX - mLevel.getScreenX()), (float) (mY - mLevel.getScreenY()));
 	}
 	
 	/**
@@ -37,7 +39,7 @@ public class Banana extends Entity
 	{
 		if (isRemoved()) return;
 		Stats.instance().addBanana(mSuper ? 5 : 1);
-		DataManager.instance().playSound("banana");
+		DataManager.instance().playSound(SoundName.BANANA);
 		remove();
 	}
 	

@@ -6,6 +6,8 @@ import game.level.Map;
 import java.util.HashMap;
 import util.Direction;
 import data.DataManager;
+import data.SoundName;
+import data.Texture;
 
 abstract class HitAction
 {
@@ -105,9 +107,9 @@ abstract class HitAction
 						if (entity instanceof Weapon && aLevel.getPlayer().hasWeapon((Weapon) entity)) add = false;
 						if (add) aLevel.addEntity(entity);
 					}
-					DataManager.instance().playSound("item");
+					DataManager.instance().playSound(SoundName.ITEM);
 				}
-				else DataManager.instance().playSound("destroyBlock");
+				else DataManager.instance().playSound(SoundName.DESTROY_BLOCK);
 			}
 	}
 	

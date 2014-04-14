@@ -10,7 +10,9 @@ import view.MainMenu;
 import view.Menu;
 import view.PauseMenu;
 import data.DataManager;
+import data.ImageName;
 import data.LevelManager;
+import data.MusicName;
 
 public class Game
 {
@@ -31,7 +33,8 @@ public class Game
 	 */
 	public void render(final Graphics aG)
 	{
-		if ( !DataManager.instance().isInitiated() || DataManager.instance().isLoading()) aG.drawImage(DataManager.instance().getImage("splash").getScaledCopy(mGC.getWidth(), mGC.getHeight()), 0, 0);
+		if ( !DataManager.instance().isInitiated() || DataManager.instance().isLoading()) aG.drawImage(
+				DataManager.instance().getImage(ImageName.SPLASH).getScaledCopy(mGC.getWidth(), mGC.getHeight()), 0, 0);
 		else
 		{
 			if (mMain) mMainMenu.render(aG);
@@ -158,7 +161,7 @@ public class Game
 	{
 		mPause = false;
 		mMain = true;
-		DataManager.instance().playMusic("menu");
+		DataManager.instance().playMusic(MusicName.MENU);
 		mLevel = null;
 		mInput.clearKeyPressedRecord();
 	}

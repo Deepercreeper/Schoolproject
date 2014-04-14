@@ -1,7 +1,6 @@
 package editor;
 
 import game.level.block.Block;
-import game.level.block.Texture;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
@@ -14,6 +13,7 @@ import java.util.ArrayList;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JMenuBar;
+import data.Texture;
 
 @SuppressWarnings("serial")
 public class ToolBox extends JDialog

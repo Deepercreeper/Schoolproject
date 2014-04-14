@@ -7,6 +7,7 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import util.Direction;
 import data.DataManager;
+import data.ImageName;
 
 public class Pistol extends Weapon
 {
@@ -71,7 +72,7 @@ public class Pistol extends Weapon
 	@Override
 	public void render(final Graphics aG)
 	{
-		Image image = DataManager.instance().getSplitImage("weapon" + DataManager.instance().getTexturePack(), 0);
+		Image image = DataManager.instance().getTexturedSplitImage(ImageName.WEAPON, 0);
 		if (mDir == Direction.LEFT) image = image.getFlippedCopy(true, false);
 		aG.drawImage(image, (int) (mX - mLevel.getScreenX()), (int) (mY - mLevel.getScreenY()), null);
 	}
@@ -79,7 +80,7 @@ public class Pistol extends Weapon
 	@Override
 	public void renderIcon(final Graphics aG, final int aX, final int aY)
 	{
-		final Image image = DataManager.instance().getSplitImage("weapon" + DataManager.instance().getTexturePack(), 0);
+		final Image image = DataManager.instance().getTexturedSplitImage(ImageName.WEAPON, 0);
 		aG.drawImage(image, aX, aY, null);
 	}
 }

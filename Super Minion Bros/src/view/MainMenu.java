@@ -10,6 +10,7 @@ import org.newdawn.slick.KeyListener;
 import util.InputKeys;
 import util.Key;
 import data.DataManager;
+import data.ImageName;
 import data.LevelManager;
 
 public class MainMenu extends Menu
@@ -199,7 +200,7 @@ public class MainMenu extends Menu
 	
 	private void renderLevelSelection(final Graphics aG)
 	{
-		aG.drawImage(DataManager.instance().getImage(DataManager.instance().getTexturePack()), 0, 0);
+		aG.drawImage(DataManager.instance().getImage(ImageName.TEXTUREPACK), 0, 0);
 		
 		aG.drawString("World: " + mWorldId + " Level: " + mLevelId, mWidth / 2 - 100, 5);
 		

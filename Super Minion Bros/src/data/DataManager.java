@@ -1,7 +1,6 @@
 package data;
 
 import game.Save;
-import game.level.block.Texture;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -9,49 +8,31 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.Music;
-import org.newdawn.slick.SlickException;
 import org.newdawn.slick.Sound;
-import org.newdawn.slick.util.Log;
 
 public class DataManager
 {
-	private static DataManager								INSTANCE;
+	private static DataManager		INSTANCE;
 	
-	private final HashMap<String, Image>					mImages;
-	private final HashMap<String, HashMap<Integer, Image>>	mSplitImages;
-	private final HashMap<String, Sound>					mSounds;
-	private final HashMap<String, Music>					mMusic;
-	private final ArrayList<String>							mSaves;
+	private final Cache				mCache;
 	
-	private final String									mVersion;
+	private final ArrayList<String>	mSaves;
 	
-	private final String[]									mMusicTitles;
-	private final String[]									mSplitImageNames;
-	private final int[][]									mSplitImageSizes;
-	private final String[]									mTexturepacks;
+	private final String			mVersion;
 	
-	private int												mCurrentTexturepack	= 0;
+	private Music					mCurrentMusic;
 	
-	private final int										mCurrentTitle			= 0;
-	private float											mVolume			= 1;
-	private boolean											mInitiated		= false, mLoading = false, mWasLoading = false;
+	private int						mCurrentTexturepack	= 0;
+	
+	private float					mVolume				= 1;
+	private boolean					mInitiated			= false, mLoading = false, mWasLoading = false;
 	
 	private DataManager()
 	{
-		mImages = new HashMap<>();
-		mSplitImages = new HashMap<>();
-		mSounds = new HashMap<>();
-		mMusic = new HashMap<>();
+		mCache = new Cache();
 		mSaves = new ArrayList<>();
-		
-		mMusicTitles = new String[] { "world4", "world0", "world3", "world1", "world2", "world5", "menu" };
-		mSplitImageNames = new String[] { "player", "entity", "enemy", "weapon" };
-		mSplitImageSizes = new int[][] { { 14, 30 }, { 16, 16 }, { 16, 16 }, { 20, 20 } };
-		mTexturepacks = new String[] { "Mario", "Minecraft" };
-		
 		mVersion = loadVersion();
 	}
 	
@@ -64,13 +45,12 @@ public class DataManager
 	/**
 	 * Plays a sound with the given name. All sounds have to have the type wav and sounds can be played more times simultanely.
 	 * 
-	 * @param aName
+	 * @param aSound
 	 *            The name of the sound to play.
 	 */
-	public void playSound(final String aName)
+	public void playSound(final SoundName aSound)
 	{
-		Sound sound = mSounds.get(aName);
-		if (sound == null) sound = loadSound(aName);
+		final Sound sound = mCache.loadSound(aSound);
 		if (sound.playing()) sound.stop();
 		if (mVolume > 0) sound.play(1, mVolume);
 	}
@@ -81,11 +61,11 @@ public class DataManager
 	 * @param aName
 	 *            The name of the music title.
 	 */
-	public void playMusic(final String aName)
+	public void playMusic(final MusicName aName)
 	{
-		final Music music = mMusic.get(aName);
-		music.loop();
-		music.setVolume(mVolume);
+		mCurrentMusic = mCache.loadMusic(aName);
+		mCurrentMusic.loop();
+		mCurrentMusic.setVolume(mVolume);
 	}
 	
 	/**
@@ -110,7 +90,7 @@ public class DataManager
 	 */
 	public float getVolume()
 	{
-		return mMusic.get(mMusicTitles[0]).getVolume();
+		return mVolume;
 	}
 	
 	/**
@@ -122,8 +102,7 @@ public class DataManager
 	public void setVolume(final float aVolume)
 	{
 		mVolume = aVolume;
-		for (final Music music : mMusic.values())
-			music.setVolume(mVolume);
+		mCurrentMusic.setVolume(mVolume);
 	}
 	
 	/**
@@ -146,102 +125,51 @@ public class DataManager
 		return mLoading;
 	}
 	
-	/**
-	 * Loads and caches an image that is not split but a simple png image.
-	 * 
-	 * @param aName
-	 *            the name of the image.
-	 * @return an image with name {@code aName} that is laying inside {@code data/images/}.
-	 */
-	public Image getImage(final String aName)
+	public Image getImage(final ImageName aImage)
 	{
-		Image image = mImages.get(aName);
-		if (image == null) image = loadImage(aName);
-		return image;
+		return getImage(aImage, "");
 	}
 	
-	/**
-	 * Loads an level data image.
-	 * 
-	 * @param aId
-	 *            The world id.
-	 * @param aLevelId
-	 *            The level id.
-	 * @return an image that contains level data.
-	 */
 	public Image getLevelImage(final int aWorldId, final int aLevelId)
 	{
-		return getImage("worldData/level" + aWorldId + "-" + aLevelId);
+		return getImage(ImageName.LEVEL, aWorldId + "-" + aLevelId);
 	}
 	
-	/**
-	 * Loads an background image belonging to the given world id.
-	 * 
-	 * @param aWorldId
-	 *            The world id.
-	 * @return an image that contains a background.
-	 */
 	public Image getBackgroundImage(final int aWorldId)
 	{
-		return getImage("backgrounds/background" + aWorldId);
+		return getImage(ImageName.BACKGROUND, "" + aWorldId);
 	}
 	
-	/**
-	 * Returns a part of the split image {@code aName.png} with position {@code aIndex}.
-	 * 
-	 * @param aName
-	 *            The name of the split image.
-	 * @param aIndex
-	 *            The index of the image part.
-	 * @return the {@code aIndex}s part of {@code aName}.png.
-	 */
-	public Image getSplitImage(final String aName, final int aIndex)
+	private Image getSplitImage(final ImageName aImage, final boolean aTexturePack, final Texture aTexture, final int aIndex)
 	{
-		return mSplitImages.get(aName).get(aIndex);
+		return mCache.loadSplitImage(aImage, aTexturePack ? getTexturePack() : null, aTexture, aIndex);
 	}
 	
-	/**
-	 * Returns a part of the split image {@code aName.png} with position {@code aIndex}.
-	 * 
-	 * @param aName
-	 *            The name of the split image.
-	 * @param aIndex
-	 *            The index of the image part.
-	 * @return the {@code aIndex}s part of {@code <aName><aTexture.getSuffix()>}.png.
-	 */
-	public Image getTextureImage(final String aName, final Texture aTexture, final int aIndex)
+	public Image getTexturedSplitImage(final ImageName aImage, final int aIndex)
 	{
-		final HashMap<Integer, Image> images = mSplitImages.get(aName + aTexture.getSuffix());
-		final Image image = images.get(aIndex);
-		return image;
+		return getSplitImage(aImage, true, null, aIndex);
+	}
+	
+	public Image getBlockImage(final Texture aTexture, final int aIndex)
+	{
+		return getSplitImage(ImageName.BLOCKS, true, aTexture, aIndex);
 	}
 	
 	/**
 	 * Loads the given texture into the cache so for example all blocks in one level are loaded.
 	 * 
-	 * @param aName
+	 * @param aTexturePack
 	 *            The image name.
 	 * @param aTexture
 	 *            The used texture.
 	 * @param aIndex
 	 *            The block id.
 	 */
-	public void loadTexture(final String aName, final Texture aTexture, final int aIndex)
+	public void loadTexture(final Texture aTexture, final int aIndex)
 	{
-		HashMap<Integer, Image> images = mSplitImages.get(aName + aTexture.getSuffix());
-		if (images == null)
-		{
-			images = new HashMap<>();
-			mSplitImages.put(aName + aTexture.getSuffix(), images);
-		}
-		Image image = images.get(aIndex);
-		if (image == null)
-		{
-			mLoading = mWasLoading = true;
-			image = loadSplittedImage("texturepacks/blocks" + aName + aTexture.getSuffix(), aIndex, new int[] { 16, 16 });
-			images.put(aIndex, image);
-			mLoading = false;
-		}
+		mLoading = mWasLoading = true;
+		mCache.loadSplitImage(ImageName.BLOCKS, getTexturePack(), aTexture, aIndex);
+		mLoading = false;
 	}
 	
 	/**
@@ -249,7 +177,7 @@ public class DataManager
 	 */
 	public void nextTexturePack()
 	{
-		mCurrentTexturepack = (mCurrentTexturepack + 1) % mTexturepacks.length;
+		mCurrentTexturepack = (mCurrentTexturepack + 1) % TexturePack.getTexturePacks().size();
 	}
 	
 	/**
@@ -257,7 +185,7 @@ public class DataManager
 	 */
 	public void previousTexturePack()
 	{
-		mCurrentTexturepack = (mCurrentTexturepack - 1 + mTexturepacks.length) % mTexturepacks.length;
+		mCurrentTexturepack = (mCurrentTexturepack - 1 + TexturePack.getTexturePacks().size()) % TexturePack.getTexturePacks().size();
 	}
 	
 	/**
@@ -265,19 +193,9 @@ public class DataManager
 	 * 
 	 * @return the name of the texture pack.
 	 */
-	public String getTexturePack()
+	public TexturePack getTexturePack()
 	{
-		return mTexturepacks[mCurrentTexturepack];
-	}
-	
-	/**
-	 * Returns the name of the current music title.
-	 * 
-	 * @return the music title.
-	 */
-	public String getTitle()
-	{
-		return mMusicTitles[mCurrentTitle];
+		return TexturePack.getTexturePacks().get(mCurrentTexturepack);
 	}
 	
 	/**
@@ -286,16 +204,7 @@ public class DataManager
 	public void init()
 	{
 		mLoading = true;
-		for (int tile = 0; tile < mSplitImageNames.length; tile++ )
-		{
-			for (final String texture : mTexturepacks)
-			{
-				final HashMap<Integer, Image> images = loadSplittedImages(mSplitImageNames[tile] + texture, mSplitImageSizes[tile]);
-				mSplitImages.put(mSplitImageNames[tile] + texture, images);
-			}
-		}
-		for (final String name : mMusicTitles)
-			mMusic.put(name, loadMusic(name));
+		TexturePack.init();
 		loadSaves();
 		LevelManager.instance();
 		mLoading = false;
@@ -412,6 +321,11 @@ public class DataManager
 		return mVersion;
 	}
 	
+	private Image getImage(final ImageName aImage, final String aSuffix)
+	{
+		return mCache.loadImage(aImage, aSuffix);
+	}
+	
 	private String loadVersion()
 	{
 		final File version = new File("data/version.txt");
@@ -433,48 +347,6 @@ public class DataManager
 		throw new IllegalArgumentException("Not the right version format!");
 	}
 	
-	private Image loadImage(final String aName)
-	{
-		try
-		{
-			final Image image = new Image("data/images/" + aName + ".png");
-			return image;
-		}
-		catch (final SlickException e)
-		{
-			Log.error("Could not read Image " + aName);
-		}
-		return null;
-	}
-	
-	private Sound loadSound(final String aName)
-	{
-		try
-		{
-			final Sound sound = new Sound("data/sounds/" + aName + ".wav");
-			return sound;
-		}
-		catch (final SlickException e)
-		{
-			Log.error("Could not read Sound " + aName);
-		}
-		return null;
-	}
-	
-	private Music loadMusic(final String aName)
-	{
-		try
-		{
-			final Music music = new Music("data/sounds/" + aName + ".ogg");
-			return music;
-		}
-		catch (final SlickException e)
-		{
-			Log.error("Could not read Music " + aName);
-		}
-		return null;
-	}
-	
 	private void loadSaves()
 	{
 		final File saves = new File("data/saves/#Saves#.txt");
@@ -493,22 +365,5 @@ public class DataManager
 		}
 		if ( !data.toString().isEmpty()) for (final String save : data.toString().split("\n"))
 			mSaves.add(save);
-	}
-	
-	private Image loadSplittedImage(final String aName, final int aIndex, final int[] aSize)
-	{
-		final Image image = loadImage(aName);
-		final int imageWidth = aSize[0], imageHeight = aSize[1], width = image.getWidth() / imageWidth;
-		return image.getSubImage((aIndex % width) * imageWidth, (aIndex / width) * imageHeight, imageWidth, imageHeight);
-	}
-	
-	private HashMap<Integer, Image> loadSplittedImages(final String aName, final int[] aSize)
-	{
-		final Image image = loadImage(aName);
-		final int imageWidth = aSize[0], imageHeight = aSize[1], width = image.getWidth() / imageWidth, height = image.getHeight() / imageHeight;
-		final HashMap<Integer, Image> images = new HashMap<>();
-		for (int tile = 0; tile < width * height; tile++ )
-			images.put(tile, image.getSubImage((tile % width) * imageWidth, (tile / width) * imageHeight, imageWidth, imageHeight));
-		return images;
 	}
 }

@@ -4,6 +4,7 @@ import game.level.Map;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
 import data.DataManager;
+import data.ImageName;
 
 public class Gore extends Entity
 {
@@ -61,7 +62,7 @@ public class Gore extends Entity
 	@Override
 	public void render(final Graphics aG)
 	{
-		aG.drawImage(DataManager.instance().getSplitImage("entity" + DataManager.instance().getTexturePack(), 0), (float) (mX - mLevel.getScreenX()), (float) (mY - mLevel.getScreenY()));
+		aG.drawImage(DataManager.instance().getTexturedSplitImage(ImageName.ENTITY, 0), (float) (mX - mLevel.getScreenX()), (float) (mY - mLevel.getScreenY()));
 	}
 	
 	@Override

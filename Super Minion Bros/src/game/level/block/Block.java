@@ -8,6 +8,8 @@ import java.util.HashSet;
 import org.newdawn.slick.Graphics;
 import util.Direction;
 import data.DataManager;
+import data.ImageName;
+import data.Texture;
 import editor.EditorDataManager;
 
 public class Block
@@ -350,8 +352,9 @@ public class Block
 	 */
 	public void initImage(final int aX, final int aY, final Map aLevel)
 	{
+		if (isItemBlock()) return;
 		final Texture texture = getBlockTexture(aX, aY, aLevel.getBlock(aX, aY));
-		DataManager.instance().loadTexture(DataManager.instance().getTexturePack(), texture, getId(texture) / Texture.values().size());
+		DataManager.instance().loadTexture(texture, getId(texture) / Texture.values().size());
 	}
 	
 	/**
@@ -423,9 +426,9 @@ public class Block
 	{
 		final Block block = get(aId);
 		final Texture texture = getBlockTexture(aX, aY, aId);
-		if (block.mFlag) aG.drawImage(DataManager.instance().getImage("flag"), aX * SIZE - aLevel.getScreenX(), (aY - 7) * SIZE - aLevel.getScreenY());
-		else aG.drawImage(DataManager.instance().getTextureImage(DataManager.instance().getTexturePack(), texture, block.getId(texture) / Texture.values().size()).getScaledCopy(SIZE, SIZE), aX * SIZE
-				- aLevel.getScreenX(), aY * SIZE - aLevel.getScreenY());
+		if (block.mFlag) aG.drawImage(DataManager.instance().getImage(ImageName.FLAG), aX * SIZE - aLevel.getScreenX(), (aY - 7) * SIZE - aLevel.getScreenY());
+		else aG.drawImage(DataManager.instance().getBlockImage(texture, block.getId(texture) / Texture.values().size()).getScaledCopy(SIZE, SIZE), aX * SIZE - aLevel.getScreenX(),
+				aY * SIZE - aLevel.getScreenY());
 	}
 	
 	/**

@@ -2,7 +2,6 @@ package editor;
 
 import game.level.block.Block;
 import game.level.block.Item;
-import game.level.block.Texture;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -14,6 +13,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import javax.imageio.ImageIO;
 import org.newdawn.slick.util.Log;
+import data.Texture;
 
 public class EditorDataManager
 {

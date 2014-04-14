@@ -4,6 +4,7 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import util.Direction;
 import data.DataManager;
+import data.ImageName;
 
 public class Roller extends Enemy
 {
@@ -41,7 +42,7 @@ public class Roller extends Enemy
 		int id = 0;
 		final int delay = 6;
 		id = mTime % (delay * 6) / delay;
-		Image image = DataManager.instance().getSplitImage("enemy" + DataManager.instance().getTexturePack(), START_ID + id);
+		Image image = DataManager.instance().getTexturedSplitImage(ImageName.ENEMY, START_ID + id);
 		if (mDir == Direction.LEFT) image = image.getFlippedCopy(true, false);
 		aG.drawImage(image, (float) (mX - mLevel.getScreenX()), (float) (mY - mLevel.getScreenY()));
 	}
