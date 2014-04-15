@@ -14,18 +14,18 @@ import java.util.HashMap;
 import javax.imageio.ImageIO;
 import org.newdawn.slick.util.Log;
 import data.names.Texture;
+import data.names.TexturePack;
 
 public class EditorDataManager
 {
-	private static EditorDataManager										INSTANCE;
+	private static EditorDataManager												INSTANCE;
 	
-	private static final HashMap<String, HashMap<Texture, BufferedImage[]>>	SPLIT_IMAGES	= new HashMap<>();
-	private static final HashMap<String, BufferedImage>						IMAGES			= new HashMap<>();
-	private static final String[]											TEXTUREPACKS	= new String[] { "Mario", "Minecraft" };
+	private static final HashMap<TexturePack, HashMap<Texture, BufferedImage[]>>	SPLIT_IMAGES	= new HashMap<>();
+	private static final HashMap<String, BufferedImage>								IMAGES			= new HashMap<>();
 	
-	private static ArrayList<String>										mLevels			= new ArrayList<>();
+	private static ArrayList<String>												mLevels			= new ArrayList<>();
 	
-	private static String													sTexturePack	= TEXTUREPACKS[0];
+	private static TexturePack														sTexturePack	= TexturePack.MARIO;
 	
 	private EditorDataManager()
 	{}
@@ -38,12 +38,13 @@ public class EditorDataManager
 	
 	public void init()
 	{
+		TexturePack.init();
 		try
 		{
-			for (final String texturePack : TEXTUREPACKS)
+			for (final TexturePack texturePack : TexturePack.getTexturePacks())
 			{
 				final HashMap<Texture, BufferedImage[]> textureImages = new HashMap<>();
-				for (final Texture texture : Texture.values())
+				for (final Texture texture : Texture.getTextures())
 				{
 					final BufferedImage blocks = ImageIO.read(new File("data/images/texturePacks/blocks" + texturePack + texture.getSuffix() + ".png"));
 					final int width = blocks.getWidth() / 16, height = blocks.getHeight() / 16;
@@ -87,14 +88,9 @@ public class EditorDataManager
 		return mLevels;
 	}
 	
-	public void setTexturePack(final String aTexturePack)
+	public void setTexturePack(final TexturePack aTexturePack)
 	{
 		sTexturePack = aTexturePack;
-	}
-	
-	public String[] getTexturePacks()
-	{
-		return TEXTUREPACKS;
 	}
 	
 	public void saveMapImage(final short[][] aData, final short[][] aAlphas, final int aWorld, final int aLevel)

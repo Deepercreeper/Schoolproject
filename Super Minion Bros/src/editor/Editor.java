@@ -38,6 +38,7 @@ import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.WindowConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import data.names.TexturePack;
 
 @SuppressWarnings("serial")
 public class Editor extends JFrame
@@ -686,8 +687,8 @@ public class Editor extends JFrame
 			});
 			menu.add(mTools);
 			
-			final JComboBox<String> texturePacks = new JComboBox<>();
-			for (final String texturePack : EditorDataManager.instance().getTexturePacks())
+			final JComboBox<TexturePack> texturePacks = new JComboBox<>();
+			for (final TexturePack texturePack : TexturePack.getTexturePacks())
 				texturePacks.addItem(texturePack);
 			texturePacks.addActionListener(new ActionListener()
 			{

@@ -19,19 +19,13 @@ public class Texture
 	
 	private final byte							mId;
 	
-	private final String						mSuffix;
+	private final String						mName;
 	
-	private Texture(final int aId, final String aSuffix)
+	private Texture(final int aId, final String aName)
 	{
 		mId = (byte) aId;
-		mSuffix = aSuffix;
+		mName = aName;
 		PARTS.put(mId, this);
-	}
-	
-	@Override
-	public String toString()
-	{
-		return mSuffix;
 	}
 	
 	/**
@@ -51,7 +45,13 @@ public class Texture
 	 */
 	public String getSuffix()
 	{
-		return mSuffix;
+		return mName;
+	}
+	
+	@Override
+	public String toString()
+	{
+		return mName;
 	}
 	
 	/**
@@ -59,7 +59,7 @@ public class Texture
 	 * 
 	 * @return all textures.
 	 */
-	public static Collection<Texture> values()
+	public static Collection<Texture> getTextures()
 	{
 		return PARTS.values();
 	}
