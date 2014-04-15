@@ -5,7 +5,7 @@ import java.util.HashMap;
 public enum MusicName
 {
 	
-	MENU("menu"), WORLD_0("world0"), WORLD_1("world1"), WORLD_2("world2"), WORLD_3("world3"), WORLD_4("world4"), WORLD_5("world5");
+	MENU("menu"), WORLD_0("world0", 0), WORLD_1("world1", 1), WORLD_2("world2", 2), WORLD_3("world3", 3), WORLD_4("world4", 4), WORLD_5("world5", 5);
 	
 	private static final HashMap<Integer, MusicName>	WORLD_TITLES	= new HashMap<>();
 	
