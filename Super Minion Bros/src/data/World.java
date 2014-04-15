@@ -6,16 +6,32 @@ public class World
 	
 	private final Level[]	mLevels	= new Level[10];
 	
+	/**
+	 * Creates a new world.
+	 * 
+	 * @param aId
+	 *            The world id.
+	 */
 	public World(final int aId)
 	{
 		mId = (byte) aId;
 	}
 	
+	/**
+	 * Returns an array of all levels inside this world.
+	 * 
+	 * @return the underlying levels.
+	 */
 	public Level[] getLevels()
 	{
 		return mLevels;
 	}
 	
+	/**
+	 * Counts the number of levels inside this world and returns it.
+	 * 
+	 * @return the number of levels.
+	 */
 	public int getLevelsCount()
 	{
 		int length = 0;
@@ -24,11 +40,22 @@ public class World
 		return length;
 	}
 	
+	/**
+	 * Adds a new level to this world.
+	 * 
+	 * @param aId
+	 *            The id of the new level.
+	 */
 	public void addLevel(final int aId)
 	{
 		mLevels[aId] = new Level(aId, this);
 	}
 	
+	/**
+	 * Returns the identification number of this world. Each world has its own id.
+	 * 
+	 * @return the id.
+	 */
 	public byte getId()
 	{
 		return mId;

@@ -71,7 +71,7 @@ public class Map
 		mWidth = mBlocks.length;
 		if (mWidth > 0) mHeight = mBlocks[0].length;
 		else mHeight = 0;
-		DataManager.instance().playMusic(MusicName.get("world" + (mWorldId % 6)));
+		DataManager.instance().playMusic(MusicName.get(mWorldId % 6));
 	}
 	
 	/**

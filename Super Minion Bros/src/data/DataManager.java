@@ -22,15 +22,11 @@ public class DataManager
 	private static DataManager		INSTANCE;
 	
 	private final Cache				mCache;
-	
 	private final ArrayList<String>	mSaves;
-	
-	private final String			mVersion;
-	
 	private Music					mCurrentMusic;
 	
+	private final String			mVersion;
 	private int						mCurrentTexturepack	= 0;
-	
 	private float					mVolume				= 1;
 	private boolean					mInitiated			= false, mLoading = false, mWasLoading = false;
 	
@@ -41,6 +37,11 @@ public class DataManager
 		mVersion = loadVersion();
 	}
 	
+	/**
+	 * Returns the current DataManager.
+	 * 
+	 * @return the last created DataManager.
+	 */
 	public static DataManager instance()
 	{
 		if (INSTANCE == null) INSTANCE = new DataManager();
@@ -51,7 +52,7 @@ public class DataManager
 	 * Plays a sound with the given name. All sounds have to have the type wav and sounds can be played more times simultanely.
 	 * 
 	 * @param aSound
-	 *            The name of the sound to play.
+	 *            The sound to play.
 	 */
 	public void playSound(final SoundName aSound)
 	{
@@ -63,12 +64,12 @@ public class DataManager
 	/**
 	 * Starts to play a music with the given name. All music titles have to have the type ogg and only one music title can be played at one time.
 	 * 
-	 * @param aName
-	 *            The name of the music title.
+	 * @param aMusic
+	 *            The music title to play.
 	 */
-	public void playMusic(final MusicName aName)
+	public void playMusic(final MusicName aMusic)
 	{
-		mCurrentMusic = mCache.loadMusic(aName);
+		mCurrentMusic = mCache.loadMusic(aMusic);
 		mCurrentMusic.loop();
 		mCurrentMusic.setVolume(mVolume);
 	}
@@ -111,7 +112,7 @@ public class DataManager
 	}
 	
 	/**
-	 * Returns whether all split images and music titles where loaded already.
+	 * Returns whether all music titles where loaded already.
 	 * 
 	 * @return {@code true} if it has finished or {@code false} if not.
 	 */
@@ -130,31 +131,67 @@ public class DataManager
 		return mLoading;
 	}
 	
+	/**
+	 * Loads a normal image and returns it.
+	 * 
+	 * @param aImage
+	 *            The image name.
+	 * @return the corresponding image.
+	 */
 	public Image getImage(final ImageName aImage)
 	{
 		return getImage(aImage, "");
 	}
 	
+	/**
+	 * Loads the map image of the given world and level.
+	 * 
+	 * @param aWorldId
+	 *            The world id.
+	 * @param aLevelId
+	 *            The level id.
+	 * @return the level image.
+	 */
 	public Image getLevelImage(final int aWorldId, final int aLevelId)
 	{
 		return getImage(ImageName.LEVEL, aWorldId + "-" + aLevelId);
 	}
 	
+	/**
+	 * Loads a background image corresponding to the given world id.
+	 * 
+	 * @param aWorldId
+	 *            The world id.
+	 * @return the background image.
+	 */
 	public Image getBackgroundImage(final int aWorldId)
 	{
 		return getImage(ImageName.BACKGROUND, "" + aWorldId);
 	}
 	
-	private Image getSplitImage(final ImageName aImage, final boolean aTexturePack, final Texture aTexture, final int aIndex)
-	{
-		return mCache.loadSplitImage(aImage, aTexturePack ? getTexturePack() : null, aTexture, aIndex);
-	}
-	
+	/**
+	 * Loads an image that is affected by changing the current texture pack. Then returns the sub image at the given index.
+	 * 
+	 * @param aImage
+	 *            The image name.
+	 * @param aIndex
+	 *            The index of the sub image.
+	 * @return the sub image with the given index.
+	 */
 	public Image getTexturedSplitImage(final ImageName aImage, final int aIndex)
 	{
 		return getSplitImage(aImage, true, null, aIndex);
 	}
 	
+	/**
+	 * Loads a block image depending on the given texture.
+	 * 
+	 * @param aTexture
+	 *            The current used block texture.
+	 * @param aIndex
+	 *            The sub image index, representing the block id.
+	 * @return the block image with the current texture pack and the given texture.
+	 */
 	public Image getBlockImage(final Texture aTexture, final int aIndex)
 	{
 		return getSplitImage(ImageName.BLOCKS, true, aTexture, aIndex);
@@ -163,8 +200,6 @@ public class DataManager
 	/**
 	 * Loads the given texture into the cache so for example all blocks in one level are loaded.
 	 * 
-	 * @param aTexturePack
-	 *            The image name.
 	 * @param aTexture
 	 *            The used texture.
 	 * @param aIndex
@@ -194,9 +229,9 @@ public class DataManager
 	}
 	
 	/**
-	 * Returns the current used texture pack name.
+	 * Returns the current used texture pack.
 	 * 
-	 * @return the name of the texture pack.
+	 * @return the texture pack.
 	 */
 	public TexturePack getTexturePack()
 	{
@@ -204,12 +239,13 @@ public class DataManager
 	}
 	
 	/**
-	 * Loads all split images and music titles.
+	 * Initiates the TexturePack and the LevelManager.
 	 */
 	public void init()
 	{
 		mLoading = true;
 		TexturePack.init();
+		MusicName.init();
 		loadSaves();
 		LevelManager.instance();
 		mLoading = false;
@@ -321,9 +357,19 @@ public class DataManager
 		return mSaves;
 	}
 	
+	/**
+	 * Returns the current version of this game.
+	 * 
+	 * @return the game version.
+	 */
 	public String getVersion()
 	{
 		return mVersion;
+	}
+	
+	private Image getSplitImage(final ImageName aImage, final boolean aTexturePack, final Texture aTexture, final int aIndex)
+	{
+		return mCache.loadSplitImage(aImage, aTexturePack ? getTexturePack() : null, aTexture, aIndex);
 	}
 	
 	private Image getImage(final ImageName aImage, final String aSuffix)

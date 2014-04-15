@@ -11,6 +11,11 @@ public enum SoundName
 	
 	private final String	mPath;
 	
+	/**
+	 * Returns the path of this sound.
+	 * 
+	 * @return the path.
+	 */
 	public String getPath()
 	{
 		return mPath;

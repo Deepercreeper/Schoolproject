@@ -31,16 +31,31 @@ public enum ImageName
 	
 	private final int		mWidth, mHeight;
 	
+	/**
+	 * Returns the path of this image.
+	 * 
+	 * @return the path.
+	 */
 	public String getPath()
 	{
 		return mPath;
 	}
 	
+	/**
+	 * The width of sub images inside a split image or {@code -1} if this is a normal image.
+	 * 
+	 * @return the width.
+	 */
 	public int getWidth()
 	{
 		return mWidth;
 	}
 	
+	/**
+	 * The height of sub images inside a split image or {@code -1} if this is a normal image.
+	 * 
+	 * @return the height.
+	 */
 	public int getHeight()
 	{
 		return mHeight;

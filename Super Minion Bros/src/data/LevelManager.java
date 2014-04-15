@@ -45,22 +45,44 @@ public class LevelManager
 		}
 	}
 	
+	/**
+	 * Returns the current LevelManager.
+	 * 
+	 * @return the last created LevelManager.
+	 */
 	public static LevelManager instance()
 	{
 		if (INSTANCE == null) INSTANCE = new LevelManager();
 		return INSTANCE;
 	}
 	
+	/**
+	 * Returns the number of worlds existing at this time.
+	 * 
+	 * @return the number of worlds.
+	 */
 	public int getWorldsCount()
 	{
 		return mWorlds.size();
 	}
 	
+	/**
+	 * Returns the number of levels existing inside the given world.
+	 * 
+	 * @param aWorld
+	 *            The world you want to know about.
+	 * @return the number of levels inside the world.
+	 */
 	public int getLevelsCount(final int aWorld)
 	{
 		return mWorlds.get(aWorld).getLevelsCount();
 	}
 	
+	/**
+	 * Returns a HashMap of worlds. Each id refers to one specific world.
+	 * 
+	 * @return all existing worlds.
+	 */
 	public HashMap<Integer, World> getWorlds()
 	{
 		return mWorlds;

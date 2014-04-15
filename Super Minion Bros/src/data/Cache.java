@@ -19,6 +19,9 @@ public class Cache
 	private final HashMap<String, Sound>					mSounds;
 	private final HashMap<String, Music>					mMusic;
 	
+	/**
+	 * Creates a new cache that handles loading and saving images, sounds and music.
+	 */
 	public Cache()
 	{
 		mImages = new HashMap<>();
@@ -27,6 +30,13 @@ public class Cache
 		mMusic = new HashMap<>();
 	}
 	
+	/**
+	 * Loads the given sound and caches it if not done already.
+	 * 
+	 * @param aSound
+	 *            The sound to load.
+	 * @return the requested sound.
+	 */
 	public Sound loadSound(final SoundName aSound)
 	{
 		Sound sound = mSounds.get(aSound);
@@ -34,6 +44,13 @@ public class Cache
 		return sound;
 	}
 	
+	/**
+	 * Loads the given music and caches it if not done already.
+	 * 
+	 * @param aMusic
+	 *            The music to load.
+	 * @return the requested music.
+	 */
 	public Music loadMusic(final MusicName aMusic)
 	{
 		Music music = mMusic.get(aMusic);
@@ -41,6 +58,15 @@ public class Cache
 		return music;
 	}
 	
+	/**
+	 * Loads a normal image and caches it if not done already.
+	 * 
+	 * @param aImage
+	 *            The image to load.
+	 * @param aSuffix
+	 *            A suffix that is concatenated at the end of the images path if needed.
+	 * @return the requested image.
+	 */
 	public Image loadImage(final ImageName aImage, final String aSuffix)
 	{
 		final String path = aImage.getPath() + aSuffix;
@@ -53,6 +79,19 @@ public class Cache
 		return image;
 	}
 	
+	/**
+	 * Loads a image and splits it if not done already. The {@code aIndex}s subimage is returned.
+	 * 
+	 * @param aImage
+	 *            The image to load.
+	 * @param aTexturePack
+	 *            (Optional) The texture pack out of which the image should be loaded.
+	 * @param aTexture
+	 *            (Optional) The texture of which type the image should be.
+	 * @param aIndex
+	 *            The sub image index.
+	 * @return the requested sub image.
+	 */
 	public Image loadSplitImage(final ImageName aImage, final TexturePack aTexturePack, final Texture aTexture, final int aIndex)
 	{
 		String path = aImage.getPath();
