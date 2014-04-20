@@ -2,7 +2,7 @@ package data.names;
 
 import data.DataManager;
 
-public enum ImageName
+public enum ImageName implements DataName
 {
 	SPLASH("splash"), FLAG("flag"), LEVEL("worldData/level"), BACKGROUND("backgrounds/background"), TEXTUREPACK(null)
 	{
@@ -31,11 +31,7 @@ public enum ImageName
 	
 	private final int		mWidth, mHeight;
 	
-	/**
-	 * Returns the path of this image.
-	 * 
-	 * @return the path.
-	 */
+	@Override
 	public String getPath()
 	{
 		return mPath;

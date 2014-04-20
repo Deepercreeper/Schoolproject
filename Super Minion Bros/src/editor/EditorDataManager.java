@@ -39,12 +39,13 @@ public class EditorDataManager
 	public void init()
 	{
 		TexturePack.init();
+		Texture.init();
 		try
 		{
 			for (final TexturePack texturePack : TexturePack.getTexturePacks())
 			{
 				final HashMap<Texture, BufferedImage[]> textureImages = new HashMap<>();
-				for (final Texture texture : Texture.getTextures())
+				for (final Texture texture : Texture.values())
 				{
 					final BufferedImage blocks = ImageIO.read(new File("data/images/texturePacks/blocks" + texturePack + texture.getSuffix() + ".png"));
 					final int width = blocks.getWidth() / 16, height = blocks.getHeight() / 16;

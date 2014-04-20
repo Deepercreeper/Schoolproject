@@ -32,7 +32,7 @@ public class ToolBox extends JDialog
 		final JMenuBar toolBar = new JMenuBar();
 		{
 			final JComboBox<Texture> textures = new JComboBox<>();
-			for (final Texture texture : Texture.getTextures())
+			for (final Texture texture : Texture.values())
 				textures.addItem(texture);
 			textures.addActionListener(new ActionListener()
 			{

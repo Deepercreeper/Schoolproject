@@ -98,18 +98,18 @@ public class Block
 	
 	private Block(final int aId, final int[] aRGBs)
 	{
-		final int textures = Texture.getTextures().size();
-		for (final Texture texture : Texture.getTextures())
+		final int textures = Texture.values().length;
+		for (final Texture texture : Texture.values())
 			mIds.put(texture, (short) (aId * textures + texture.getId()));
 		for (final Texture texture : mIds.keySet())
 			BLOCKS.put(mIds.get(texture), this);
 		if (aRGBs.length != textures) throw new IllegalArgumentException("Not the right number of color codes");
 		for (int i = 0; i < textures; i++ )
 		{
-			COLORS.put(aRGBs[i], mIds.get(Texture.get((byte) i)));
-			BLOCK_COLORS.put(mIds.get(Texture.get((byte) i)), aRGBs[i]);
+			COLORS.put(aRGBs[i], mIds.get(Texture.getTextureWithId((byte) i)));
+			BLOCK_COLORS.put(mIds.get(Texture.getTextureWithId((byte) i)), aRGBs[i]);
 		}
-		for (final Texture texture : Texture.getTextures())
+		for (final Texture texture : Texture.values())
 			TEXTURES.put(mIds.get(texture), texture);
 		mRenderBlocks.add(this);
 		BLOCK_LIST.add(aId, this);
@@ -119,8 +119,8 @@ public class Block
 	
 	private Block(final int aId, final int aRGB)
 	{
-		final short id = (short) (aId * Texture.getTextures().size());
-		for (final Texture texture : Texture.getTextures())
+		final short id = (short) (aId * Texture.values().length);
+		for (final Texture texture : Texture.values())
 			mIds.put(texture, id);
 		BLOCKS.put(id, this);
 		COLORS.put(aRGB, id);
@@ -134,7 +134,7 @@ public class Block
 	private Block()
 	{
 		final short id = Short.MAX_VALUE;
-		for (final Texture texture : Texture.getTextures())
+		for (final Texture texture : Texture.values())
 			mIds.put(texture, id);
 		BLOCKS.put(id, this);
 		TEXTURES.put(id, Texture.NORMAL);
@@ -354,7 +354,7 @@ public class Block
 	{
 		if (isItemBlock()) return;
 		final Texture texture = getBlockTexture(aX, aY, aLevel.getBlock(aX, aY));
-		DataManager.instance().loadTexture(texture, getId(texture) / Texture.getTextures().size());
+		DataManager.instance().loadTexture(texture, getId(texture) / Texture.values().length);
 	}
 	
 	/**
@@ -427,7 +427,7 @@ public class Block
 		final Block block = get(aId);
 		final Texture texture = getBlockTexture(aX, aY, aId);
 		if (block.mFlag) aG.drawImage(DataManager.instance().getImage(ImageName.FLAG), aX * SIZE - aLevel.getScreenX(), (aY - 7) * SIZE - aLevel.getScreenY());
-		else aG.drawImage(DataManager.instance().getBlockImage(texture, block.getId(texture) / Texture.getTextures().size()).getScaledCopy(SIZE, SIZE), aX * SIZE - aLevel.getScreenX(),
+		else aG.drawImage(DataManager.instance().getBlockImage(texture, block.getId(texture) / Texture.values().length).getScaledCopy(SIZE, SIZE), aX * SIZE - aLevel.getScreenX(),
 				aY * SIZE - aLevel.getScreenY());
 	}
 	
@@ -456,7 +456,7 @@ public class Block
 		}
 		else if (block.mItemBlock) aG.drawImage(EditorDataManager.instance().getImage("item"), aX * SIZE, aY * SIZE, null);
 		else if (block == START) aG.drawImage(EditorDataManager.instance().getImage("start"), aX * SIZE, aY * SIZE, null);
-		else aG.drawImage(EditorDataManager.instance().getBlockImage(block.getId(texture) / Texture.getTextures().size(), texture), aX * SIZE, aY * SIZE, null);
+		else aG.drawImage(EditorDataManager.instance().getBlockImage(block.getId(texture) / Texture.values().length, texture), aX * SIZE, aY * SIZE, null);
 	}
 	
 	/**

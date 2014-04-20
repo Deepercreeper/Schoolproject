@@ -2,9 +2,8 @@ package data.names;
 
 import java.util.HashMap;
 
-public enum MusicName
+public enum MusicName implements DataName
 {
-	
 	MENU("menu"), WORLD_0("world0", 0), WORLD_1("world1", 1), WORLD_2("world2", 2), WORLD_3("world3", 3), WORLD_4("world4", 4), WORLD_5("world5", 5);
 	
 	private static final HashMap<Integer, MusicName>	WORLD_TITLES	= new HashMap<>();
@@ -25,11 +24,7 @@ public enum MusicName
 	
 	private final String	mPath;
 	
-	/**
-	 * Returns the path of this music title.
-	 * 
-	 * @return the path.
-	 */
+	@Override
 	public String getPath()
 	{
 		return mPath;
@@ -65,4 +60,5 @@ public enum MusicName
 	{
 		return WORLD_TITLES.get(aWorldId);
 	}
+	
 }

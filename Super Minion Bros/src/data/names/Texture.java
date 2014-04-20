@@ -1,21 +1,12 @@
 package data.names;
 
-import java.util.Collection;
 import java.util.HashMap;
 
-public class Texture
+public enum Texture
 {
-	private static final HashMap<Byte, Texture>	PARTS		= new HashMap<>();
+	NORMAL(0, "Normal"), SNOW(1, "Snow"), DESERT(2, "Desert"), CASTLE(3, "Castle"), UNDERGROUND(4, "Underground"), CLOUD(5, "Cloud"), JUNGLE(6, "Jungle"), HORROR(7, "Horror"), STONE(8, "Stone");
 	
-	public static final Texture					NORMAL		= new Texture(0, "Normal");
-	public static final Texture					SNOW		= new Texture(1, "Snow");
-	public static final Texture					DESERT		= new Texture(2, "Desert");
-	public static final Texture					CASTLE		= new Texture(3, "Castle");
-	public static final Texture					UNDERGROUND	= new Texture(4, "Underground");
-	public static final Texture					CLOUD		= new Texture(5, "Cloud");
-	public static final Texture					JUNGLE		= new Texture(6, "Jungle");
-	public static final Texture					HORROR		= new Texture(7, "Horror");
-	public static final Texture					STONE		= new Texture(8, "Stone");
+	private static final HashMap<Byte, Texture>	TEXTURES	= new HashMap<>();
 	
 	private final byte							mId;
 	
@@ -25,7 +16,6 @@ public class Texture
 	{
 		mId = (byte) aId;
 		mName = aName;
-		PARTS.put(mId, this);
 	}
 	
 	/**
@@ -55,13 +45,12 @@ public class Texture
 	}
 	
 	/**
-	 * Returns all defined textures.
-	 * 
-	 * @return all textures.
+	 * Initializes all textures.
 	 */
-	public static Collection<Texture> getTextures()
+	public static void init()
 	{
-		return PARTS.values();
+		for (final Texture texture : values())
+			TEXTURES.put(texture.mId, texture);
 	}
 	
 	/**
@@ -71,8 +60,8 @@ public class Texture
 	 *            The texture id.
 	 * @return the texture with the given id and {@code null} if no texture with the given id exists.
 	 */
-	public static Texture get(final byte aId)
+	public static Texture getTextureWithId(final byte aId)
 	{
-		return PARTS.get(aId);
+		return TEXTURES.get(aId);
 	}
 }

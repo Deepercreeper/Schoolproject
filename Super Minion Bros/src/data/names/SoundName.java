@@ -1,6 +1,6 @@
 package data.names;
 
-public enum SoundName
+public enum SoundName implements DataName
 {
 	BANANA("banana"), HEART("heart"), CANNON("cannon"), BOMB("bomb"), JUMP("jump"), ITEM("item"), DESTROY_BLOCK("destroyBlock");
 	
@@ -11,11 +11,7 @@ public enum SoundName
 	
 	private final String	mPath;
 	
-	/**
-	 * Returns the path of this sound.
-	 * 
-	 * @return the path.
-	 */
+	@Override
 	public String getPath()
 	{
 		return mPath;

@@ -245,6 +245,7 @@ public class DataManager
 	{
 		mLoading = true;
 		TexturePack.init();
+		Texture.init();
 		MusicName.init();
 		loadSaves();
 		LevelManager.instance();
